@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>YangAgent Revit 2027</Name>
+    <Assembly>{{ASSEMBLY_PATH}}</Assembly>
+    <AddInId>8D0E45F2-C0C8-4FD7-9E75-10D7A5F74B71</AddInId>
+    <FullClassName>YangAgent.Revit2027.App</FullClassName>
+    <VendorId>YANG</VendorId>
+    <VendorDescription>Developed by Yang, powered by Codex.</VendorDescription>
+  </AddIn>
+</RevitAddIns>

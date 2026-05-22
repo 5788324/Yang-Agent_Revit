@@ -12,6 +12,8 @@
 - [下一步工作清单](docs/next-steps.md)
 - [同事快速使用说明](docs/colleague-quickstart.md)
 - [语言策略](docs/language-strategy.md)
+- [非程序员路线图](docs/non-programmer-roadmap.md)
+- [DLL 插件开发计划](docs/dll-addin-development-plan.md)
 
 当前 pyRevit 工具：
 
@@ -35,3 +37,20 @@
 ```
 
 注意：如果 Revit 里没有 `pyRevit` 选项卡，请先安装 pyRevit，再安装本项目工具栏。
+
+构建 Revit 2027 DLL 插件骨架：
+
+```powershell
+.\scripts\build-revit2027-addin.ps1
+```
+
+安装 Revit 2027 `.addin + .dll` 插件骨架：
+
+```powershell
+.\scripts\install-revit2027-addin.ps1
+```
+
+当前策略：
+
+- `pyrevit/`：快速原型、报告、dry-run。
+- `src/` + `addins/`：正式 C# `.addin + .dll` 插件。

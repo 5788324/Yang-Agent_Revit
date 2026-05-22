@@ -14,6 +14,7 @@
 - pyRevit 只读工具：`Export Model Snapshot`。
 - pyRevit 只读工具：`Model Health Report`。
 - pyRevit dry-run 工具：`Preview Missing Marks`。
+- Revit 2027 C# `.addin + .dll` 正式插件骨架。
 
 ## 现在应该做什么
 
@@ -95,8 +96,10 @@ cd "D:\codex\Yang Agent_Revit"
 
 ## 后续阶段
 
-1. 加入 dry-run 修复脚本。
-2. 加入人工确认后的 `apply_*` 工具。
-3. 开发只读 MCP。
-4. 开发结构化 C# Bridge。
-5. 做公司标准知识库。
+1. 在 Revit 2027 中加载 DLL 插件骨架。
+2. 继续完善 pyRevit dry-run 修复脚本。
+3. 把稳定的 pyRevit 功能迁移到 DLL。
+4. 加入人工确认后的 `apply_*` 工具。
+5. 开发只读 MCP。
+6. 开发结构化 C# Bridge。
+7. 做公司标准知识库。

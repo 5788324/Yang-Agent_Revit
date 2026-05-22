@@ -73,6 +73,29 @@ src/
 
 正式 Bridge 只接收结构化命令，不允许执行任意代码。
 
+当前已建立 Revit 2027 DLL 骨架：
+
+```text
+src/
+  YangAgent.Revit2027/
+addins/
+  Revit2027/
+```
+
+构建：
+
+```powershell
+.\scripts\build-revit2027-addin.ps1
+```
+
+安装：
+
+```powershell
+.\scripts\install-revit2027-addin.ps1
+```
+
+第一版 DLL 只创建功能区和占位按钮，不修改模型。
+
 ## 4. MCP 开发约定
 
 MCP 目录：
