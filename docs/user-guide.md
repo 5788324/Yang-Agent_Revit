@@ -9,6 +9,7 @@
 - `Language Settings`：设置默认语言。
 - `Export Model Snapshot`：导出模型快照，给 AI 分析。
 - `Model Health Report`：生成模型健康检查报告。
+- `Preview Missing Marks`：预览缺少标记的门窗，不修改模型。
 
 它们都不会修改模型。
 
@@ -119,6 +120,29 @@ YangAgent -> AI Tools -> Language Settings
 
 ## 6. 如何把结果交给 AI
 
+## 6. 使用 Preview Missing Marks
+
+适合场景：
+
+- 检查哪些门窗缺少 `Mark/标记`。
+- 生成 dry-run 预览清单。
+- 给后续修复工具准备数据。
+
+操作：
+
+1. 打开 Revit 模型。
+2. 点击 `YangAgent -> AI Tools -> Preview Missing Marks`。
+3. 到桌面 `YangAgent_Revit_Exports` 文件夹查看报告。
+
+输出文件：
+
+- `missing_door_window_marks_*.md`
+- `missing_door_window_marks_*.csv`
+
+注意：此工具只预览，不会写入标记。
+
+## 7. 如何把结果交给 AI
+
 你可以把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后这样问：
 
 ```text
@@ -131,7 +155,7 @@ YangAgent -> AI Tools -> Language Settings
 请先生成 dry-run 脚本，只预览会修改哪些元素，不要直接修改模型。
 ```
 
-## 7. 安全提醒
+## 8. 安全提醒
 
 当前两个工具都是只读工具，不会修改模型。
 

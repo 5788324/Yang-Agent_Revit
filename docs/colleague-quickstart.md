@@ -27,6 +27,7 @@ YangAgent -> AI Tools
 - `Language Settings`：设置默认语言。
 - `Export Model Snapshot`：导出模型快照。
 - `Model Health Report`：生成模型健康报告。
+- `Preview Missing Marks`：dry-run 预览缺少标记的门窗。
 
 ## 3. 安装前检查
 
@@ -128,6 +129,23 @@ YangAgent -> AI Tools -> Model Health Report
 
 ## 8. 如何把报告交给 AI
 
+## 8. 预览门窗缺失标记
+
+点击：
+
+```text
+YangAgent -> AI Tools -> Preview Missing Marks
+```
+
+输出文件：
+
+- `missing_door_window_marks_*.md`
+- `missing_door_window_marks_*.csv`
+
+这个按钮是 dry-run，只生成预览，不会写入模型。
+
+## 9. 如何把报告交给 AI
+
 把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后可以这样问：
 
 ```text
@@ -141,7 +159,7 @@ YangAgent -> AI Tools -> Model Health Report
 请先生成 dry-run 脚本，只预览会修改哪些元素，不要直接修改模型。
 ```
 
-## 9. 常见问题
+## 10. 常见问题
 
 ### Revit 里看不到 YangAgent
 
@@ -163,7 +181,7 @@ YangAgent_Revit_Exports
 
 运行 `Language Settings` 重新选择语言。
 
-## 10. 安全提醒
+## 11. 安全提醒
 
 当前工具不会修改模型。
 

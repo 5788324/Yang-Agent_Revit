@@ -13,6 +13,7 @@
 - Agent 提示词模板。
 - pyRevit 只读工具：`Export Model Snapshot`。
 - pyRevit 只读工具：`Model Health Report`。
+- pyRevit dry-run 工具：`Preview Missing Marks`。
 
 ## 现在应该做什么
 
@@ -41,8 +42,10 @@ cd "D:\codex\Yang Agent_Revit"
 4. 检查桌面 `YangAgent_Revit_Exports` 是否生成 JSON 和 CSV。
 5. 运行 `Model Health Report`。
 6. 检查是否生成中文 Markdown 报告。
-7. 再运行 `Language Settings`，设置 English。
-8. 重复运行两个按钮，检查英文输出。
+7. 运行 `Preview Missing Marks`。
+8. 检查是否生成 dry-run Markdown 和 CSV。
+9. 再运行 `Language Settings`，设置 English。
+10. 重复运行三个按钮，检查英文输出。
 
 ### 第 3 步：把报告交给 AI 分析
 
@@ -72,11 +75,13 @@ cd "D:\codex\Yang Agent_Revit"
 
 下一轮开发目标：
 
-- `Preview Missing Door Window Marks`
+- `Apply Missing Door Window Marks`
 - `Preview Missing Room Numbers`
 - `Preview Unplaced Views`
 
-这些工具只预览，不修改。
+其中 `Apply Missing Door Window Marks` 会进入受控修改阶段，必须先读取 dry-run CSV、显示影响数量，并要求用户二次确认。
+
+`Preview Missing Room Numbers` 和 `Preview Unplaced Views` 仍然只预览，不修改模型。
 
 ## 判断是否进入下一阶段
 

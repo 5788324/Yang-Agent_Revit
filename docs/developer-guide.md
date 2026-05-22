@@ -8,9 +8,10 @@
 
 1. `Export Model Snapshot`：导出当前模型基本信息。
 2. `Model Health Report`：直接生成只读模型健康报告。
-3. `Export Rooms`：导出房间列表。
-4. `Export Doors Windows`：导出门窗列表。
-5. `Export Sheets Views`：导出图纸和视图列表。
+3. `Preview Missing Marks`：dry-run 预览缺少标记的门窗。
+4. `Export Rooms`：导出房间列表。
+5. `Export Doors Windows`：导出门窗列表。
+6. `Export Sheets Views`：导出图纸和视图列表。
 
 ## 2. pyRevit 开发约定
 

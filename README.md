@@ -18,6 +18,7 @@
 - `Language Settings`：设置默认语言。
 - `Export Model Snapshot`：只读导出模型快照。
 - `Model Health Report`：只读生成模型健康报告。
+- `Preview Missing Marks`：dry-run 预览缺少标记的门窗。
 
 工具箱支持 `中文` 和 `English`，通过 `Language Settings` 设置默认语言。
 
