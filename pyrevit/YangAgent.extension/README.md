@@ -2,19 +2,28 @@
 
 公司内部 Revit AI Agent 工具栏。
 
-当前按钮：
+当前功能区：
 
-- `Language Settings`：设置默认语言。
-- `Export Model Snapshot`：只读导出模型快照。
-- `Model Health Report`：只读生成模型健康报告。
-- `Preview Missing Marks`：dry-run 预览缺少标记的门窗。
+系统设置：
+
+- `语言设置`：设置默认语言。
+- `用户设置`：设置简称和头像路径。
+- `主题设置`：设置 Light / Dark Theme。
+- `关于更新`：版权声明和更新链接。
+
+导出报告：
+
+- `导出路径`：设置报告输出目录。
+- `导出模型快照`：只读导出模型快照。
+- `模型健康报告`：只读生成模型健康报告。
+- `预览缺失标记`：dry-run 预览缺少标记的门窗。
 
 工具箱支持：
 
 - 中文
 - English
 
-默认语言通过 `Language Settings` 设置。
+默认语言通过 `系统设置 -> 语言设置` 设置。
 
 安全原则：
 

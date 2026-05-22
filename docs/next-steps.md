@@ -30,22 +30,23 @@ cd "D:\codex\Yang Agent_Revit"
 
 然后重启 Revit 或 reload pyRevit。
 
-### 第 2 步：用测试模型运行两个按钮
+### 第 2 步：用测试模型运行工具箱
 
 先不要用正式项目模型。
 
 测试顺序：
 
 1. 打开测试 Revit 模型。
-2. 运行 `Language Settings`，设置中文。
-3. 运行 `Export Model Snapshot`。
-4. 检查桌面 `YangAgent_Revit_Exports` 是否生成 JSON 和 CSV。
-5. 运行 `Model Health Report`。
-6. 检查是否生成中文 Markdown 报告。
-7. 运行 `Preview Missing Marks`。
-8. 检查是否生成 dry-run Markdown 和 CSV。
-9. 再运行 `Language Settings`，设置 English。
-10. 重复运行三个按钮，检查英文输出。
+2. 运行 `系统设置 -> 语言设置`，设置中文。
+3. 运行 `导出报告 -> 导出路径`，选择一个项目报告目录。
+4. 运行 `导出报告 -> 导出模型快照`。
+5. 检查导出目录是否生成 JSON 和 CSV。
+6. 运行 `导出报告 -> 模型健康报告`。
+7. 检查是否生成中文 Markdown 报告。
+8. 运行 `导出报告 -> 预览缺失标记`。
+9. 检查是否生成 dry-run Markdown 和 CSV。
+10. 再运行 `系统设置 -> 语言设置`，设置 English。
+11. 重复运行三个报告按钮，检查英文输出。
 
 ### 第 3 步：把报告交给 AI 分析
 
@@ -87,7 +88,7 @@ cd "D:\codex\Yang Agent_Revit"
 
 满足以下条件后，再进入“受控修改”阶段：
 
-- 两个只读按钮能在测试模型稳定运行。
+- 只读和 dry-run 按钮能在测试模型稳定运行。
 - 输出文件能被 AI 正确分析。
 - BIM 负责人确认报告里的检查规则有价值。
 - 用户确认哪些问题可以自动修复。

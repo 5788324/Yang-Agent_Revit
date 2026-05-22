@@ -21,8 +21,9 @@ pyRevit 工具目录：
 pyrevit/
   YangAgent.extension/
     YangAgent.tab/
-      AI Tools.panel/
-        Export Model Snapshot.pushbutton/
+      系统设置.panel/
+      导出报告.panel/
+        导出模型快照.pushbutton/
           script.py
           bundle.yaml
           README.md
@@ -35,6 +36,7 @@ pyrevit/
 - 不使用 Python 类型注解。
 - 不直接修改模型，除非工具明确是 `apply_*`。
 - 输出文件统一放到用户桌面 `YangAgent_Revit_Exports`。
+- 报告和导出工具必须使用共享设置中的 `get_export_dir()`，不要硬编码桌面路径。
 - 所有按钮必须提供语言选项：`中文` 和 `English`。
 - 用户可见的弹窗、pyRevit 输出、Markdown 报告必须跟随统一语言设置。
 - 给 AI 或脚本读取的 JSON key 建议保持稳定英文，避免双语切换破坏自动化解析。
@@ -45,6 +47,14 @@ pyrevit/
 from yang_agent_lang import get_or_choose_language
 
 lang = get_or_choose_language(forms)
+```
+
+报告路径统一使用：
+
+```python
+from yang_agent_lang import get_export_dir
+
+export_dir = get_export_dir()
 ```
 
 ## 3. C# 插件开发约定

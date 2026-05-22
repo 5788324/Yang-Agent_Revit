@@ -19,15 +19,23 @@ YangAgent Revit 是一个基于 pyRevit 的公司内部工具箱，用来配合 
 在 Revit 中会出现：
 
 ```text
-YangAgent -> AI Tools
+YangAgent -> 系统设置
+YangAgent -> 导出报告
 ```
 
-当前按钮：
+系统设置：
 
-- `Language Settings`：设置默认语言。
-- `Export Model Snapshot`：导出模型快照。
-- `Model Health Report`：生成模型健康报告。
-- `Preview Missing Marks`：dry-run 预览缺少标记的门窗。
+- `语言设置`：设置默认语言。
+- `用户设置`：设置简称和头像路径。
+- `主题设置`：设置 Light / Dark Theme。
+- `关于更新`：版权声明和更新链接。
+
+导出报告：
+
+- `导出路径`：设置报告导出目录。
+- `导出模型快照`：导出模型快照。
+- `模型健康报告`：生成模型健康报告。
+- `预览缺失标记`：dry-run 预览缺少标记的门窗。
 
 ## 3. 安装前检查
 
@@ -63,7 +71,7 @@ cd "D:\codex\Yang Agent_Revit"
 点击：
 
 ```text
-YangAgent -> AI Tools -> Language Settings
+YangAgent -> 系统设置 -> 语言设置
 ```
 
 选择：
@@ -79,19 +87,37 @@ YangAgent -> AI Tools -> Language Settings
 
 后续按钮会自动使用默认语言。
 
-## 6. 导出模型快照
+## 6. 设置用户、主题和报告路径
+
+用户设置：
+
+```text
+YangAgent -> 系统设置 -> 用户设置
+```
+
+主题设置：
+
+```text
+YangAgent -> 系统设置 -> 主题设置
+```
+
+报告路径：
+
+```text
+YangAgent -> 导出报告 -> 导出路径
+```
+
+建议每个项目单独设置一个报告目录，避免文件堆积。
+
+## 7. 导出模型快照
 
 点击：
 
 ```text
-YangAgent -> AI Tools -> Export Model Snapshot
+YangAgent -> 导出报告 -> 导出模型快照
 ```
 
-输出目录：
-
-```text
-桌面\YangAgent_Revit_Exports
-```
+输出目录由 `导出路径` 设置。未设置时默认在桌面 `YangAgent_Revit_Exports`。
 
 输出文件：
 
@@ -106,12 +132,12 @@ YangAgent -> AI Tools -> Export Model Snapshot
 - 检查房间、门窗、视图、图纸数据。
 - 作为后续自动化任务的数据来源。
 
-## 7. 生成模型健康报告
+## 8. 生成模型健康报告
 
 点击：
 
 ```text
-YangAgent -> AI Tools -> Model Health Report
+YangAgent -> 导出报告 -> 模型健康报告
 ```
 
 输出文件：
@@ -127,14 +153,12 @@ YangAgent -> AI Tools -> Model Health Report
 - 窗缺少标记。
 - 可能未放置到图纸的视图。
 
-## 8. 如何把报告交给 AI
-
-## 8. 预览门窗缺失标记
+## 9. 预览门窗缺失标记
 
 点击：
 
 ```text
-YangAgent -> AI Tools -> Preview Missing Marks
+YangAgent -> 导出报告 -> 预览缺失标记
 ```
 
 输出文件：
@@ -144,7 +168,7 @@ YangAgent -> AI Tools -> Preview Missing Marks
 
 这个按钮是 dry-run，只生成预览，不会写入模型。
 
-## 9. 如何把报告交给 AI
+## 10. 如何把报告交给 AI
 
 把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后可以这样问：
 
@@ -159,7 +183,27 @@ YangAgent -> AI Tools -> Preview Missing Marks
 请先生成 dry-run 脚本，只预览会修改哪些元素，不要直接修改模型。
 ```
 
-## 10. 常见问题
+## 11. 版权和更新
+
+点击：
+
+```text
+YangAgent -> 系统设置 -> 关于更新
+```
+
+版权声明：
+
+```text
+由 Yang 开发，工具为 Codex。
+```
+
+更新链接：
+
+```text
+https://github.com/5788324/Yang-Agent_Revit
+```
+
+## 12. 常见问题
 
 ### Revit 里看不到 YangAgent
 
@@ -179,9 +223,9 @@ YangAgent_Revit_Exports
 
 ### 语言不对
 
-运行 `Language Settings` 重新选择语言。
+运行 `系统设置 -> 语言设置` 重新选择语言。
 
-## 11. 安全提醒
+## 13. 安全提醒
 
 当前工具不会修改模型。
 

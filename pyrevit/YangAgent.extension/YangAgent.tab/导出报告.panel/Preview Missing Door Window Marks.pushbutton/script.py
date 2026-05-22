@@ -23,7 +23,7 @@ from Autodesk.Revit.DB import (  # noqa: E402
     FilteredElementCollector,
 )
 from pyrevit import forms, revit, script  # noqa: E402
-from yang_agent_lang import get_or_choose_language  # noqa: E402
+from yang_agent_lang import get_export_dir, get_or_choose_language  # noqa: E402
 
 
 doc = revit.doc
@@ -125,16 +125,6 @@ def get_param_as_text(element, built_in_param):
         return safe_text(param.AsValueString() or param.AsString() or param.AsDouble() or param.AsInteger())
     except Exception:
         return u""
-
-
-def get_desktop_export_dir():
-    desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    if not os.path.isdir(desktop):
-        desktop = os.path.expanduser("~")
-    export_dir = os.path.join(desktop, "YangAgent_Revit_Exports")
-    if not os.path.isdir(export_dir):
-        os.makedirs(export_dir)
-    return export_dir
 
 
 def get_family_type(element):
@@ -290,7 +280,7 @@ def main():
         forms.alert(tr(lang, "no_doc"), title=tr(lang, "alert_title"))
         return
 
-    export_dir = get_desktop_export_dir()
+    export_dir = get_export_dir()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     report_path = os.path.join(export_dir, "missing_door_window_marks_{0}.md".format(timestamp))
     csv_path = os.path.join(export_dir, "missing_door_window_marks_{0}.csv".format(timestamp))

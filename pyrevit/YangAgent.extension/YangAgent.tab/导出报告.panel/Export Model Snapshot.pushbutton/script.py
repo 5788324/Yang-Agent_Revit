@@ -30,7 +30,7 @@ from Autodesk.Revit.DB import (  # noqa: E402
 )
 from Autodesk.Revit.DB.Architecture import Room  # noqa: E402
 from pyrevit import forms, revit, script  # noqa: E402
-from yang_agent_lang import get_or_choose_language  # noqa: E402
+from yang_agent_lang import get_export_dir, get_or_choose_language  # noqa: E402
 
 
 doc = revit.doc
@@ -128,16 +128,6 @@ def get_lookup_param_as_text(element, param_name):
         return safe_text(param.AsValueString() or param.AsString() or param.AsDouble() or param.AsInteger())
     except Exception:
         return u""
-
-
-def get_desktop_export_dir():
-    desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    if not os.path.isdir(desktop):
-        desktop = os.path.expanduser("~")
-    export_dir = os.path.join(desktop, "YangAgent_Revit_Exports")
-    if not os.path.isdir(export_dir):
-        os.makedirs(export_dir)
-    return export_dir
 
 
 def write_json(path, data):
@@ -330,7 +320,7 @@ def main():
         return
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    export_dir = get_desktop_export_dir()
+    export_dir = get_export_dir()
 
     document_info = collect_document_info()
     levels = collect_levels()

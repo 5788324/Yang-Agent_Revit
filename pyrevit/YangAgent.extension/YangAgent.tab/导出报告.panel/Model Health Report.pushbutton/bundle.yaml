@@ -1,4 +1,4 @@
-title: Model Health Report
+title: 模型健康报告
 tooltip: Generate a read-only model health report for AI review. Supports Chinese and English.
 author: Yang Agent
 context: zero-doc

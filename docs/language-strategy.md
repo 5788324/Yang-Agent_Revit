@@ -55,7 +55,7 @@ YangAgent Revit 不拆分中文工具箱和英文工具箱，而是采用“一�
 设置按钮：
 
 ```text
-YangAgent -> AI Tools -> Language Settings
+YangAgent -> 系统设置 -> 语言设置
 ```
 
 所有新按钮必须读取统一语言设置。

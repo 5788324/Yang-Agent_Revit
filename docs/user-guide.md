@@ -4,12 +4,24 @@
 
 ## 1. 当前能做什么
 
-当前版本提供两个只读 pyRevit 按钮：
+当前版本提供两个功能区：
 
-- `Language Settings`：设置默认语言。
-- `Export Model Snapshot`：导出模型快照，给 AI 分析。
-- `Model Health Report`：生成模型健康检查报告。
-- `Preview Missing Marks`：预览缺少标记的门窗，不修改模型。
+- `系统设置`
+- `导出报告`
+
+系统设置：
+
+- `语言设置`：同步修改整个插件的默认语言。
+- `用户设置`：设置简称和头像路径。
+- `主题设置`：设置 Light / Dark Theme。
+- `关于更新`：查看版权声明和更新链接。
+
+导出报告：
+
+- `导出路径`：设置报告输出目录，避免报告堆积。
+- `导出模型快照`：导出模型快照，给 AI 分析。
+- `模型健康报告`：生成模型健康检查报告。
+- `预览缺失标记`：预览缺少标记的门窗，不修改模型。
 
 它们都不会修改模型。
 
@@ -18,7 +30,7 @@
 - 中文
 - English
 
-你可以通过 `Language Settings` 设置默认语言。
+你可以通过 `系统设置 -> 语言设置` 设置默认语言。
 
 ## 2. 安装 pyRevit 工具栏
 
@@ -54,7 +66,8 @@ cd "D:\codex\Yang Agent_Revit"
 成功后会看到：
 
 ```text
-YangAgent -> AI Tools
+YangAgent -> 系统设置
+YangAgent -> 导出报告
 ```
 
 如果看不到：
@@ -64,19 +77,49 @@ YangAgent -> AI Tools
 3. 在 pyRevit 里执行 reload。
 4. 重启 Revit。
 
-## 3. 使用 Export Model Snapshot
-
 ## 3. 设置语言
 
 点击：
 
 ```text
-YangAgent -> AI Tools -> Language Settings
+YangAgent -> 系统设置 -> 语言设置
 ```
 
 选择 `中文` 或 `English`。设置会保存到本机，后续按钮自动使用该语言。
 
-## 4. 使用 Export Model Snapshot
+## 4. 设置用户、主题和导出路径
+
+用户设置：
+
+```text
+YangAgent -> 系统设置 -> 用户设置
+```
+
+可设置：
+
+- 简称。
+- 头像图片路径。
+
+主题设置：
+
+```text
+YangAgent -> 系统设置 -> 主题设置
+```
+
+可选择：
+
+- Light Theme
+- Dark Theme
+
+导出路径：
+
+```text
+YangAgent -> 导出报告 -> 导出路径
+```
+
+用于选择报告输出目录，方便自己管理报告文件。
+
+## 5. 使用 Export Model Snapshot
 
 适合场景：
 
@@ -87,9 +130,9 @@ YangAgent -> AI Tools -> Language Settings
 操作：
 
 1. 打开 Revit 模型。
-2. 点击 `YangAgent -> AI Tools -> Export Model Snapshot`。
+2. 点击 `YangAgent -> 导出报告 -> 导出模型快照`。
 3. 等待导出完成。
-4. 到桌面 `YangAgent_Revit_Exports` 文件夹查看结果。
+4. 到你设置的导出目录查看结果。
 
 输出文件：
 
@@ -98,7 +141,7 @@ YangAgent -> AI Tools -> Language Settings
 - `doors_windows_*.csv`
 - `sheets_views_*.csv`
 
-## 5. 使用 Model Health Report
+## 6. 使用 Model Health Report
 
 适合场景：
 
@@ -111,16 +154,14 @@ YangAgent -> AI Tools -> Language Settings
 操作：
 
 1. 打开 Revit 模型。
-2. 点击 `YangAgent -> AI Tools -> Model Health Report`。
-3. 到桌面 `YangAgent_Revit_Exports` 文件夹查看报告。
+2. 点击 `YangAgent -> 导出报告 -> 模型健康报告`。
+3. 到你设置的导出目录查看报告。
 
 输出文件：
 
 - `model_health_report_*.md`
 
-## 6. 如何把结果交给 AI
-
-## 6. 使用 Preview Missing Marks
+## 7. 使用 Preview Missing Marks
 
 适合场景：
 
@@ -131,8 +172,8 @@ YangAgent -> AI Tools -> Language Settings
 操作：
 
 1. 打开 Revit 模型。
-2. 点击 `YangAgent -> AI Tools -> Preview Missing Marks`。
-3. 到桌面 `YangAgent_Revit_Exports` 文件夹查看报告。
+2. 点击 `YangAgent -> 导出报告 -> 预览缺失标记`。
+3. 到你设置的导出目录查看报告。
 
 输出文件：
 
@@ -141,7 +182,7 @@ YangAgent -> AI Tools -> Language Settings
 
 注意：此工具只预览，不会写入标记。
 
-## 7. 如何把结果交给 AI
+## 8. 如何把结果交给 AI
 
 你可以把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后这样问：
 
@@ -155,9 +196,22 @@ YangAgent -> AI Tools -> Language Settings
 请先生成 dry-run 脚本，只预览会修改哪些元素，不要直接修改模型。
 ```
 
-## 8. 安全提醒
+## 9. 版权和更新
 
-当前两个工具都是只读工具，不会修改模型。
+点击：
+
+```text
+YangAgent -> 系统设置 -> 关于更新
+```
+
+可查看：
+
+- 版权声明：由 Yang 开发，工具为 Codex。
+- 插件更新链接。
+
+## 10. 安全提醒
+
+当前报告和预览工具不会修改模型。
 
 后续如果出现修复工具，请记住：
 

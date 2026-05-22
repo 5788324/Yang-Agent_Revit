@@ -906,7 +906,7 @@ Revit 版本：
 如果今天就要开始，建议这样做：
 
 1. 用 Codex 创建项目仓库和文档。
-2. 用 pyRevit 做一个 `AI Tools` 工具栏。
+2. 用 pyRevit 做一个 `YangAgent` 工具栏，并拆分 `系统设置` 与 `导出报告` 功能区。
 3. 第一个按钮只负责导出模型数据，不修改模型。
 4. 把导出的 JSON/Excel 交给 Codex 或 Claude 分析。
 5. 让 AI 生成检查报告。
