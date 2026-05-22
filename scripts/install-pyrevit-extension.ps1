@@ -1,5 +1,7 @@
 param(
-    [string]$PyRevitExtensionsRoot = "$env:APPDATA\pyRevit\Extensions"
+    [string]$PyRevitExtensionsRoot = "$env:APPDATA\pyRevit\Extensions",
+    [switch]$Force,
+    [switch]$ClearCache
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,12 +26,26 @@ if (-not (Test-Path -LiteralPath $PyRevitExtensionsRoot)) {
 }
 
 if (Test-Path -LiteralPath $target) {
-    Write-Host "Existing extension found: $target"
-    Write-Host "Remove or rename it before installing again."
-    exit 1
+    if (-not $Force) {
+        Write-Host "Existing extension found: $target"
+        Write-Host "Run again with -Force to replace the link."
+        exit 1
+    }
+
+    $resolvedTarget = (Resolve-Path -LiteralPath $target).Path
+    $resolvedRoot = (Resolve-Path -LiteralPath $PyRevitExtensionsRoot).Path
+    if (-not $resolvedTarget.StartsWith($resolvedRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "Refusing to remove target outside pyRevit extensions root: $resolvedTarget"
+    }
+
+    Remove-Item -LiteralPath $target -Recurse -Force
 }
 
 New-Item -ItemType Junction -Path $target -Target $source | Out-Null
+
+if ($ClearCache) {
+    & (Join-Path $PSScriptRoot "clear-pyrevit-yangagent-cache.ps1")
+}
 
 Write-Host "Installed YangAgent pyRevit extension:"
 Write-Host "  Source: $source"

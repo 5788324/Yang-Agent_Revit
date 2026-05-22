@@ -15,6 +15,7 @@
 - [非程序员路线图](docs/non-programmer-roadmap.md)
 - [DLL 插件开发计划](docs/dll-addin-development-plan.md)
 - [故障排查](docs/troubleshooting.md)
+- [AI 协作开发流程](docs/collaboration-workflow.md)
 
 当前 pyRevit 工具：
 
@@ -35,6 +36,12 @@
 
 ```powershell
 .\scripts\install-pyrevit-extension.ps1
+```
+
+更新后如果 Revit 仍然加载旧按钮或提示 FullClassName 错误，先关闭 Revit，再执行：
+
+```powershell
+.\scripts\install-pyrevit-extension.ps1 -Force -ClearCache
 ```
 
 注意：如果 Revit 里没有 `pyRevit` 选项卡，请先安装 pyRevit，再安装本项目工具栏。

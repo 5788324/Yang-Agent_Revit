@@ -45,11 +45,48 @@ Could not resolve type ...
 
 删除旧缓存后，pyRevit 会重新编译工具箱。
 
-## 3. 仍然无法点击
+## 3. 提示“外部工具-完整类名称错误”
+
+典型报错：
+
+```text
+无法初始化附加模块“导出路径”
+FullClassName 为 Revit 调用附加模块应用程序提供了入口点
+必须确保该类实现 Autodesk.Revit.UI.IExternalCommand
+```
+
+原因通常不是业务脚本没有实现 `IExternalCommand`。pyRevit 会自动把 `script.py` 包装成 Revit 外部命令，这个错误多半来自旧的 pyRevit 临时 DLL 或旧 `.addin` 缓存仍在被 Revit 读取。
+
+处理步骤：
+
+1. 完全关闭 Revit。
+2. 更新仓库到最新版本。
+3. 执行缓存清理脚本：
+
+```powershell
+.\scripts\clear-pyrevit-yangagent-cache.ps1
+```
+
+4. 重新安装或刷新 pyRevit extension：
+
+```powershell
+.\scripts\install-pyrevit-extension.ps1 -Force -ClearCache
+```
+
+5. 重新打开 Revit，并执行 pyRevit Reload。
+
+项目修复：
+
+- `.panel` 目录使用无中文英文名。
+- `.pushbutton` 目录使用无空格英文名。
+- UI 中文显示名只放在 `bundle.yaml` 的 `title` 中。
+
+## 4. 仍然无法点击
 
 请检查：
 
 - `pyrevit/YangAgent.extension/YangAgent.tab` 下是否只有英文 `.panel` 目录。
+- `.pushbutton` 目录是否是无空格英文名。
 - `bundle.yaml` 中是否没有 `context:`。
 - Revit 是否已经完全重启。
 - pyRevit 是否已经 reload。
