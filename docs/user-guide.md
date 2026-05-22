@@ -11,13 +11,32 @@
 
 它们都不会修改模型。
 
+两个按钮运行时都会先让你选择语言：
+
+- 中文
+- English
+
 ## 2. 安装 pyRevit 工具栏
 
 前提：
 
 - 已安装 Revit。
-- 已安装 pyRevit。
+- 已安装 pyRevit。如果 Revit 中没有 pyRevit 选项卡，本项目按钮也不会显示。
 - 本仓库已克隆到本机。
+
+### 2.1 检查 pyRevit 是否安装
+
+打开 Revit 后，先看功能区是否有 `pyRevit` 选项卡。
+
+如果没有，先安装 pyRevit：
+
+```text
+https://github.com/pyrevitlabs/pyRevit/releases
+```
+
+安装完成后重启 Revit，确认能看到 `pyRevit` 选项卡，再继续安装本项目工具栏。
+
+### 2.2 安装 YangAgent 工具栏
 
 在 PowerShell 中进入仓库目录：
 
@@ -34,6 +53,13 @@ cd "D:\codex\Yang Agent_Revit"
 YangAgent -> AI Tools
 ```
 
+如果看不到：
+
+1. 确认 Revit 里已经能看到 `pyRevit` 选项卡。
+2. 确认脚本没有提示安装失败。
+3. 在 pyRevit 里执行 reload。
+4. 重启 Revit。
+
 ## 3. 使用 Export Model Snapshot
 
 适合场景：
@@ -46,8 +72,9 @@ YangAgent -> AI Tools
 
 1. 打开 Revit 模型。
 2. 点击 `YangAgent -> AI Tools -> Export Model Snapshot`。
-3. 等待导出完成。
-4. 到桌面 `YangAgent_Revit_Exports` 文件夹查看结果。
+3. 选择 `中文` 或 `English`。
+4. 等待导出完成。
+5. 到桌面 `YangAgent_Revit_Exports` 文件夹查看结果。
 
 输出文件：
 
@@ -70,7 +97,8 @@ YangAgent -> AI Tools
 
 1. 打开 Revit 模型。
 2. 点击 `YangAgent -> AI Tools -> Model Health Report`。
-3. 到桌面 `YangAgent_Revit_Exports` 文件夹查看报告。
+3. 选择 `中文` 或 `English`。
+4. 到桌面 `YangAgent_Revit_Exports` 文件夹查看报告。
 
 输出文件：
 

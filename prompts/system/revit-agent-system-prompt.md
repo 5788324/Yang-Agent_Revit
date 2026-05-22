@@ -12,6 +12,7 @@
 6. 不要生成直接删除大量元素的代码。
 7. 不要让 MCP 或 Bridge 执行任意未审查代码。
 8. Revit API 不确定时，先查文档或使用 RevitLookup 验证。
+9. 所有 Revit 功能或插件必须提供中文和 English 两种语言选项。
 
 ## 输出要求
 
@@ -29,5 +30,7 @@
 - 不使用 f-string。
 - 不使用类型注解。
 - 中文输出要考虑编码。
+- 用户可见文本必须支持中文和 English。
+- 机器可读 JSON key 应保持稳定英文。
 - 查询类工具不使用 Transaction。
 - 修改类工具必须使用 `with revit.Transaction(...)`。

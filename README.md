@@ -16,8 +16,12 @@
 - `Export Model Snapshot`：只读导出模型快照。
 - `Model Health Report`：只读生成模型健康报告。
 
+两个按钮都支持运行时选择 `中文` 或 `English`。
+
 安装 pyRevit extension：
 
 ```powershell
 .\scripts\install-pyrevit-extension.ps1
 ```
+
+注意：如果 Revit 里没有 `pyRevit` 选项卡，请先安装 pyRevit，再安装本项目工具栏。

@@ -18,6 +18,8 @@
 
 ### 第 1 步：在本机安装 pyRevit 工具栏
 
+先确认 Revit 里能看到 `pyRevit` 选项卡。如果看不到，请先安装 pyRevit。
+
 运行：
 
 ```powershell
@@ -35,9 +37,11 @@ cd "D:\codex\Yang Agent_Revit"
 
 1. 打开测试 Revit 模型。
 2. 运行 `Export Model Snapshot`。
-3. 检查桌面 `YangAgent_Revit_Exports` 是否生成 JSON 和 CSV。
-4. 运行 `Model Health Report`。
-5. 检查是否生成 Markdown 报告。
+3. 分别测试 `中文` 和 `English`。
+4. 检查桌面 `YangAgent_Revit_Exports` 是否生成 JSON 和 CSV。
+5. 运行 `Model Health Report`。
+6. 分别测试 `中文` 和 `English`。
+7. 检查是否生成 Markdown 报告。
 
 ### 第 3 步：把报告交给 AI 分析
 

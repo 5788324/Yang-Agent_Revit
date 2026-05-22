@@ -32,6 +32,117 @@ doc = revit.doc
 output = script.get_output()
 
 
+TEXT = {
+    "zh": {
+        "language_message": u"选择报告语言 / Select report language",
+        "alert_title": u"Yang Agent",
+        "no_doc": u"没有打开的 Revit 文档。",
+        "report_title": u"# Yang Agent 模型健康报告",
+        "read_only_note": u"此报告为只读检查结果，未修改 Revit 模型。",
+        "document_info": u"## 文档信息",
+        "document": u"- 文档：{0}",
+        "path": u"- 路径：{0}",
+        "revit": u"- Revit：{0} ({1})",
+        "exported_at": u"- 导出时间：{0}",
+        "issue_count": u"- 问题计数：{0}",
+        "room_check": u"## 房间检查",
+        "room_total": u"- 房间总数：{0}",
+        "room_missing_number": u"- 缺少编号：{0}",
+        "room_missing_name": u"- 缺少名称：{0}",
+        "room_duplicate_groups": u"- 重复编号组：{0}",
+        "missing_room_numbers": u"### 缺少编号的房间",
+        "missing_room_names": u"### 缺少名称的房间",
+        "duplicate_room_numbers": u"### 重复房间编号",
+        "door_window_check": u"## 门窗标记检查",
+        "door_total": u"- 门总数：{0}",
+        "door_missing": u"- 门缺少标记：{0}",
+        "window_total": u"- 窗总数：{0}",
+        "window_missing": u"- 窗缺少标记：{0}",
+        "missing_doors": u"### 缺少标记的门",
+        "missing_windows": u"### 缺少标记的窗",
+        "view_check": u"## 视图上图检查",
+        "view_total": u"- 可检查视图总数：{0}",
+        "view_unplaced": u"- 可能未放置到图纸的视图：{0}",
+        "unplaced_views": u"### 可能未上图视图",
+        "next_steps": u"## 建议下一步",
+        "next_step_1": u"1. 把此报告交给 Codex 或 Claude 分析。",
+        "next_step_2": u"2. 先人工确认问题是否符合公司标准。",
+        "next_step_3": u"3. 再为单一问题生成 dry-run 修复脚本。",
+        "none": u"- 无",
+        "more_items": u"- ...还有 {0} 项未显示",
+        "output_title": u"# Yang Agent 模型健康报告",
+        "output_done": u"报告生成完成。此工具未修改模型。",
+        "output_issues": u"- 问题计数：{0}",
+        "output_report": u"- 报告：`{0}`",
+        "alert_done": u"模型健康报告已生成。\n\n此工具未修改模型。\n\n问题计数：{0}\n\n{1}",
+        "failed_title": u"# 模型健康报告失败",
+        "failed_alert": u"模型健康报告失败。请查看 pyRevit 输出窗口。",
+    },
+    "en": {
+        "language_message": u"Select report language / 选择报告语言",
+        "alert_title": u"Yang Agent",
+        "no_doc": u"No active Revit document.",
+        "report_title": u"# Yang Agent Model Health Report",
+        "read_only_note": u"This is a read-only report. No Revit model changes were made.",
+        "document_info": u"## Document Info",
+        "document": u"- Document: {0}",
+        "path": u"- Path: {0}",
+        "revit": u"- Revit: {0} ({1})",
+        "exported_at": u"- Exported at: {0}",
+        "issue_count": u"- Issue count: {0}",
+        "room_check": u"## Room Check",
+        "room_total": u"- Total rooms: {0}",
+        "room_missing_number": u"- Missing numbers: {0}",
+        "room_missing_name": u"- Missing names: {0}",
+        "room_duplicate_groups": u"- Duplicate number groups: {0}",
+        "missing_room_numbers": u"### Rooms Missing Numbers",
+        "missing_room_names": u"### Rooms Missing Names",
+        "duplicate_room_numbers": u"### Duplicate Room Numbers",
+        "door_window_check": u"## Door and Window Mark Check",
+        "door_total": u"- Total doors: {0}",
+        "door_missing": u"- Doors missing marks: {0}",
+        "window_total": u"- Total windows: {0}",
+        "window_missing": u"- Windows missing marks: {0}",
+        "missing_doors": u"### Doors Missing Marks",
+        "missing_windows": u"### Windows Missing Marks",
+        "view_check": u"## View Placement Check",
+        "view_total": u"- Reportable views: {0}",
+        "view_unplaced": u"- Views possibly not placed on sheets: {0}",
+        "unplaced_views": u"### Views Possibly Not Placed On Sheets",
+        "next_steps": u"## Suggested Next Steps",
+        "next_step_1": u"1. Ask Codex or Claude to analyze this report.",
+        "next_step_2": u"2. Confirm the findings against company standards.",
+        "next_step_3": u"3. Generate a dry-run repair script for one issue type at a time.",
+        "none": u"- None",
+        "more_items": u"- ...{0} more items not shown",
+        "output_title": u"# Yang Agent Model Health Report",
+        "output_done": u"Report completed. No model changes were made.",
+        "output_issues": u"- Issues counted: {0}",
+        "output_report": u"- Report: `{0}`",
+        "alert_done": u"Model health report generated.\n\nNo model changes were made.\n\nIssues counted: {0}\n\n{1}",
+        "failed_title": u"# Model Health Report failed",
+        "failed_alert": u"Model Health Report failed. See pyRevit output for details.",
+    },
+}
+
+
+def choose_language():
+    try:
+        selected = forms.CommandSwitchWindow.show(
+            [u"中文", u"English"],
+            message=TEXT["zh"]["language_message"],
+        )
+        if selected == u"English":
+            return "en"
+    except Exception:
+        pass
+    return "zh"
+
+
+def tr(lang, key):
+    return TEXT.get(lang, TEXT["zh"]).get(key, TEXT["zh"].get(key, key))
+
+
 def safe_text(value):
     if value is None:
         return u""
@@ -202,7 +313,7 @@ def check_unplaced_views():
     }
 
 
-def format_element_list(elements, max_items):
+def format_element_list(elements, max_items, lang):
     lines = []
     count = 0
     for element in elements:
@@ -212,9 +323,9 @@ def format_element_list(elements, max_items):
         lines.append("- `{0}` {1}".format(element_id_value(element.Id), name))
         count += 1
     if len(elements) > max_items:
-        lines.append("- ...还有 {0} 项未显示".format(len(elements) - max_items))
+        lines.append(tr(lang, "more_items").format(len(elements) - max_items))
     if not lines:
-        lines.append("- 无")
+        lines.append(tr(lang, "none"))
     return lines
 
 
@@ -223,7 +334,7 @@ def write_report(path, lines):
         stream.write(u"\n".join(lines))
 
 
-def build_report():
+def build_report(lang):
     app = doc.Application
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -242,94 +353,96 @@ def build_report():
     )
 
     lines = []
-    lines.append(u"# Yang Agent Model Health Report")
+    lines.append(tr(lang, "report_title"))
     lines.append(u"")
-    lines.append(u"此报告为只读检查结果，未修改 Revit 模型。")
+    lines.append(tr(lang, "read_only_note"))
     lines.append(u"")
-    lines.append(u"## 文档信息")
+    lines.append(tr(lang, "document_info"))
     lines.append(u"")
-    lines.append(u"- 文档：{0}".format(safe_text(doc.Title)))
-    lines.append(u"- 路径：{0}".format(safe_text(doc.PathName)))
-    lines.append(u"- Revit：{0} ({1})".format(safe_text(app.VersionName), safe_text(app.VersionNumber)))
-    lines.append(u"- 导出时间：{0}".format(timestamp))
-    lines.append(u"- 问题计数：{0}".format(issue_count))
+    lines.append(tr(lang, "document").format(safe_text(doc.Title)))
+    lines.append(tr(lang, "path").format(safe_text(doc.PathName)))
+    lines.append(tr(lang, "revit").format(safe_text(app.VersionName), safe_text(app.VersionNumber)))
+    lines.append(tr(lang, "exported_at").format(timestamp))
+    lines.append(tr(lang, "issue_count").format(issue_count))
     lines.append(u"")
-    lines.append(u"## 房间检查")
+    lines.append(tr(lang, "room_check"))
     lines.append(u"")
-    lines.append(u"- 房间总数：{0}".format(room_result["total"]))
-    lines.append(u"- 缺少编号：{0}".format(len(room_result["missing_number"])))
-    lines.append(u"- 缺少名称：{0}".format(len(room_result["missing_name"])))
-    lines.append(u"- 重复编号组：{0}".format(len(room_result["duplicate_numbers"])))
+    lines.append(tr(lang, "room_total").format(room_result["total"]))
+    lines.append(tr(lang, "room_missing_number").format(len(room_result["missing_number"])))
+    lines.append(tr(lang, "room_missing_name").format(len(room_result["missing_name"])))
+    lines.append(tr(lang, "room_duplicate_groups").format(len(room_result["duplicate_numbers"])))
     lines.append(u"")
-    lines.append(u"### 缺少编号的房间")
-    lines.extend(format_element_list(room_result["missing_number"], 30))
+    lines.append(tr(lang, "missing_room_numbers"))
+    lines.extend(format_element_list(room_result["missing_number"], 30, lang))
     lines.append(u"")
-    lines.append(u"### 缺少名称的房间")
-    lines.extend(format_element_list(room_result["missing_name"], 30))
+    lines.append(tr(lang, "missing_room_names"))
+    lines.extend(format_element_list(room_result["missing_name"], 30, lang))
     lines.append(u"")
-    lines.append(u"### 重复房间编号")
+    lines.append(tr(lang, "duplicate_room_numbers"))
     if room_result["duplicate_numbers"]:
         for number in sorted(room_result["duplicate_numbers"].keys()):
             ids = [element_id_value(room.Id) for room in room_result["duplicate_numbers"][number]]
             lines.append(u"- `{0}`: {1}".format(number, u", ".join(ids)))
     else:
-        lines.append(u"- 无")
+        lines.append(tr(lang, "none"))
     lines.append(u"")
-    lines.append(u"## 门窗标记检查")
+    lines.append(tr(lang, "door_window_check"))
     lines.append(u"")
-    lines.append(u"- 门总数：{0}".format(door_result["total"]))
-    lines.append(u"- 门缺少标记：{0}".format(len(door_result["missing_mark"])))
-    lines.append(u"- 窗总数：{0}".format(window_result["total"]))
-    lines.append(u"- 窗缺少标记：{0}".format(len(window_result["missing_mark"])))
+    lines.append(tr(lang, "door_total").format(door_result["total"]))
+    lines.append(tr(lang, "door_missing").format(len(door_result["missing_mark"])))
+    lines.append(tr(lang, "window_total").format(window_result["total"]))
+    lines.append(tr(lang, "window_missing").format(len(window_result["missing_mark"])))
     lines.append(u"")
-    lines.append(u"### 缺少标记的门")
-    lines.extend(format_element_list(door_result["missing_mark"], 30))
+    lines.append(tr(lang, "missing_doors"))
+    lines.extend(format_element_list(door_result["missing_mark"], 30, lang))
     lines.append(u"")
-    lines.append(u"### 缺少标记的窗")
-    lines.extend(format_element_list(window_result["missing_mark"], 30))
+    lines.append(tr(lang, "missing_windows"))
+    lines.extend(format_element_list(window_result["missing_mark"], 30, lang))
     lines.append(u"")
-    lines.append(u"## 视图上图检查")
+    lines.append(tr(lang, "view_check"))
     lines.append(u"")
-    lines.append(u"- 可检查视图总数：{0}".format(view_result["reportable_total"]))
-    lines.append(u"- 可能未放置到图纸的视图：{0}".format(len(view_result["unplaced"])))
+    lines.append(tr(lang, "view_total").format(view_result["reportable_total"]))
+    lines.append(tr(lang, "view_unplaced").format(len(view_result["unplaced"])))
     lines.append(u"")
-    lines.append(u"### 可能未上图视图")
-    lines.extend(format_element_list(view_result["unplaced"], 50))
+    lines.append(tr(lang, "unplaced_views"))
+    lines.extend(format_element_list(view_result["unplaced"], 50, lang))
     lines.append(u"")
-    lines.append(u"## 建议下一步")
+    lines.append(tr(lang, "next_steps"))
     lines.append(u"")
-    lines.append(u"1. 把此报告交给 Codex 或 Claude 分析。")
-    lines.append(u"2. 先人工确认问题是否符合公司标准。")
-    lines.append(u"3. 再为单一问题生成 dry-run 修复脚本。")
+    lines.append(tr(lang, "next_step_1"))
+    lines.append(tr(lang, "next_step_2"))
+    lines.append(tr(lang, "next_step_3"))
 
     return lines, issue_count
 
 
 def main():
+    lang = choose_language()
+
     if doc is None:
-        forms.alert("No active Revit document.", title="Yang Agent")
+        forms.alert(tr(lang, "no_doc"), title=tr(lang, "alert_title"))
         return
 
     export_dir = get_desktop_export_dir()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     report_path = os.path.join(export_dir, "model_health_report_{0}.md".format(timestamp))
 
-    lines, issue_count = build_report()
+    lines, issue_count = build_report(lang)
     write_report(report_path, lines)
 
-    output.print_md("# Yang Agent Model Health Report")
+    output.print_md(tr(lang, "output_title"))
     output.print_md("")
-    output.print_md("Report completed. No model changes were made.")
+    output.print_md(tr(lang, "output_done"))
     output.print_md("")
-    output.print_md("- Issues counted: {0}".format(issue_count))
-    output.print_md("- Report: `{0}`".format(report_path))
+    output.print_md(tr(lang, "output_issues").format(issue_count))
+    output.print_md(tr(lang, "output_report").format(report_path))
 
     forms.alert(
-        "Model health report generated.\n\nNo model changes were made.\n\nIssues counted: {0}\n\n{1}".format(
+        tr(lang, "alert_done").format(
             issue_count,
             report_path,
         ),
-        title="Yang Agent",
+        title=tr(lang, "alert_title"),
     )
 
 
@@ -337,6 +450,6 @@ try:
     main()
 except Exception:
     err = traceback.format_exc()
-    output.print_md("# Model Health Report failed")
+    output.print_md(TEXT["zh"]["failed_title"] + u" / " + TEXT["en"]["failed_title"].replace("# ", u""))
     output.print_md("```text\n{0}\n```".format(err))
-    forms.alert("Model Health Report failed. See pyRevit output for details.", title="Yang Agent")
+    forms.alert(TEXT["zh"]["failed_alert"] + u"\n\n" + TEXT["en"]["failed_alert"], title="Yang Agent")

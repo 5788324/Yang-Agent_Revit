@@ -2,6 +2,8 @@
 
 只读导出当前 Revit 模型快照，供 Codex、Claude Code、Antigravity 或其他 AI 工具分析。
 
+运行时可选择中文或 English。
+
 ## 导出内容
 
 - 文档基本信息。

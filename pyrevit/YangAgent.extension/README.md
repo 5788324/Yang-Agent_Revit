@@ -7,6 +7,11 @@
 - `Export Model Snapshot`：只读导出模型快照。
 - `Model Health Report`：只读生成模型健康报告。
 
+所有按钮运行时都必须提供语言选项：
+
+- 中文
+- English
+
 安全原则：
 
 - 默认只读。

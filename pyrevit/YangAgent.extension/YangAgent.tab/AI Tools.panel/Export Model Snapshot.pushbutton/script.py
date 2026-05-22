@@ -36,6 +36,61 @@ doc = revit.doc
 output = script.get_output()
 
 
+TEXT = {
+    "zh": {
+        "language_message": u"选择界面语言 / Select language",
+        "no_doc": u"没有打开的 Revit 文档。",
+        "alert_title": u"Yang Agent",
+        "completed_title": u"# Yang Agent 模型快照导出",
+        "completed_body": u"导出完成。此工具未修改模型。",
+        "document": u"**文档：** {0}",
+        "levels": u"- 楼层：{0}",
+        "rooms": u"- 房间：{0}",
+        "doors_windows": u"- 门窗：{0}",
+        "sheets_views": u"- 图纸和视图：{0}",
+        "model_categories": u"- 模型类别：{0}",
+        "output_files": u"## 输出文件",
+        "alert_done": u"模型快照已导出。\n\n此工具未修改模型。\n\n{0}",
+        "failed_title": u"# 导出失败",
+        "failed_alert": u"导出失败。请查看 pyRevit 输出窗口。",
+    },
+    "en": {
+        "language_message": u"Select language / 选择界面语言",
+        "no_doc": u"No active Revit document.",
+        "alert_title": u"Yang Agent",
+        "completed_title": u"# Yang Agent Export Model Snapshot",
+        "completed_body": u"Export completed. No model changes were made.",
+        "document": u"**Document:** {0}",
+        "levels": u"- Levels: {0}",
+        "rooms": u"- Rooms: {0}",
+        "doors_windows": u"- Doors and windows: {0}",
+        "sheets_views": u"- Sheets and views: {0}",
+        "model_categories": u"- Model categories: {0}",
+        "output_files": u"## Output Files",
+        "alert_done": u"Model snapshot exported.\n\nNo model changes were made.\n\n{0}",
+        "failed_title": u"# Export failed",
+        "failed_alert": u"Export failed. See pyRevit output for details.",
+    },
+}
+
+
+def choose_language():
+    try:
+        selected = forms.CommandSwitchWindow.show(
+            [u"中文", u"English"],
+            message=TEXT["zh"]["language_message"],
+        )
+        if selected == u"English":
+            return "en"
+    except Exception:
+        pass
+    return "zh"
+
+
+def tr(lang, key):
+    return TEXT.get(lang, TEXT["zh"]).get(key, TEXT["zh"].get(key, key))
+
+
 def safe_text(value):
     """Return a JSON/CSV friendly unicode string."""
     if value is None:
@@ -273,8 +328,10 @@ def collect_category_summary():
 
 
 def main():
+    lang = choose_language()
+
     if doc is None:
-        forms.alert("No active Revit document.", title="Yang Agent")
+        forms.alert(tr(lang, "no_doc"), title=tr(lang, "alert_title"))
         return
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -325,19 +382,19 @@ def main():
         ["kind", "element_id", "number", "name", "view_type", "is_template"],
     )
 
-    output.print_md("# Yang Agent Export Model Snapshot")
+    output.print_md(tr(lang, "completed_title"))
     output.print_md("")
-    output.print_md("Export completed. No model changes were made.")
+    output.print_md(tr(lang, "completed_body"))
     output.print_md("")
-    output.print_md("**Document:** {0}".format(document_info.get("title")))
+    output.print_md(tr(lang, "document").format(document_info.get("title")))
     output.print_md("")
-    output.print_md("- Levels: {0}".format(len(levels)))
-    output.print_md("- Rooms: {0}".format(len(rooms)))
-    output.print_md("- Doors and windows: {0}".format(len(doors_windows)))
-    output.print_md("- Sheets and views: {0}".format(len(sheets_views)))
-    output.print_md("- Model categories: {0}".format(len(category_summary)))
+    output.print_md(tr(lang, "levels").format(len(levels)))
+    output.print_md(tr(lang, "rooms").format(len(rooms)))
+    output.print_md(tr(lang, "doors_windows").format(len(doors_windows)))
+    output.print_md(tr(lang, "sheets_views").format(len(sheets_views)))
+    output.print_md(tr(lang, "model_categories").format(len(category_summary)))
     output.print_md("")
-    output.print_md("## Output Files")
+    output.print_md(tr(lang, "output_files"))
     output.print_md("")
     output.print_md("- `{0}`".format(json_path))
     output.print_md("- `{0}`".format(rooms_csv_path))
@@ -345,8 +402,8 @@ def main():
     output.print_md("- `{0}`".format(sheets_views_csv_path))
 
     forms.alert(
-        "Model snapshot exported.\n\nNo model changes were made.\n\n{0}".format(export_dir),
-        title="Yang Agent",
+        tr(lang, "alert_done").format(export_dir),
+        title=tr(lang, "alert_title"),
     )
 
 
@@ -354,6 +411,6 @@ try:
     main()
 except Exception:
     err = traceback.format_exc()
-    output.print_md("# Export failed")
+    output.print_md(TEXT["zh"]["failed_title"] + u" / " + TEXT["en"]["failed_title"].replace("# ", u""))
     output.print_md("```text\n{0}\n```".format(err))
-    forms.alert("Export failed. See pyRevit output for details.", title="Yang Agent")
+    forms.alert(TEXT["zh"]["failed_alert"] + u"\n\n" + TEXT["en"]["failed_alert"], title="Yang Agent")

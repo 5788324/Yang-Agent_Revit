@@ -39,6 +39,9 @@
 - 脚本应兼容 IronPython 2.7 风格。
 - 避免 f-string、类型注解、walrus 运算符。
 - 中文输出和 CSV/JSON 编码要显式处理。
+- 所有按钮必须提供语言选项：中文和 English。
+- 用户可见文本必须根据语言选择输出。
+- JSON key 和机器可读字段建议保持稳定英文。
 - 使用 `pyrevit.revit`、`pyrevit.forms`、`pyrevit.script`。
 - 修改模型时使用 `with revit.Transaction(...)`。
 

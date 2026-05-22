@@ -8,6 +8,13 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $source = Join-Path $repoRoot "pyrevit\YangAgent.extension"
 $target = Join-Path $PyRevitExtensionsRoot "YangAgent.extension"
 
+if (-not (Get-Command pyrevit -ErrorAction SilentlyContinue)) {
+    Write-Warning "pyRevit command was not found in PATH."
+    Write-Warning "If the YangAgent tab does not appear in Revit, install pyRevit first and restart Revit."
+    Write-Warning "Download: https://github.com/pyrevitlabs/pyRevit/releases"
+    Write-Host ""
+}
+
 if (-not (Test-Path -LiteralPath $source)) {
     throw "Source extension not found: $source"
 }

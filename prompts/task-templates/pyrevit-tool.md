@@ -12,6 +12,9 @@
 6. 不使用 f-string、类型注解、walrus 运算符。
 7. 输出完整 pyRevit bundle 目录结构。
 8. 输出使用说明和测试步骤。
+9. 添加语言选择：中文和 English。
+10. 弹窗、pyRevit 输出、Markdown 报告跟随语言选择。
+11. JSON key 和机器可读字段保持稳定英文。
 
 需求：
 
