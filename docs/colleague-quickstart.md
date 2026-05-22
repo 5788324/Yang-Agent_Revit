@@ -211,6 +211,20 @@ https://github.com/5788324/Yang-Agent_Revit
 
 如果没有，说明 pyRevit 还没安装或没有加载。先安装 pyRevit，再安装 YangAgent。
 
+### 按钮都是灰色，提示 availability 或可用性命令载入失败
+
+这是 pyRevit 编译缓存或旧版本目录结构导致的常见问题。
+
+处理步骤：
+
+1. 确认已经更新到最新仓库版本。
+2. 关闭 Revit。
+3. 删除 pyRevit 缓存中旧的 `YangAgent` 临时 DLL。
+4. 重新打开 Revit。
+5. 在 pyRevit 中 reload。
+
+本项目已经避免在 `.panel` 和 `.pushbutton` 目录名中使用中文，并移除了 `context:` 可用性声明。
+
 ### 点击按钮没有输出文件
 
 检查桌面是否有：

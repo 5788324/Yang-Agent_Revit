@@ -14,6 +14,7 @@
 - [语言策略](docs/language-strategy.md)
 - [非程序员路线图](docs/non-programmer-roadmap.md)
 - [DLL 插件开发计划](docs/dll-addin-development-plan.md)
+- [故障排查](docs/troubleshooting.md)
 
 当前 pyRevit 工具：
 

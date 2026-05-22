@@ -21,9 +21,9 @@ pyRevit 工具目录：
 pyrevit/
   YangAgent.extension/
     YangAgent.tab/
-      系统设置.panel/
-      导出报告.panel/
-        导出模型快照.pushbutton/
+      Settings.panel/
+      Reports.panel/
+        Export Model Snapshot.pushbutton/
           script.py
           bundle.yaml
           README.md
@@ -31,6 +31,9 @@ pyrevit/
 
 脚本要求：
 
+- pyRevit 的目录名必须使用英文 ASCII，例如 `Settings.panel`、`Reports.panel`。
+- 中文显示名称写在 `bundle.yaml` 的 `title` 中，不要把中文写进 `.panel` 或 `.pushbutton` 目录名。
+- 暂时不要在 `bundle.yaml` 中使用 `context:` 可用性声明；pyRevit 2027 可能生成 availability 类型失败，导致按钮全灰。
 - 兼容 IronPython 2.7 风格。
 - 不使用 f-string。
 - 不使用 Python 类型注解。
@@ -114,6 +117,8 @@ mcp/
 提交前确认：
 
 - 文档链接可读。
+- pyRevit bundle 目录名为英文 ASCII。
+- `bundle.yaml` 中没有误加 `context:` 导致按钮可用性命令失败。
 - pyRevit 脚本没有 f-string。
 - 只读工具没有 Transaction。
 - 修改工具必须有 dry-run。

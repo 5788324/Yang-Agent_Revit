@@ -49,6 +49,8 @@ cd "D:\codex\Yang Agent_Revit"
 10. 再运行 `系统设置 -> 语言设置`，设置 English。
 11. 重复运行三个报告按钮，检查英文输出。
 
+如果所有按钮都是灰色，优先清理 pyRevit 缓存并重启 Revit。
+
 ### 第 3 步：把报告交给 AI 分析
 
 可以把 `model_health_report_*.md` 发给 Codex 或 Claude，然后问：

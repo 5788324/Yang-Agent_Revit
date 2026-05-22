@@ -77,6 +77,8 @@ YangAgent -> 导出报告
 3. 在 pyRevit 里执行 reload。
 4. 重启 Revit。
 
+如果按钮都是灰色，并提示 `availability` 或“可用性命令载入失败”，请先关闭 Revit，清理 pyRevit 旧缓存，再重新打开 Revit。
+
 ## 3. 设置语言
 
 点击：
