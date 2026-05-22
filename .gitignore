@@ -1,0 +1,33 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+
+# Revit / local outputs
+*.rvt
+*.rfa
+*.rte
+*.slog
+*.addin.user
+logs/
+outputs/
+exports/
+
+# Secrets / local config
+.env
+*.local.json
+secrets/
