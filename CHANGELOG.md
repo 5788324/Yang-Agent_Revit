@@ -11,6 +11,7 @@
 - 新增 `docs/architecture-design.md` 系统架构设计文档。
 - 新增 `docs/api-and-data-schema.md` API与数据结构规范文档。
 - 新增 `docs/testing-and-qa.md` 测试与质量保证规范文档。
+- 新增 `docs/security-preparations.md` 项目初期安全防范与备份预案。
 - 新增 `CHANGELOG.md` 更新日志文档以规范化版本控制。
 
 ### Changed (变更)
