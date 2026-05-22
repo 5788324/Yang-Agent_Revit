@@ -36,12 +36,13 @@ cd "D:\codex\Yang Agent_Revit"
 测试顺序：
 
 1. 打开测试 Revit 模型。
-2. 运行 `Export Model Snapshot`。
-3. 分别测试 `中文` 和 `English`。
+2. 运行 `Language Settings`，设置中文。
+3. 运行 `Export Model Snapshot`。
 4. 检查桌面 `YangAgent_Revit_Exports` 是否生成 JSON 和 CSV。
 5. 运行 `Model Health Report`。
-6. 分别测试 `中文` 和 `English`。
-7. 检查是否生成 Markdown 报告。
+6. 检查是否生成中文 Markdown 报告。
+7. 再运行 `Language Settings`，设置 English。
+8. 重复运行两个按钮，检查英文输出。
 
 ### 第 3 步：把报告交给 AI 分析
 

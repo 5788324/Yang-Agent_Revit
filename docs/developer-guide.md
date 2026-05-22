@@ -35,16 +35,15 @@ pyrevit/
 - 不直接修改模型，除非工具明确是 `apply_*`。
 - 输出文件统一放到用户桌面 `YangAgent_Revit_Exports`。
 - 所有按钮必须提供语言选项：`中文` 和 `English`。
-- 用户可见的弹窗、pyRevit 输出、Markdown 报告必须跟随语言选择。
+- 用户可见的弹窗、pyRevit 输出、Markdown 报告必须跟随统一语言设置。
 - 给 AI 或脚本读取的 JSON key 建议保持稳定英文，避免双语切换破坏自动化解析。
 
-语言选择建议使用：
+语言设置统一使用：
 
 ```python
-selected = forms.CommandSwitchWindow.show(
-    [u"中文", u"English"],
-    message=u"选择语言 / Select language",
-)
+from yang_agent_lang import get_or_choose_language
+
+lang = get_or_choose_language(forms)
 ```
 
 ## 3. C# 插件开发约定

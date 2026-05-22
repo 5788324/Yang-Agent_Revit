@@ -6,15 +6,18 @@
 
 当前版本提供两个只读 pyRevit 按钮：
 
+- `Language Settings`：设置默认语言。
 - `Export Model Snapshot`：导出模型快照，给 AI 分析。
 - `Model Health Report`：生成模型健康检查报告。
 
 它们都不会修改模型。
 
-两个按钮运行时都会先让你选择语言：
+工具箱支持两种语言：
 
 - 中文
 - English
+
+你可以通过 `Language Settings` 设置默认语言。
 
 ## 2. 安装 pyRevit 工具栏
 
@@ -62,6 +65,18 @@ YangAgent -> AI Tools
 
 ## 3. 使用 Export Model Snapshot
 
+## 3. 设置语言
+
+点击：
+
+```text
+YangAgent -> AI Tools -> Language Settings
+```
+
+选择 `中文` 或 `English`。设置会保存到本机，后续按钮自动使用该语言。
+
+## 4. 使用 Export Model Snapshot
+
 适合场景：
 
 - 想让 AI 理解当前模型。
@@ -72,9 +87,8 @@ YangAgent -> AI Tools
 
 1. 打开 Revit 模型。
 2. 点击 `YangAgent -> AI Tools -> Export Model Snapshot`。
-3. 选择 `中文` 或 `English`。
-4. 等待导出完成。
-5. 到桌面 `YangAgent_Revit_Exports` 文件夹查看结果。
+3. 等待导出完成。
+4. 到桌面 `YangAgent_Revit_Exports` 文件夹查看结果。
 
 输出文件：
 
@@ -83,7 +97,7 @@ YangAgent -> AI Tools
 - `doors_windows_*.csv`
 - `sheets_views_*.csv`
 
-## 4. 使用 Model Health Report
+## 5. 使用 Model Health Report
 
 适合场景：
 
@@ -97,14 +111,13 @@ YangAgent -> AI Tools
 
 1. 打开 Revit 模型。
 2. 点击 `YangAgent -> AI Tools -> Model Health Report`。
-3. 选择 `中文` 或 `English`。
-4. 到桌面 `YangAgent_Revit_Exports` 文件夹查看报告。
+3. 到桌面 `YangAgent_Revit_Exports` 文件夹查看报告。
 
 输出文件：
 
 - `model_health_report_*.md`
 
-## 5. 如何把结果交给 AI
+## 6. 如何把结果交给 AI
 
 你可以把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后这样问：
 
@@ -118,7 +131,7 @@ YangAgent -> AI Tools
 请先生成 dry-run 脚本，只预览会修改哪些元素，不要直接修改模型。
 ```
 
-## 6. 安全提醒
+## 7. 安全提醒
 
 当前两个工具都是只读工具，不会修改模型。
 

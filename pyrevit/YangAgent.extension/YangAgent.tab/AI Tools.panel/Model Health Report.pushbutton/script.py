@@ -26,6 +26,7 @@ from Autodesk.Revit.DB import (  # noqa: E402
 )
 from Autodesk.Revit.DB.Architecture import Room  # noqa: E402
 from pyrevit import forms, revit, script  # noqa: E402
+from yang_agent_lang import get_or_choose_language  # noqa: E402
 
 
 doc = revit.doc
@@ -128,15 +129,9 @@ TEXT = {
 
 def choose_language():
     try:
-        selected = forms.CommandSwitchWindow.show(
-            [u"中文", u"English"],
-            message=TEXT["zh"]["language_message"],
-        )
-        if selected == u"English":
-            return "en"
+        return get_or_choose_language(forms, message=TEXT["zh"]["language_message"])
     except Exception:
-        pass
-    return "zh"
+        return "zh"
 
 
 def tr(lang, key):

@@ -4,13 +4,16 @@
 
 当前按钮：
 
+- `Language Settings`：设置默认语言。
 - `Export Model Snapshot`：只读导出模型快照。
 - `Model Health Report`：只读生成模型健康报告。
 
-所有按钮运行时都必须提供语言选项：
+工具箱支持：
 
 - 中文
 - English
+
+默认语言通过 `Language Settings` 设置。
 
 安全原则：
 
