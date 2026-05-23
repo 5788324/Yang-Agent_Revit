@@ -24,6 +24,7 @@
 - 在 `SystemSettings` 中新增视图命名规则配置入口，可维护视图类型前缀和临时关键词。
 - 新增 `Export Regression Checklist` 只读工具，生成标准回归测试 Markdown 清单。
 - 新增 `Export AI Review Prompt` 只读工具，生成安全 AI 分析提示词和最近报告清单。
+- `SystemSettings` 新增本机 AI 工作习惯配置，并将其写入 AI 分析提示词。
 
 ### Changed (变更)
 - 完善初期项目框架与文档体系。

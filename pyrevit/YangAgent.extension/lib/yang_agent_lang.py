@@ -33,6 +33,12 @@ DEFAULT_VIEW_NAMING_RULES = {
         u"复制",
     ],
 }
+DEFAULT_AGENT_PREFERENCES = {
+    "revit_versions": "2022, 2024, 2025, 2027",
+    "preferred_workflow": u"先 pyRevit 快速验证，再迁移到 C# .addin + .dll 正式插件。",
+    "review_focus": u"优先检查 Revit 2027、中文界面、dry-run CSV、可撤销 Transaction。",
+    "safety_notes": u"不要直接修改正式模型；所有修改先在测试模型 dry-run 并人工确认。",
+}
 LANGUAGE_LABELS = {
     "zh": u"中文",
     "en": u"English",
@@ -163,6 +169,37 @@ def get_user_profile():
         "nickname": _safe_text(settings.get("nickname", "")),
         "avatar_path": _safe_text(settings.get("avatar_path", "")),
     }
+
+
+def get_agent_preferences():
+    settings = read_settings()
+    preferences = settings.get("agent_preferences")
+    if not isinstance(preferences, dict):
+        preferences = {}
+
+    result = {}
+    for key in DEFAULT_AGENT_PREFERENCES:
+        value = _safe_text(preferences.get(key, DEFAULT_AGENT_PREFERENCES[key])).strip()
+        if not value:
+            value = DEFAULT_AGENT_PREFERENCES[key]
+        result[key] = value
+    return result
+
+
+def save_agent_preferences(revit_versions=None, preferred_workflow=None, review_focus=None, safety_notes=None):
+    settings = read_settings()
+    current = get_agent_preferences()
+    if revit_versions is not None:
+        current["revit_versions"] = _safe_text(revit_versions).strip()
+    if preferred_workflow is not None:
+        current["preferred_workflow"] = _safe_text(preferred_workflow).strip()
+    if review_focus is not None:
+        current["review_focus"] = _safe_text(review_focus).strip()
+    if safety_notes is not None:
+        current["safety_notes"] = _safe_text(safety_notes).strip()
+    settings["agent_preferences"] = current
+    write_settings(settings)
+    return current
 
 
 def get_view_naming_rules():

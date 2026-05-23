@@ -15,6 +15,7 @@ from yang_agent_lang import (
     get_language, save_language, 
     get_theme, save_theme, 
     get_user_profile, save_user_profile,
+    get_agent_preferences, save_agent_preferences,
     get_view_naming_rules, save_view_naming_rules
 )
 
@@ -53,6 +54,7 @@ class SettingsWindow(forms.WPFWindow):
             
         self.NicknameBox.Text = profile.get("nickname") or ""
         self.AvatarBox.Text = profile.get("avatar_path") or ""
+        self.load_agent_preferences()
         self.load_view_naming_rules()
         
         self.apply_theme()
@@ -75,6 +77,13 @@ class SettingsWindow(forms.WPFWindow):
             box = getattr(self, box_name)
             box.Text = self.join_values(prefix_rules.get(view_type, []))
         self.TemporaryKeywordsBox.Text = self.join_values(rules.get("temporary_keywords", []))
+
+    def load_agent_preferences(self):
+        preferences = get_agent_preferences()
+        self.RevitVersionsBox.Text = preferences.get("revit_versions", "")
+        self.WorkflowBox.Text = preferences.get("preferred_workflow", "")
+        self.ReviewFocusBox.Text = preferences.get("review_focus", "")
+        self.SafetyNotesBox.Text = preferences.get("safety_notes", "")
         
     def theme_changed(self, sender, args):
         if hasattr(self, "ThemeCombo") and self.ThemeCombo.SelectedIndex != -1:
@@ -97,6 +106,12 @@ class SettingsWindow(forms.WPFWindow):
         self.ThemeLabel.Foreground = fg_color
         self.NickLabel.Foreground = fg_color
         self.AvatarLabel.Foreground = fg_color
+        self.PreferencesLabel.Foreground = fg_color
+        self.PreferencesHelp.Foreground = fg_color
+        self.RevitVersionsLabel.Foreground = fg_color
+        self.WorkflowLabel.Foreground = fg_color
+        self.ReviewFocusLabel.Foreground = fg_color
+        self.SafetyNotesLabel.Foreground = fg_color
         self.ViewRulesLabel.Foreground = fg_color
         self.ViewRulesHelp.Foreground = fg_color
         self.FloorPlanLabel.Foreground = fg_color
@@ -126,6 +141,12 @@ class SettingsWindow(forms.WPFWindow):
         save_user_profile(
             nickname=self.NicknameBox.Text,
             avatar_path=self.AvatarBox.Text
+        )
+        save_agent_preferences(
+            revit_versions=self.RevitVersionsBox.Text,
+            preferred_workflow=self.WorkflowBox.Text,
+            review_focus=self.ReviewFocusBox.Text,
+            safety_notes=self.SafetyNotesBox.Text
         )
 
         prefix_rules = {}

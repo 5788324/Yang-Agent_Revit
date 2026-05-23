@@ -24,6 +24,7 @@
 - pyRevit 受控修改工具：`Apply Missing Door Window Marks`。
 - pyRevit 受控修改工具：`Apply Missing Room Numbers`。
 - 系统设置支持维护视图命名规则前缀和临时关键词。
+- 系统设置支持维护本机 AI 工作习惯，并写入 AI 分析提示词。
 - Revit 2027 C# `.addin + .dll` 正式插件骨架。
 
 ## 现在应该做什么
