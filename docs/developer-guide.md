@@ -22,11 +22,13 @@ pyrevit/
   YangAgent.extension/
     YangAgent.tab/
       Settings.panel/
+        SystemSettings.pushbutton/
       Reports.panel/
-        ExportModelSnapshot.pushbutton/
-          script.py
-          bundle.yaml
-          README.md
+        Reports.pulldown/
+          ExportModelSnapshot.pushbutton/
+            script.py
+            bundle.yaml
+            README.md
 ```
 
 脚本要求：

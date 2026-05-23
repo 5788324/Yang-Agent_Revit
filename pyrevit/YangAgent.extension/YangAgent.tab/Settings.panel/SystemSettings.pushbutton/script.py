@@ -38,6 +38,7 @@ class SettingsWindow(forms.WPFWindow):
             self.ThemeCombo.SelectedIndex = 0
             
         self.NicknameBox.Text = profile.get("nickname") or ""
+        self.AvatarBox.Text = profile.get("avatar_path") or ""
         
         self.apply_theme()
         
@@ -61,13 +62,25 @@ class SettingsWindow(forms.WPFWindow):
         self.LangLabel.Foreground = fg_color
         self.ThemeLabel.Foreground = fg_color
         self.NickLabel.Foreground = fg_color
+        self.AvatarLabel.Foreground = fg_color
         self.AboutText.Foreground = fg_color
+
+    def browse_avatar_click(self, sender, args):
+        picked = forms.pick_file(
+            files_filter="Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg|All Files (*.*)|*.*",
+            title="Select avatar / 选择头像"
+        )
+        if picked:
+            self.AvatarBox.Text = picked
 
     def save_click(self, sender, args):
         new_lang = "zh" if self.LanguageCombo.SelectedIndex == 0 else "en"
         save_language(new_lang)
         save_theme(self.theme)
-        save_user_profile(nickname=self.NicknameBox.Text)
+        save_user_profile(
+            nickname=self.NicknameBox.Text,
+            avatar_path=self.AvatarBox.Text
+        )
         
         forms.toast(
             "Settings Saved / 设置已保存", 

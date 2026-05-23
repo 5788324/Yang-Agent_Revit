@@ -16,6 +16,23 @@
 
 ### Changed (变更)
 - 完善初期项目框架与文档体系。
+- 将报告工具整理到 `Reports.pulldown`。
+- 将语言、用户、主题、关于更新合并为统一的 `SystemSettings` 设置窗口。
+- 设置窗口补回头像路径、版权声明和插件更新链接。
+
+## [1.0.0] - 2026-05-23
+
+### Added
+- 发布首个 YangAgent Revit MVP 版本。
+- 新增 pyRevit 工具箱基础结构：系统设置、导出报告。
+- 新增中英双语设置、用户简称、头像路径、Light/Dark Theme 配置。
+- 新增报告导出路径、模型快照、模型健康报告、缺失门窗标记 dry-run 预览。
+- 新增 Revit 2027 C# `.addin + .dll` 插件骨架。
+- 新增用户说明、开发指南、故障排查、AI 协作流程文档。
+
+### Fixed
+- 修复 pyRevit 2027 中文目录名与 `context:` availability 导致按钮灰色的问题。
+- 修复 pyRevit 旧缓存导致 FullClassName 加载错误的问题。
 
 ## [0.1.0] - 2026-05-22
 
