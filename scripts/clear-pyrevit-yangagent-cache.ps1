@@ -11,8 +11,12 @@ $roots = $candidateRoots | Where-Object { $_ -and (Test-Path -LiteralPath $_) } 
 $patterns = @(
     "*YangAgent*.dll",
     "*YangAgent*.addin",
+    "*YangAgent*.cs",
+    "*YangAgent*.pickle",
     "*yangagent*.dll",
-    "*yangagent*.addin"
+    "*yangagent*.addin",
+    "*yangagent*.cs",
+    "*yangagent*.pickle"
 )
 
 Write-Host "Close Revit before clearing the pyRevit cache."
@@ -32,9 +36,20 @@ foreach ($root in $roots) {
         $matches |
             Where-Object { $_.FullName -match "pyRevit" } |
             ForEach-Object {
-                Write-Host "Removing: $($_.FullName)"
-                Remove-Item -LiteralPath $_.FullName -Force -ErrorAction SilentlyContinue
-                $script:removed += 1
+                $path = $_.FullName
+                Write-Host "Removing: $path"
+                try {
+                    Remove-Item -LiteralPath $path -Force -ErrorAction Stop
+                    if (-not (Test-Path -LiteralPath $path)) {
+                        $script:removed += 1
+                    }
+                    else {
+                        Write-Warning "Could not remove cache file, it still exists: $path"
+                    }
+                }
+                catch {
+                    Write-Warning "Could not remove cache file. Close Revit and try again: $path"
+                }
             }
     }
 }

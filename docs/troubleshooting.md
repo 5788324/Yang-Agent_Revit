@@ -33,7 +33,7 @@ Could not resolve type ...
 
 1. 关闭 Revit。
 2. 更新仓库到最新版本。
-3. 清理 pyRevit 缓存中旧的 YangAgent 临时 DLL。
+3. 清理 pyRevit 缓存中旧的 YangAgent 临时 DLL、生成的 `.cs` 文件和 pickle 缓存。
 4. 重新打开 Revit。
 5. 在 pyRevit 中 reload。
 
@@ -41,6 +41,8 @@ Could not resolve type ...
 
 ```text
 *YangAgent*.dll
+*YangAgent*.cs
+*YangAgent*.pickle
 ```
 
 删除旧缓存后，pyRevit 会重新编译工具箱。
@@ -56,6 +58,8 @@ FullClassName 为 Revit 调用附加模块应用程序提供了入口点
 ```
 
 原因通常不是业务脚本没有实现 `IExternalCommand`。pyRevit 会自动把 `script.py` 包装成 Revit 外部命令，这个错误多半来自旧的 pyRevit 临时 DLL 或旧 `.addin` 缓存仍在被 Revit 读取。
+
+如果报错出现在新按钮上，例如 `AI分析提示词`，优先怀疑旧缓存仍在。Revit 正在运行时，Windows 可能会锁住旧 DLL，导致清理脚本无法真正删除缓存。
 
 处理步骤：
 
@@ -74,6 +78,13 @@ FullClassName 为 Revit 调用附加模块应用程序提供了入口点
 ```
 
 5. 重新打开 Revit，并执行 pyRevit Reload。
+
+如果脚本提示仍有缓存无法删除，请确认任务管理器里没有以下进程：
+
+```text
+Revit.exe
+RevitWorker.exe
+```
 
 项目修复：
 
