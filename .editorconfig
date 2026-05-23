@@ -1,0 +1,43 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# Python files (IronPython 2.7 for pyRevit)
+[*.py]
+indent_style = space
+indent_size = 4
+
+# C# files
+[*.cs]
+indent_style = space
+indent_size = 4
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
+
+# XAML files
+[*.xaml]
+indent_style = space
+indent_size = 4
+
+# YAML files (pyRevit bundle.yaml)
+[*.yaml]
+indent_style = space
+indent_size = 2
+
+# CSV files exported by pyRevit scripts need UTF-8 with BOM
+# However, editorconfig doesn't apply to runtime generated files, 
+# but if we manually edit them:
+[*.csv]
+charset = utf-8-bom

@@ -1,0 +1,17 @@
+[flake8]
+# pyRevit uses IronPython 2.7
+# E501: Line too long (we can ignore or set a high limit, e.g., 120)
+# E402: Module level import not at top of file (common in pyRevit due to clr.AddReference)
+# F821: Undefined name (common in IronPython for Built-ins like unicode, __window__)
+
+ignore = E501, E402, F821
+max-line-length = 120
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    docs/
+
+# We don't want modern Python 3 features to slip in because Revit IronPython will crash.
+# Ensure colleagues don't use f-strings or type hints.
