@@ -14,8 +14,22 @@ from pyrevit import forms, script
 from yang_agent_lang import (
     get_language, save_language, 
     get_theme, save_theme, 
-    get_user_profile, save_user_profile
+    get_user_profile, save_user_profile,
+    get_view_naming_rules, save_view_naming_rules
 )
+
+
+VIEW_TYPE_BOXES = [
+    ("FloorPlan", "FloorPlanPrefixesBox"),
+    ("CeilingPlan", "CeilingPlanPrefixesBox"),
+    ("Section", "SectionPrefixesBox"),
+    ("Elevation", "ElevationPrefixesBox"),
+    ("ThreeD", "ThreeDPrefixesBox"),
+    ("DraftingView", "DraftingViewPrefixesBox"),
+    ("Legend", "LegendPrefixesBox"),
+    ("AreaPlan", "AreaPlanPrefixesBox"),
+    ("EngineeringPlan", "EngineeringPlanPrefixesBox"),
+]
 
 class SettingsWindow(forms.WPFWindow):
     def __init__(self, xaml_file_name):
@@ -39,8 +53,28 @@ class SettingsWindow(forms.WPFWindow):
             
         self.NicknameBox.Text = profile.get("nickname") or ""
         self.AvatarBox.Text = profile.get("avatar_path") or ""
+        self.load_view_naming_rules()
         
         self.apply_theme()
+
+    def join_values(self, values):
+        return ", ".join(values or [])
+
+    def split_values(self, text):
+        cleaned = []
+        for part in (text or "").replace(u"|", u",").split(u","):
+            value = part.strip()
+            if value:
+                cleaned.append(value)
+        return cleaned
+
+    def load_view_naming_rules(self):
+        rules = get_view_naming_rules()
+        prefix_rules = rules.get("prefix_by_view_type", {})
+        for view_type, box_name in VIEW_TYPE_BOXES:
+            box = getattr(self, box_name)
+            box.Text = self.join_values(prefix_rules.get(view_type, []))
+        self.TemporaryKeywordsBox.Text = self.join_values(rules.get("temporary_keywords", []))
         
     def theme_changed(self, sender, args):
         if hasattr(self, "ThemeCombo") and self.ThemeCombo.SelectedIndex != -1:
@@ -63,6 +97,18 @@ class SettingsWindow(forms.WPFWindow):
         self.ThemeLabel.Foreground = fg_color
         self.NickLabel.Foreground = fg_color
         self.AvatarLabel.Foreground = fg_color
+        self.ViewRulesLabel.Foreground = fg_color
+        self.ViewRulesHelp.Foreground = fg_color
+        self.FloorPlanLabel.Foreground = fg_color
+        self.CeilingPlanLabel.Foreground = fg_color
+        self.SectionLabel.Foreground = fg_color
+        self.ElevationLabel.Foreground = fg_color
+        self.ThreeDLabel.Foreground = fg_color
+        self.DraftingViewLabel.Foreground = fg_color
+        self.LegendLabel.Foreground = fg_color
+        self.AreaPlanLabel.Foreground = fg_color
+        self.EngineeringPlanLabel.Foreground = fg_color
+        self.KeywordsLabel.Foreground = fg_color
         self.AboutText.Foreground = fg_color
 
     def browse_avatar_click(self, sender, args):
@@ -80,6 +126,15 @@ class SettingsWindow(forms.WPFWindow):
         save_user_profile(
             nickname=self.NicknameBox.Text,
             avatar_path=self.AvatarBox.Text
+        )
+
+        prefix_rules = {}
+        for view_type, box_name in VIEW_TYPE_BOXES:
+            box = getattr(self, box_name)
+            prefix_rules[view_type] = self.split_values(box.Text)
+        save_view_naming_rules(
+            prefix_by_view_type=prefix_rules,
+            temporary_keywords=self.split_values(self.TemporaryKeywordsBox.Text)
         )
         
         forms.toast(

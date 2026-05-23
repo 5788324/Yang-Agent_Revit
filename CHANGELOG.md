@@ -21,6 +21,7 @@
 - 新增 `docs/handoff-2026-05-23.md` 交接记录，方便后续同事接手。
 - 新增 `Apply Missing Door Window Marks` 受控修改工具，从 dry-run CSV 写入门窗标记并输出日志。
 - 新增 `Apply Missing Room Numbers` 受控修改工具，从 dry-run CSV 写入缺失房间编号并输出日志。
+- 在 `SystemSettings` 中新增视图命名规则配置入口，可维护视图类型前缀和临时关键词。
 
 ### Changed (变更)
 - 完善初期项目框架与文档体系。

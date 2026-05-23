@@ -21,6 +21,7 @@
 - pyRevit dry-run 工具：`Preview Views By Naming Rules`。
 - pyRevit 受控修改工具：`Apply Missing Door Window Marks`。
 - pyRevit 受控修改工具：`Apply Missing Room Numbers`。
+- 系统设置支持维护视图命名规则前缀和临时关键词。
 - Revit 2027 C# `.addin + .dll` 正式插件骨架。
 
 ## 现在应该做什么
@@ -100,8 +101,8 @@ cd "D:\codex\Yang Agent_Revit"
 
 下一轮开发目标：
 
-- 将公司实际视图命名规范写入本机 `settings.json`，降低 `Preview Views By Naming Rules` 的误报。
 - 整理一份标准测试模型，用于后续回归测试。
+- 与 BIM 负责人确认公司实际视图命名规范，并通过 `系统设置` 写入本机规则。
 
 ## 判断是否进入下一阶段
 
