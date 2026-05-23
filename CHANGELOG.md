@@ -15,6 +15,7 @@
 - 新增 `CHANGELOG.md` 更新日志文档以规范化版本控制。
 - 新增 `Preview Missing Room Numbers` dry-run 工具，导出缺少编号房间的 Markdown 和 CSV 清单。
 - 新增 `Preview Unplaced Views` dry-run 工具，导出可能未上图视图的 Markdown 和 CSV 清单。
+- 新增 `Apply Missing Door Window Marks` 受控修改工具，从 dry-run CSV 写入门窗标记并输出日志。
 
 ### Changed (变更)
 - 完善初期项目框架与文档体系。

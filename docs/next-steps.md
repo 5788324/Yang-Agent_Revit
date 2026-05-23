@@ -16,6 +16,7 @@
 - pyRevit dry-run 工具：`Preview Missing Marks`。
 - pyRevit dry-run 工具：`Preview Missing Room Numbers`。
 - pyRevit dry-run 工具：`Preview Unplaced Views`。
+- pyRevit 受控修改工具：`Apply Missing Door Window Marks`。
 - Revit 2027 C# `.addin + .dll` 正式插件骨架。
 
 ## 现在应该做什么
@@ -52,8 +53,11 @@ cd "D:\codex\Yang Agent_Revit"
 11. 检查是否生成 dry-run Markdown 和 CSV。
 12. 运行 `导出报告 -> 预览未上图视图`。
 13. 检查是否生成 dry-run Markdown 和 CSV。
-14. 再运行 `系统设置`，设置 English。
-15. 重复运行报告按钮，检查英文输出。
+14. 在测试模型中运行 `导出报告 -> 应用门窗标记`。
+15. 选择已人工确认的 `missing_door_window_marks_*.csv`。
+16. 检查是否生成 apply 日志，并确认 Revit 可一次撤销。
+17. 再运行 `系统设置`，设置 English。
+18. 重复运行报告按钮，检查英文输出。
 
 如果所有按钮都是灰色，优先清理 pyRevit 缓存并重启 Revit。
 
@@ -85,11 +89,11 @@ cd "D:\codex\Yang Agent_Revit"
 
 下一轮开发目标：
 
-- `Apply Missing Door Window Marks`
+- `Preview Duplicate Room Numbers`
+- `Preview Views By Naming Rules`
+- `Apply Missing Room Numbers`
 
-其中 `Apply Missing Door Window Marks` 会进入受控修改阶段，必须先读取 dry-run CSV、显示影响数量，并要求用户二次确认。
-
-进入 `Apply Missing Door Window Marks` 前，建议先让 BIM 负责人确认 dry-run CSV 字段和命名规则。
+其中 `Apply Missing Room Numbers` 会进入受控修改阶段，必须先读取 dry-run CSV、显示影响数量，并要求用户二次确认。
 
 ## 判断是否进入下一阶段
 
