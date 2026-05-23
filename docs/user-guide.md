@@ -20,6 +20,7 @@
 - `模型健康报告`：生成模型健康检查报告。
 - `预览缺失标记`：预览缺少标记的门窗，不修改模型。
 - `预览缺失房间编号`：预览缺少编号的房间，不修改模型。
+- `预览重复房间编号`：预览重复编号的房间，不修改模型。
 - `预览未上图视图`：预览可能未放置到图纸的视图，不修改模型。
 - `应用门窗标记`：读取 dry-run CSV，在二次确认后写入门窗标记。
 
@@ -196,7 +197,28 @@ YangAgent -> 导出报告 -> 导出路径
 
 注意：此工具只预览，不会写入房间编号。
 
-## 9. 使用 Preview Unplaced Views
+## 9. 使用 Preview Duplicate Room Numbers
+
+适合场景：
+
+- 检查哪些房间编号重复。
+- 生成 dry-run 预览清单。
+- 给后续房间编号规则整理做准备。
+
+操作：
+
+1. 打开 Revit 模型。
+2. 点击 `YangAgent -> 导出报告 -> 预览重复房间编号`。
+3. 到你设置的导出目录查看报告。
+
+输出文件：
+
+- `duplicate_room_numbers_*.md`
+- `duplicate_room_numbers_*.csv`
+
+注意：此工具只预览，不会修改房间编号。
+
+## 10. 使用 Preview Unplaced Views
 
 适合场景：
 
@@ -217,7 +239,7 @@ YangAgent -> 导出报告 -> 导出路径
 
 注意：此工具只预览，不会修改视图或图纸。
 
-## 10. 使用 Apply Missing Door Window Marks
+## 11. 使用 Apply Missing Door Window Marks
 
 此工具会修改模型。只建议在测试模型或已备份模型中使用。
 
@@ -253,7 +275,7 @@ YangAgent -> 导出报告 -> 应用门窗标记
 - `apply_door_window_marks_*.md`
 - `apply_door_window_marks_*.csv`
 
-## 11. 如何把结果交给 AI
+## 12. 如何把结果交给 AI
 
 你可以把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后这样问：
 
@@ -267,7 +289,7 @@ YangAgent -> 导出报告 -> 应用门窗标记
 请先生成 dry-run 脚本，只预览会修改哪些元素，不要直接修改模型。
 ```
 
-## 12. 版权和更新
+## 13. 版权和更新
 
 点击：
 
@@ -280,7 +302,7 @@ YangAgent -> 系统设置
 - 版权声明：由 Yang 开发，工具为 Codex。
 - 插件更新链接。
 
-## 13. 安全提醒
+## 14. 安全提醒
 
 当前报告和预览工具不会修改模型。
 

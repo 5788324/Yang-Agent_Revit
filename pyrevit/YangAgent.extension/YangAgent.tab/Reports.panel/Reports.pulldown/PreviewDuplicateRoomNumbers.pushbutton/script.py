@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Preview rooms missing numbers.
+"""Preview duplicate room numbers.
 
 This tool is dry-run only. It does not modify the model and does not open a Transaction.
 """
@@ -35,52 +35,52 @@ TEXT = {
     "zh": {
         "alert_title": u"Yang Agent",
         "no_doc": u"没有打开的 Revit 文档。",
-        "title": u"# Yang Agent 房间缺失编号预览",
+        "title": u"# Yang Agent 重复房间编号预览",
         "read_only": u"此报告为 dry-run 预览，未修改 Revit 模型。",
         "summary": u"## 汇总",
         "document": u"- 文档：{0}",
         "exported_at": u"- 导出时间：{0}",
         "rooms_total": u"- 房间总数：{0}",
-        "missing_total": u"- 缺少编号房间数：{0}",
-        "details": u"## 缺少编号的房间",
+        "duplicate_groups": u"- 重复编号组：{0}",
+        "duplicate_rooms": u"- 涉及房间数：{0}",
+        "details": u"## 重复房间编号",
         "none": u"- 无",
-        "suggested": u"建议编号",
         "next_steps": u"## 建议下一步",
-        "step_1": u"1. 人工检查建议编号是否符合项目编号规则。",
-        "step_2": u"2. 如确认无误，再生成 apply 工具写入房间编号。",
-        "step_3": u"3. apply 前仍需二次确认影响房间数量。",
+        "step_1": u"1. 人工确认重复编号是否属于分区、套内或设计意图。",
+        "step_2": u"2. 确认公司房间编号规则后，再生成修复预览。",
+        "step_3": u"3. 不建议直接自动批量重编号。",
         "output_done": u"预览完成。此工具未修改模型。",
-        "output_missing": u"- 缺少编号房间：{0}",
+        "output_groups": u"- 重复编号组：{0}",
         "output_report": u"- 报告：`{0}`",
         "output_csv": u"- CSV：`{0}`",
-        "alert_done": u"房间缺失编号预览已生成。\n\n此工具未修改模型。\n\n缺少编号房间：{0}\n\n{1}",
-        "failed_title": u"# 房间缺失编号预览失败",
-        "failed_alert": u"房间缺失编号预览失败。请查看 pyRevit 输出窗口。",
+        "alert_done": u"重复房间编号预览已生成。\n\n此工具未修改模型。\n\n重复编号组：{0}\n\n{1}",
+        "failed_title": u"# 重复房间编号预览失败",
+        "failed_alert": u"重复房间编号预览失败。请查看 pyRevit 输出窗口。",
     },
     "en": {
         "alert_title": u"Yang Agent",
         "no_doc": u"No active Revit document.",
-        "title": u"# Yang Agent Missing Room Numbers Preview",
+        "title": u"# Yang Agent Duplicate Room Numbers Preview",
         "read_only": u"This is a dry-run preview. No Revit model changes were made.",
         "summary": u"## Summary",
         "document": u"- Document: {0}",
         "exported_at": u"- Exported at: {0}",
         "rooms_total": u"- Total rooms: {0}",
-        "missing_total": u"- Rooms missing numbers: {0}",
-        "details": u"## Rooms Missing Numbers",
+        "duplicate_groups": u"- Duplicate number groups: {0}",
+        "duplicate_rooms": u"- Affected rooms: {0}",
+        "details": u"## Duplicate Room Numbers",
         "none": u"- None",
-        "suggested": u"Suggested number",
         "next_steps": u"## Suggested Next Steps",
-        "step_1": u"1. Review suggested numbers against project numbering rules.",
-        "step_2": u"2. Generate an apply tool only after confirming the preview.",
-        "step_3": u"3. Confirm affected room count again before applying changes.",
+        "step_1": u"1. Confirm whether duplicates are intentional.",
+        "step_2": u"2. Define company room numbering rules before generating repair previews.",
+        "step_3": u"3. Avoid direct automatic bulk renumbering.",
         "output_done": u"Preview completed. No model changes were made.",
-        "output_missing": u"- Rooms missing numbers: {0}",
+        "output_groups": u"- Duplicate number groups: {0}",
         "output_report": u"- Report: `{0}`",
         "output_csv": u"- CSV: `{0}`",
-        "alert_done": u"Missing room numbers preview generated.\n\nNo model changes were made.\n\nRooms missing numbers: {0}\n\n{1}",
-        "failed_title": u"# Missing Room Numbers Preview failed",
-        "failed_alert": u"Missing Room Numbers Preview failed. See pyRevit output for details.",
+        "alert_done": u"Duplicate room numbers preview generated.\n\nNo model changes were made.\n\nDuplicate number groups: {0}\n\n{1}",
+        "failed_title": u"# Duplicate Room Numbers Preview failed",
+        "failed_alert": u"Duplicate Room Numbers Preview failed. See pyRevit output for details.",
     },
 }
 
@@ -116,16 +116,6 @@ def element_id_value(element_id):
         return safe_text(element_id)
 
 
-def get_param_as_text(element, built_in_param):
-    try:
-        param = element.get_Parameter(built_in_param)
-        if param is None:
-            return u""
-        return get_param_text(param)
-    except Exception:
-        return u""
-
-
 def get_param_text(param):
     if param is None:
         return u""
@@ -152,6 +142,16 @@ def get_param_text(param):
     return u""
 
 
+def get_param_as_text(element, built_in_param):
+    try:
+        param = element.get_Parameter(built_in_param)
+        if param is None:
+            return u""
+        return get_param_text(param)
+    except Exception:
+        return u""
+
+
 def get_level_name(room):
     try:
         level = doc.GetElement(room.LevelId)
@@ -174,38 +174,40 @@ def collect_rooms():
         rows.append({
             "element_id": element_id_value(element.Id),
             "category": "Room",
+            "room_number": get_param_as_text(element, BuiltInParameter.ROOM_NUMBER),
             "room_name": get_param_as_text(element, BuiltInParameter.ROOM_NAME),
-            "current_number": get_param_as_text(element, BuiltInParameter.ROOM_NUMBER),
             "level_name": get_level_name(element),
         })
     return rows
 
 
-def build_suggested_number(row, index):
-    level = safe_text(row.get("level_name"))
-    if level:
-        clean_level = level.replace(" ", "").replace("-", "")
-        return "{0}-{1:03d}".format(clean_level, index)
-    return "R-{0:03d}".format(index)
-
-
-def collect_preview_rows():
+def collect_duplicate_rows():
     rooms = collect_rooms()
-    missing = []
-    missing_index = 1
-
+    by_number = {}
     for row in rooms:
-        if is_blank(row.get("current_number")):
-            row["suggested_number"] = build_suggested_number(row, missing_index)
+        number = safe_text(row.get("room_number")).strip()
+        if is_blank(number):
+            continue
+        by_number.setdefault(number, []).append(row)
+
+    duplicates = []
+    group_count = 0
+    for number in sorted(by_number.keys()):
+        group_rows = by_number[number]
+        if len(group_rows) < 2:
+            continue
+        group_count += 1
+        for row in group_rows:
             row["dry_run"] = "true"
-            row["status"] = "Missing"
-            missing.append(row)
-            missing_index += 1
+            row["duplicate_number"] = number
+            row["duplicate_count"] = safe_text(len(group_rows))
+            row["status"] = "Duplicate"
+            duplicates.append(row)
 
-    return len(rooms), missing
+    return len(rooms), group_count, duplicates
 
 
-def write_markdown(path, lang, room_count, missing):
+def write_markdown(path, lang, room_count, group_count, duplicates):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     lines = []
     lines.append(tr(lang, "title"))
@@ -217,22 +219,27 @@ def write_markdown(path, lang, room_count, missing):
     lines.append(tr(lang, "document").format(safe_text(doc.Title)))
     lines.append(tr(lang, "exported_at").format(timestamp))
     lines.append(tr(lang, "rooms_total").format(room_count))
-    lines.append(tr(lang, "missing_total").format(len(missing)))
+    lines.append(tr(lang, "duplicate_groups").format(group_count))
+    lines.append(tr(lang, "duplicate_rooms").format(len(duplicates)))
     lines.append(u"")
     lines.append(tr(lang, "details"))
     lines.append(u"")
 
-    if not missing:
+    if not duplicates:
         lines.append(tr(lang, "none"))
     else:
-        for row in missing:
+        current_number = None
+        for row in duplicates:
+            number = row["duplicate_number"]
+            if number != current_number:
+                lines.append(u"")
+                lines.append(u"### `{0}`".format(number))
+                current_number = number
             lines.append(
-                u"- `{0}` {1} | {2} | {3}: `{4}`".format(
+                u"- `{0}` {1} | {2}".format(
                     row["element_id"],
                     row["level_name"],
                     row["room_name"],
-                    tr(lang, "suggested"),
-                    row["suggested_number"],
                 )
             )
 
@@ -253,9 +260,10 @@ def write_csv(path, rows):
         "element_id",
         "category",
         "level_name",
+        "room_number",
         "room_name",
-        "current_number",
-        "suggested_number",
+        "duplicate_number",
+        "duplicate_count",
         "status",
     ]
     with open(path, "wb") as raw_stream:
@@ -281,23 +289,23 @@ def main():
 
     export_dir = get_export_dir()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    report_path = os.path.join(export_dir, "missing_room_numbers_{0}.md".format(timestamp))
-    csv_path = os.path.join(export_dir, "missing_room_numbers_{0}.csv".format(timestamp))
+    report_path = os.path.join(export_dir, "duplicate_room_numbers_{0}.md".format(timestamp))
+    csv_path = os.path.join(export_dir, "duplicate_room_numbers_{0}.csv".format(timestamp))
 
-    room_count, missing = collect_preview_rows()
-    write_markdown(report_path, lang, room_count, missing)
-    write_csv(csv_path, missing)
+    room_count, group_count, duplicates = collect_duplicate_rows()
+    write_markdown(report_path, lang, room_count, group_count, duplicates)
+    write_csv(csv_path, duplicates)
 
     output.print_md(tr(lang, "title"))
     output.print_md(u"")
     output.print_md(tr(lang, "output_done"))
     output.print_md(u"")
-    output.print_md(tr(lang, "output_missing").format(len(missing)))
+    output.print_md(tr(lang, "output_groups").format(group_count))
     output.print_md(tr(lang, "output_report").format(report_path))
     output.print_md(tr(lang, "output_csv").format(csv_path))
 
     forms.toast(
-        tr(lang, "alert_done").format(len(missing), report_path),
+        tr(lang, "alert_done").format(group_count, report_path),
         title=tr(lang, "alert_title"),
     )
 
