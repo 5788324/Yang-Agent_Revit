@@ -18,6 +18,7 @@
 - `导出路径`：设置报告输出目录，避免报告堆积。
 - `导出模型快照`：导出模型快照，给 AI 分析。
 - `模型健康报告`：生成模型健康检查报告。
+- `回归测试清单`：生成标准工具测试清单，方便记录每次测试结果。
 - `预览缺失标记`：预览缺少标记的门窗，不修改模型。
 - `预览缺失房间编号`：预览缺少编号的房间，不修改模型。
 - `预览重复房间编号`：预览重复编号的房间，不修改模型。
@@ -188,7 +189,28 @@ YangAgent -> 导出报告 -> 导出路径
 
 注意：此工具只预览，不会写入标记。
 
-## 8. 使用 Preview Missing Room Numbers
+## 8. 使用 Export Regression Checklist
+
+适合场景：
+
+- 新功能上线前做统一测试。
+- 给同事记录每个按钮的 Pass / Fail。
+- 固定测试模型的验收流程。
+
+操作：
+
+1. 打开测试 Revit 模型。
+2. 点击 `YangAgent -> 导出报告 -> 回归测试清单`。
+3. 到你设置的导出目录查看清单。
+4. 按清单逐项运行工具，并记录结果。
+
+输出文件：
+
+- `yangagent_regression_checklist_*.md`
+
+注意：此工具只生成测试清单，不会修改模型。
+
+## 9. 使用 Preview Missing Room Numbers
 
 适合场景：
 
@@ -209,7 +231,7 @@ YangAgent -> 导出报告 -> 导出路径
 
 注意：此工具只预览，不会写入房间编号。
 
-## 9. 使用 Preview Duplicate Room Numbers
+## 10. 使用 Preview Duplicate Room Numbers
 
 适合场景：
 
@@ -273,7 +295,7 @@ YangAgent -> 导出报告 -> 导出路径
 
 注意：此工具只预览，不会修改视图名称。
 
-## 12. 使用 Apply Missing Door Window Marks
+## 13. 使用 Apply Missing Door Window Marks
 
 此工具会修改模型。只建议在测试模型或已备份模型中使用。
 
@@ -309,7 +331,7 @@ YangAgent -> 导出报告 -> 应用门窗标记
 - `apply_door_window_marks_*.md`
 - `apply_door_window_marks_*.csv`
 
-## 13. 使用 Apply Missing Room Numbers
+## 14. 使用 Apply Missing Room Numbers
 
 此工具会修改模型。只建议在测试模型或已备份模型中使用。
 
@@ -347,7 +369,7 @@ YangAgent -> 导出报告 -> 应用房间编号
 
 注意：此工具只能选择 `missing_room_numbers_*.csv`。不要选择 `duplicate_room_numbers_*.csv`，重复编号需要人工确认规则后再处理。
 
-## 14. 如何把结果交给 AI
+## 15. 如何把结果交给 AI
 
 你可以把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后这样问：
 
@@ -361,7 +383,7 @@ YangAgent -> 导出报告 -> 应用房间编号
 请先生成 dry-run 脚本，只预览会修改哪些元素，不要直接修改模型。
 ```
 
-## 15. 版权和更新
+## 16. 版权和更新
 
 点击：
 
@@ -374,7 +396,7 @@ YangAgent -> 系统设置
 - 版权声明：由 Yang 开发，工具为 Codex。
 - 插件更新链接。
 
-## 16. 安全提醒
+## 17. 安全提醒
 
 当前报告和预览工具不会修改模型。
 

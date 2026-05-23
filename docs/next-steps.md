@@ -14,6 +14,7 @@
 - Agent 提示词模板。
 - pyRevit 只读工具：`Export Model Snapshot`。
 - pyRevit 只读工具：`Model Health Report`。
+- pyRevit 只读工具：`Export Regression Checklist`。
 - pyRevit dry-run 工具：`Preview Missing Marks`。
 - pyRevit dry-run 工具：`Preview Missing Room Numbers`。
 - pyRevit dry-run 工具：`Preview Duplicate Room Numbers`。
@@ -52,24 +53,26 @@ cd "D:\codex\Yang Agent_Revit"
 5. 检查导出目录是否生成 JSON 和 CSV。
 6. 运行 `导出报告 -> 模型健康报告`。
 7. 检查是否生成中文 Markdown 报告。
-8. 运行 `导出报告 -> 预览缺失标记`。
-9. 检查是否生成 dry-run Markdown 和 CSV。
-10. 运行 `导出报告 -> 预览缺失房间编号`。
+8. 运行 `导出报告 -> 回归测试清单`。
+9. 后续测试按生成的 Markdown 清单逐项记录 Pass / Fail。
+10. 运行 `导出报告 -> 预览缺失标记`。
 11. 检查是否生成 dry-run Markdown 和 CSV。
-12. 运行 `导出报告 -> 预览重复房间编号`。
+12. 运行 `导出报告 -> 预览缺失房间编号`。
 13. 检查是否生成 dry-run Markdown 和 CSV。
-14. 运行 `导出报告 -> 预览未上图视图`。
+14. 运行 `导出报告 -> 预览重复房间编号`。
 15. 检查是否生成 dry-run Markdown 和 CSV。
-16. 运行 `导出报告 -> 预览视图命名`。
+16. 运行 `导出报告 -> 预览未上图视图`。
 17. 检查是否生成 dry-run Markdown 和 CSV。
-18. 在测试模型中运行 `导出报告 -> 应用门窗标记`。
-19. 选择已人工确认的 `missing_door_window_marks_*.csv`。
-20. 检查是否生成 apply 日志，并确认 Revit 可一次撤销。
-21. 在测试模型中运行 `导出报告 -> 应用房间编号`。
-22. 选择已人工确认的 `missing_room_numbers_*.csv`。
-23. 检查是否生成 apply 日志，并确认 Revit 可一次撤销。
-24. 再运行 `系统设置`，设置 English。
-25. 重复运行报告按钮，检查英文输出。
+18. 运行 `导出报告 -> 预览视图命名`。
+19. 检查是否生成 dry-run Markdown 和 CSV。
+20. 在测试模型中运行 `导出报告 -> 应用门窗标记`。
+21. 选择已人工确认的 `missing_door_window_marks_*.csv`。
+22. 检查是否生成 apply 日志，并确认 Revit 可一次撤销。
+23. 在测试模型中运行 `导出报告 -> 应用房间编号`。
+24. 选择已人工确认的 `missing_room_numbers_*.csv`。
+25. 检查是否生成 apply 日志，并确认 Revit 可一次撤销。
+26. 再运行 `系统设置`，设置 English。
+27. 重复运行报告按钮，检查英文输出。
 
 如果所有按钮都是灰色，优先清理 pyRevit 缓存并重启 Revit。
 

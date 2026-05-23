@@ -22,6 +22,9 @@
 当新增工具或进行版本升级时，按以下流程进行回归测试：
 
 1. 打开标准测试模型 (如 `samples/test_model.rvt`)。
-2. 运行所有现有的只读工具 (Export Report等)，比对输出的 JSON/CSV 是否存在格式突变。
-3. 运行现有的 Dry-Run 工具，确认识别出的待处理 Element 数量无误。
-4. 如果以上步骤通过，允许合并代码。
+2. 运行 `导出报告 -> 回归测试清单`，生成 `yangagent_regression_checklist_*.md`。
+3. 按清单运行所有现有的只读工具，比对输出的 JSON/CSV 是否存在格式突变。
+4. 运行现有的 Dry-Run 工具，确认识别出的待处理 Element 数量无误。
+5. 对于修改类工具，必须先运行 dry-run，人工检查 CSV，再执行 Apply。
+6. Apply 后必须确认可以通过 Revit 撤销。
+7. 填写测试清单结果；不要提交 `.rvt` 模型到 Git。
