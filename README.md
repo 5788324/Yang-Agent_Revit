@@ -46,6 +46,10 @@
 
 注意：如果 Revit 里没有 `pyRevit` 选项卡，请先安装 pyRevit，再安装本项目工具栏。
 
+### 必备开发辅助工具：
+- **Revit Lookup**: 进行 Revit API 开发和元素探查的必备工具，请务必安装。
+- **pyRevit CLI**: 用于通过命令行管理和重新加载 pyRevit 插件环境。
+
 构建 Revit 2027 DLL 插件骨架：
 
 ```powershell

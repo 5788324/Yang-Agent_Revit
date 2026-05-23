@@ -297,7 +297,7 @@ def main():
     output.print_md(tr(lang, "output_report").format(report_path))
     output.print_md(tr(lang, "output_csv").format(csv_path))
 
-    forms.alert(
+    forms.toast(
         tr(lang, "alert_done").format(len(missing), report_path),
         title=tr(lang, "alert_title"),
     )

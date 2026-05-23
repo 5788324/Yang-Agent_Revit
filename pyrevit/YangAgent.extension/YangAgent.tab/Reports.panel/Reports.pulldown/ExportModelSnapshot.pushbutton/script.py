@@ -386,8 +386,10 @@ def main():
     output.print_md("- `{0}`".format(doors_windows_csv_path))
     output.print_md("- `{0}`".format(sheets_views_csv_path))
 
-    forms.alert(
-        tr(lang, "alert_done").format(export_dir),
+    forms.toast(
+        tr(lang, "alert_done").format(
+            export_dir,
+        ),
         title=tr(lang, "alert_title"),
     )
 

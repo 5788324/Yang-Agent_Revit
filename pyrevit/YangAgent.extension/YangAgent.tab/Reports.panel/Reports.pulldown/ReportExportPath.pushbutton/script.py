@@ -41,14 +41,14 @@ def main():
     current = get_export_dir()
     picked = forms.pick_folder(title=tr(lang, "pick"))
     if not picked:
-        forms.alert(tr(lang, "cancel").format(current), title="Yang Agent")
+        forms.toast(tr(lang, "cancel").format(current), title="Yang Agent")
         return
 
     save_export_dir(picked)
     output.print_md(u"# {0}".format(tr(lang, "title")))
     output.print_md(u"")
     output.print_md(u"- {0}: `{1}`".format(tr(lang, "current"), picked))
-    forms.alert(tr(lang, "done").format(picked), title="Yang Agent")
+    forms.toast(tr(lang, "done").format(picked), title="Yang Agent")
 
 
 try:

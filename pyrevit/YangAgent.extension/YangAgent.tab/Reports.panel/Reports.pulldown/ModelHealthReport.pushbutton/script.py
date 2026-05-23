@@ -422,7 +422,7 @@ def main():
     output.print_md(tr(lang, "output_issues").format(issue_count))
     output.print_md(tr(lang, "output_report").format(report_path))
 
-    forms.alert(
+    forms.toast(
         tr(lang, "alert_done").format(
             issue_count,
             report_path,

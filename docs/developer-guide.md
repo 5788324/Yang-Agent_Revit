@@ -61,6 +61,12 @@ from yang_agent_lang import get_export_dir
 export_dir = get_export_dir()
 ```
 
+### 必备开发工具
+
+1. **Revit Lookup**: 用于实时探查 Revit API 对象、参数和底层结构的必备插件。必须安装。
+2. **pyrevit cli**: 用于通过命令行打包、编译和部署 pyRevit extension。
+3. **Visual Studio 2022**: 用于 C# (.addin) 插件的正式开发。
+
 ## 3. C# 插件开发约定
 
 正式插件源码放在 `src/`。
