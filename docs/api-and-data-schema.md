@@ -54,3 +54,24 @@
 - 必须包含生成时间和执行环境。
 - 采用明确的标题层级（H1, H2, H3）。
 - 统计数据优先使用表格形式展示。
+
+## 4. 本地设置结构
+
+本地用户设置保存在：
+
+```text
+%APPDATA%\YangAgent_Revit\settings.json
+```
+
+可配置规则必须保持英文 key。例如视图命名规则：
+
+```json
+{
+  "view_naming_rules": {
+    "prefix_by_view_type": {
+      "FloorPlan": ["FP-", "PL-"]
+    },
+    "temporary_keywords": ["temp", "test", "临时", "测试"]
+  }
+}
+```

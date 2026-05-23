@@ -17,6 +17,7 @@
 - 新增 `Preview Duplicate Room Numbers` dry-run 工具，导出重复房间编号的 Markdown 和 CSV 清单。
 - 新增 `Preview Unplaced Views` dry-run 工具，导出可能未上图视图的 Markdown 和 CSV 清单。
 - 新增 `Preview Views By Naming Rules` dry-run 工具，导出视图命名问题 Markdown 和 CSV 清单。
+- 新增 `docs/view-naming-rules.md`，说明视图命名规则的本地配置方式。
 - 新增 `Apply Missing Door Window Marks` 受控修改工具，从 dry-run CSV 写入门窗标记并输出日志。
 
 ### Changed (变更)
@@ -28,6 +29,7 @@
 - 优化 `Apply Missing Door Window Marks` 的 dry-run CSV 读取，支持 UTF-8 BOM 表头并在字段校验失败时输出实际字段。
 - 修复 Revit 2027 / IronPython 中 `ElementId` 构造函数重载歧义导致应用门窗标记失败的问题。
 - 优化房间编号参数读取，避免 Revit 参数对象布尔误判。
+- 将视图命名检查规则抽到共享设置，支持通过本机 `settings.json` 调整。
 
 ## [1.0.0] - 2026-05-23
 

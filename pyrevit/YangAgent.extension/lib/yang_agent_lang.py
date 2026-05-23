@@ -10,6 +10,29 @@ import os
 
 SUPPORTED_LANGUAGES = ["zh", "en"]
 SUPPORTED_THEMES = ["light", "dark"]
+DEFAULT_VIEW_NAMING_RULES = {
+    "prefix_by_view_type": {
+        "FloorPlan": ["FP-", "PL-", "A-", "S-", "M-", "E-"],
+        "CeilingPlan": ["RCP-", "CP-"],
+        "Section": ["SEC-", "SECTION-"],
+        "Elevation": ["EL-", "ELEV-"],
+        "ThreeD": ["3D-"],
+        "DraftingView": ["DR-", "DET-", "DT-"],
+        "Legend": ["LG-", "LEG-"],
+        "AreaPlan": ["AR-", "AREA-"],
+        "EngineeringPlan": ["EP-", "ENG-"],
+    },
+    "temporary_keywords": [
+        u"临时",
+        u"测试",
+        u"工作",
+        u"temp",
+        u"test",
+        u"working",
+        u"copy",
+        u"复制",
+    ],
+}
 LANGUAGE_LABELS = {
     "zh": u"中文",
     "en": u"English",
@@ -61,6 +84,17 @@ def write_settings(settings):
     path = get_config_path()
     with codecs.open(path, "w", "utf-8-sig") as stream:
         stream.write(json.dumps(settings, ensure_ascii=False, indent=2))
+
+
+def _clean_list(values):
+    cleaned = []
+    if not isinstance(values, list):
+        return cleaned
+    for value in values:
+        text = _safe_text(value).strip()
+        if text:
+            cleaned.append(text)
+    return cleaned
 
 
 def normalize_language(lang):
@@ -129,6 +163,46 @@ def get_user_profile():
         "nickname": _safe_text(settings.get("nickname", "")),
         "avatar_path": _safe_text(settings.get("avatar_path", "")),
     }
+
+
+def get_view_naming_rules():
+    settings = read_settings()
+    rules = settings.get("view_naming_rules")
+    if not isinstance(rules, dict):
+        return DEFAULT_VIEW_NAMING_RULES
+
+    prefix_rules = rules.get("prefix_by_view_type")
+    if not isinstance(prefix_rules, dict):
+        prefix_rules = DEFAULT_VIEW_NAMING_RULES["prefix_by_view_type"]
+
+    cleaned_prefix_rules = {}
+    for view_type in DEFAULT_VIEW_NAMING_RULES["prefix_by_view_type"]:
+        values = prefix_rules.get(view_type)
+        cleaned = _clean_list(values)
+        if not cleaned:
+            cleaned = DEFAULT_VIEW_NAMING_RULES["prefix_by_view_type"][view_type]
+        cleaned_prefix_rules[view_type] = cleaned
+
+    keywords = _clean_list(rules.get("temporary_keywords"))
+    if not keywords:
+        keywords = DEFAULT_VIEW_NAMING_RULES["temporary_keywords"]
+
+    return {
+        "prefix_by_view_type": cleaned_prefix_rules,
+        "temporary_keywords": keywords,
+    }
+
+
+def save_view_naming_rules(prefix_by_view_type=None, temporary_keywords=None):
+    settings = read_settings()
+    current = get_view_naming_rules()
+    if prefix_by_view_type is not None:
+        current["prefix_by_view_type"] = prefix_by_view_type
+    if temporary_keywords is not None:
+        current["temporary_keywords"] = temporary_keywords
+    settings["view_naming_rules"] = current
+    write_settings(settings)
+    return current
 
 
 def save_export_dir(path):

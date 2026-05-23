@@ -16,6 +16,7 @@
 - [DLL 插件开发计划](docs/dll-addin-development-plan.md)
 - [故障排查](docs/troubleshooting.md)
 - [AI 协作开发流程](docs/collaboration-workflow.md)
+- [视图命名规则配置](docs/view-naming-rules.md)
 
 当前 pyRevit 工具：
 

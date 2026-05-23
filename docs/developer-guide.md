@@ -46,6 +46,7 @@ pyrevit/
 - 所有按钮必须提供语言选项：`中文` 和 `English`。
 - 用户可见的弹窗、pyRevit 输出、Markdown 报告必须跟随统一语言设置。
 - 给 AI 或脚本读取的 JSON key 建议保持稳定英文，避免双语切换破坏自动化解析。
+- 可配置规则优先放入 `%APPDATA%\YangAgent_Revit\settings.json`，并提供默认值；不要把公司规则硬编码到多个脚本里。
 
 语言设置统一使用：
 

@@ -19,7 +19,7 @@ clr.AddReference("RevitAPIUI")
 
 from Autodesk.Revit.DB import FilteredElementCollector, View, ViewSheet  # noqa: E402
 from pyrevit import forms, revit, script  # noqa: E402
-from yang_agent_lang import get_export_dir, get_or_choose_language  # noqa: E402
+from yang_agent_lang import get_export_dir, get_or_choose_language, get_view_naming_rules  # noqa: E402
 
 
 doc = revit.doc
@@ -78,30 +78,6 @@ TEXT = {
 }
 
 
-PREFIX_BY_VIEW_TYPE = {
-    "FloorPlan": ["FP-", "PL-", "A-", "S-", "M-", "E-"],
-    "CeilingPlan": ["RCP-", "CP-"],
-    "Section": ["SEC-", "SECTION-"],
-    "Elevation": ["EL-", "ELEV-"],
-    "ThreeD": ["3D-"],
-    "DraftingView": ["DR-", "DET-", "DT-"],
-    "Legend": ["LG-", "LEG-"],
-    "AreaPlan": ["AR-", "AREA-"],
-    "EngineeringPlan": ["EP-", "ENG-"],
-}
-
-TEMP_KEYWORDS = [
-    u"临时",
-    u"测试",
-    u"工作",
-    u"temp",
-    u"test",
-    u"working",
-    u"copy",
-    u"复制",
-]
-
-
 def tr(lang, key):
     return TEXT.get(lang, TEXT["zh"]).get(key, TEXT["zh"].get(key, key))
 
@@ -145,20 +121,21 @@ def is_reportable_view(view):
         return False
 
     view_type = safe_text(view.ViewType)
-    return view_type in PREFIX_BY_VIEW_TYPE
+    rules = get_view_naming_rules()
+    return view_type in rules["prefix_by_view_type"]
 
 
-def get_naming_issue(view_name, view_type):
+def get_naming_issue(view_name, view_type, rules):
     name = safe_text(view_name).strip()
     if is_blank(name):
         return "BlankName", ""
 
     lowered = name.lower()
-    for keyword in TEMP_KEYWORDS:
+    for keyword in rules["temporary_keywords"]:
         if safe_text(keyword).lower() in lowered:
             return "TemporaryKeyword", safe_text(keyword)
 
-    prefixes = PREFIX_BY_VIEW_TYPE.get(view_type, [])
+    prefixes = rules["prefix_by_view_type"].get(view_type, [])
     upper_name = name.upper()
     for prefix in prefixes:
         if upper_name.startswith(prefix):
@@ -167,6 +144,7 @@ def get_naming_issue(view_name, view_type):
 
 
 def collect_preview_rows():
+    rules = get_view_naming_rules()
     views = FilteredElementCollector(doc).OfClass(View).ToElements()
     reportable_count = 0
     issues = []
@@ -178,7 +156,7 @@ def collect_preview_rows():
         reportable_count += 1
         view_type = safe_text(view.ViewType)
         view_name = safe_text(view.Name)
-        issue_type, expected = get_naming_issue(view_name, view_type)
+        issue_type, expected = get_naming_issue(view_name, view_type, rules)
         if not issue_type:
             continue
 
