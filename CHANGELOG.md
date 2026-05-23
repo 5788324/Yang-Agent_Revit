@@ -24,6 +24,7 @@
 - 设置窗口补回头像路径、版权声明和插件更新链接。
 - 优化门窗 `Mark/标记` 参数读写，避免 Revit 参数对象布尔误判并增加中英文参数名兜底。
 - 优化 `Apply Missing Door Window Marks` 的 dry-run CSV 读取，支持 UTF-8 BOM 表头并在字段校验失败时输出实际字段。
+- 修复 Revit 2027 / IronPython 中 `ElementId` 构造函数重载歧义导致应用门窗标记失败的问题。
 
 ## [1.0.0] - 2026-05-23
 

@@ -17,6 +17,7 @@ import clr
 clr.AddReference("RevitAPI")
 clr.AddReference("RevitAPIUI")
 
+from System import Int64  # noqa: E402
 from Autodesk.Revit.DB import BuiltInParameter, ElementId  # noqa: E402
 from pyrevit import forms, revit, script  # noqa: E402
 from yang_agent_lang import get_export_dir, get_or_choose_language  # noqa: E402
@@ -259,7 +260,7 @@ def apply_marks(rows):
                 results.append(result)
                 continue
 
-            element = doc.GetElement(ElementId(element_id))
+            element = doc.GetElement(ElementId(Int64(element_id)))
             if element is None:
                 result["result"] = "failed"
                 result["message"] = "Element not found"
