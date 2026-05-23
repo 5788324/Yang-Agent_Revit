@@ -4,18 +4,19 @@
 
 当前主文档：
 
+- [**交接 SOP（人员/AI 接手必读）**](HANDOFF.md)
+- [**更新日志**](CHANGELOG.md)
+- [**工作日志目录**](docs/worklogs/)
 - [Revit AI Agent 项目方案](docs/revit-ai-agent-project-plan.md)
-- [Claude 文档整合评审](docs/claude-doc-integration-review.md)
+- [系统架构设计](docs/architecture-design.md)
+- [下一步工作清单](docs/next-steps.md)
 - [用户使用指南](docs/user-guide.md)
 - [开发指南](docs/developer-guide.md)
 - [安全规则](docs/safety-rules.md)
-- [下一步工作清单](docs/next-steps.md)
-- [同事快速使用说明](docs/colleague-quickstart.md)
-- [语言策略](docs/language-strategy.md)
-- [非程序员路线图](docs/non-programmer-roadmap.md)
-- [DLL 插件开发计划](docs/dll-addin-development-plan.md)
 - [故障排查](docs/troubleshooting.md)
 - [AI 协作开发流程](docs/collaboration-workflow.md)
+- [MCP 工具调研](docs/mcp-tools.md)
+- [同事快速使用说明](docs/colleague-quickstart.md)
 - [视图命名规则配置](docs/view-naming-rules.md)
 - [2026-05-23 交接记录](docs/handoff-2026-05-23.md)
 
