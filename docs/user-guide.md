@@ -219,6 +219,7 @@ YangAgent -> 导出报告 -> 导出路径
 - `duplicate_room_numbers_*.csv`
 
 注意：此工具只预览，不会修改房间编号。
+`duplicate_room_numbers_*.csv` 只是重复编号检查结果，不能用于 `应用房间编号`。
 
 ## 10. 使用 Preview Unplaced Views
 
@@ -333,6 +334,8 @@ YangAgent -> 导出报告 -> 应用房间编号
 
 - `apply_room_numbers_*.md`
 - `apply_room_numbers_*.csv`
+
+注意：此工具只能选择 `missing_room_numbers_*.csv`。不要选择 `duplicate_room_numbers_*.csv`，重复编号需要人工确认规则后再处理。
 
 ## 14. 如何把结果交给 AI
 

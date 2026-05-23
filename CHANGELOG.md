@@ -32,6 +32,7 @@
 - 修复 Revit 2027 / IronPython 中 `ElementId` 构造函数重载歧义导致应用门窗标记失败的问题。
 - 优化房间编号参数读取，避免 Revit 参数对象布尔误判。
 - 将视图命名检查规则抽到共享设置，支持通过本机 `settings.json` 调整。
+- 优化 `Apply Missing Room Numbers` 的 CSV 选择提示，只接受 `missing_room_numbers_*.csv`，避免误选重复编号报告。
 
 ## [1.0.0] - 2026-05-23
 

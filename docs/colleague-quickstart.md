@@ -263,6 +263,8 @@ YangAgent -> 导出报告 -> 预览视图命名
 - 只写入当前编号仍为空的房间。
 - 全部修改在一个 Revit Transaction 中，可撤销。
 
+注意：只能选择 `missing_room_numbers_*.csv`。`duplicate_room_numbers_*.csv` 是重复编号检查结果，不能用于自动写入缺失编号。
+
 ## 16. 如何把报告交给 AI
 
 把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后可以这样问：
