@@ -17,7 +17,12 @@ clr.AddReference("RevitAPI")
 clr.AddReference("RevitAPIUI")
 
 from pyrevit import forms, revit, script  # noqa: E402
-from yang_agent_lang import get_agent_preferences, get_export_dir, get_or_choose_language  # noqa: E402
+from yang_agent_lang import (  # noqa: E402
+    get_agent_preferences,
+    get_export_dir,
+    get_or_choose_language,
+    read_company_standards,
+)
 
 
 doc = revit.doc
@@ -43,12 +48,16 @@ TEXT = {
         "preferred_workflow": u"- 默认工作流：{0}",
         "review_focus": u"- AI 分析重点：{0}",
         "safety_notes": u"- 安全偏好：{0}",
+        "company_standards": u"## 公司标准",
+        "company_standards_path": u"- 公司标准文件：`{0}`",
+        "no_company_standards": u"- 未找到公司标准文件。可在 `系统设置` 中创建或选择本机 Markdown 文件。",
         "recent_files": u"## 最近报告文件",
         "no_files": u"- 未找到 `.md`、`.json` 或 `.csv` 报告文件。",
         "prompt_title": u"## 可直接复制给 AI 的提示词",
         "prompt": u"""请分析这些 YangAgent Revit 报告文件，按严重程度列出问题和建议。
 
 请优先遵守上方“用户偏好”中的 Revit 版本、默认工作流、分析重点和安全偏好。
+如果上方提供了“公司标准”，请优先按公司标准判断问题。
 
 要求：
 1. 只做分析和建议，不要生成会直接修改 Revit 模型的脚本。
@@ -78,12 +87,16 @@ TEXT = {
         "preferred_workflow": u"- Preferred workflow: {0}",
         "review_focus": u"- AI review focus: {0}",
         "safety_notes": u"- Safety preferences: {0}",
+        "company_standards": u"## Company Standards",
+        "company_standards_path": u"- Company standards file: `{0}`",
+        "no_company_standards": u"- No company standards file was found. Create or select a local Markdown file in `System Settings`.",
         "recent_files": u"## Recent Report Files",
         "no_files": u"- No `.md`, `.json`, or `.csv` report files were found.",
         "prompt_title": u"## Prompt To Copy Into AI",
         "prompt": u"""Please analyze these YangAgent Revit report files and list issues and recommendations by severity.
 
 Please follow the Revit versions, preferred workflow, review focus, and safety preferences listed above.
+If company standards are provided above, evaluate issues against those standards first.
 
 Requirements:
 1. Only provide analysis and recommendations. Do not generate scripts that directly modify the Revit model.
@@ -170,7 +183,7 @@ def format_time(timestamp):
         return u""
 
 
-def write_markdown(path, lang, export_dir, recent_files, preferences):
+def write_markdown(path, lang, export_dir, recent_files, preferences, standards_path, standards_text):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     lines = []
     lines.append(tr(lang, "title"))
@@ -189,6 +202,17 @@ def write_markdown(path, lang, export_dir, recent_files, preferences):
     lines.append(tr(lang, "preferred_workflow").format(safe_text(preferences.get("preferred_workflow"))))
     lines.append(tr(lang, "review_focus").format(safe_text(preferences.get("review_focus"))))
     lines.append(tr(lang, "safety_notes").format(safe_text(preferences.get("safety_notes"))))
+    lines.append(u"")
+    lines.append(tr(lang, "company_standards"))
+    lines.append(u"")
+    lines.append(tr(lang, "company_standards_path").format(safe_text(standards_path)))
+    if standards_text:
+        lines.append(u"")
+        lines.append(u"```markdown")
+        lines.append(standards_text)
+        lines.append(u"```")
+    else:
+        lines.append(tr(lang, "no_company_standards"))
     lines.append(u"")
     lines.append(tr(lang, "recent_files"))
     lines.append(u"")
@@ -226,10 +250,11 @@ def main():
     export_dir = get_export_dir()
     recent_files = collect_recent_report_files(export_dir)
     preferences = get_agent_preferences()
+    standards_path, standards_text = read_company_standards()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     report_path = os.path.join(export_dir, "yangagent_ai_review_prompt_{0}.md".format(timestamp))
 
-    write_markdown(report_path, lang, export_dir, recent_files, preferences)
+    write_markdown(report_path, lang, export_dir, recent_files, preferences, standards_path, standards_text)
 
     output.print_md(tr(lang, "title"))
     output.print_md(u"")

@@ -39,6 +39,42 @@ DEFAULT_AGENT_PREFERENCES = {
     "review_focus": u"优先检查 Revit 2027、中文界面、dry-run CSV、可撤销 Transaction。",
     "safety_notes": u"不要直接修改正式模型；所有修改先在测试模型 dry-run 并人工确认。",
 }
+DEFAULT_COMPANY_STANDARDS_TEMPLATE = u"""# Company BIM Standards / 公司 BIM 标准
+
+> This file is local only. Do not put confidential client data here unless your company allows it.
+> 本文件只保存在本机。除非公司允许，不要写入客户机密信息。
+
+## View Naming / 视图命名
+
+- Floor plans:
+- Ceiling plans:
+- Sections:
+- Elevations:
+
+## Room Rules / 房间规则
+
+- Room number format:
+- Room name rules:
+- Duplicate number handling:
+
+## Door and Window Marks / 门窗标记
+
+- Door mark format:
+- Window mark format:
+- When marks may be auto-filled:
+
+## Report Review Priorities / 报告分析优先级
+
+- High risk:
+- Medium risk:
+- Low risk:
+
+## Do Not Automate / 禁止自动化
+
+- Delete elements:
+- Modify central models:
+- Work on linked models:
+"""
 LANGUAGE_LABELS = {
     "zh": u"中文",
     "en": u"English",
@@ -73,6 +109,10 @@ def get_config_dir():
 
 def get_config_path():
     return os.path.join(get_config_dir(), "settings.json")
+
+
+def get_default_company_standards_path():
+    return os.path.join(get_config_dir(), "company_standards.md")
 
 
 def read_settings():
@@ -200,6 +240,50 @@ def save_agent_preferences(revit_versions=None, preferred_workflow=None, review_
     settings["agent_preferences"] = current
     write_settings(settings)
     return current
+
+
+def get_company_standards_path():
+    settings = read_settings()
+    path = _safe_text(settings.get("company_standards_path", "")).strip()
+    if not path:
+        path = get_default_company_standards_path()
+    return path
+
+
+def save_company_standards_path(path):
+    settings = read_settings()
+    settings["company_standards_path"] = _safe_text(path).strip()
+    write_settings(settings)
+    return settings["company_standards_path"]
+
+
+def ensure_company_standards_template(path=None):
+    path = _safe_text(path or get_company_standards_path()).strip()
+    if not path:
+        path = get_default_company_standards_path()
+    parent = os.path.dirname(path)
+    if parent and not os.path.isdir(parent):
+        os.makedirs(parent)
+    if not os.path.isfile(path):
+        with codecs.open(path, "w", "utf-8-sig") as stream:
+            stream.write(DEFAULT_COMPANY_STANDARDS_TEMPLATE)
+    save_company_standards_path(path)
+    return path
+
+
+def read_company_standards(max_chars=6000):
+    path = get_company_standards_path()
+    if not path or not os.path.isfile(path):
+        return path, u""
+    try:
+        with codecs.open(path, "r", "utf-8-sig") as stream:
+            text = stream.read()
+    except Exception:
+        return path, u""
+    text = _safe_text(text).strip()
+    if max_chars and len(text) > max_chars:
+        text = text[:max_chars] + u"\n\n... (truncated)"
+    return path, text
 
 
 def get_view_naming_rules():

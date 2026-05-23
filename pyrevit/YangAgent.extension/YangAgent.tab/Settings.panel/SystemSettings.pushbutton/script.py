@@ -16,6 +16,7 @@ from yang_agent_lang import (
     get_theme, save_theme, 
     get_user_profile, save_user_profile,
     get_agent_preferences, save_agent_preferences,
+    ensure_company_standards_template, get_company_standards_path, save_company_standards_path,
     get_view_naming_rules, save_view_naming_rules
 )
 
@@ -55,6 +56,7 @@ class SettingsWindow(forms.WPFWindow):
         self.NicknameBox.Text = profile.get("nickname") or ""
         self.AvatarBox.Text = profile.get("avatar_path") or ""
         self.load_agent_preferences()
+        self.StandardsPathBox.Text = get_company_standards_path()
         self.load_view_naming_rules()
         
         self.apply_theme()
@@ -112,6 +114,8 @@ class SettingsWindow(forms.WPFWindow):
         self.WorkflowLabel.Foreground = fg_color
         self.ReviewFocusLabel.Foreground = fg_color
         self.SafetyNotesLabel.Foreground = fg_color
+        self.StandardsLabel.Foreground = fg_color
+        self.StandardsHelp.Foreground = fg_color
         self.ViewRulesLabel.Foreground = fg_color
         self.ViewRulesHelp.Foreground = fg_color
         self.FloorPlanLabel.Foreground = fg_color
@@ -134,6 +138,22 @@ class SettingsWindow(forms.WPFWindow):
         if picked:
             self.AvatarBox.Text = picked
 
+    def browse_standards_click(self, sender, args):
+        picked = forms.pick_file(
+            files_filter="Markdown Files (*.md)|*.md|Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
+            title="Select company standards / 选择公司标准文件"
+        )
+        if picked:
+            self.StandardsPathBox.Text = picked
+
+    def create_standards_click(self, sender, args):
+        path = ensure_company_standards_template(self.StandardsPathBox.Text)
+        self.StandardsPathBox.Text = path
+        forms.toast(
+            "Company standards template created / 公司标准模板已创建",
+            title="Yang Agent"
+        )
+
     def save_click(self, sender, args):
         new_lang = "zh" if self.LanguageCombo.SelectedIndex == 0 else "en"
         save_language(new_lang)
@@ -148,6 +168,7 @@ class SettingsWindow(forms.WPFWindow):
             review_focus=self.ReviewFocusBox.Text,
             safety_notes=self.SafetyNotesBox.Text
         )
+        save_company_standards_path(self.StandardsPathBox.Text)
 
         prefix_rules = {}
         for view_type, box_name in VIEW_TYPE_BOXES:
