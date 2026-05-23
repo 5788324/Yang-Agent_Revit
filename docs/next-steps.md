@@ -14,6 +14,7 @@
 - pyRevit 只读工具：`Export Model Snapshot`。
 - pyRevit 只读工具：`Model Health Report`。
 - pyRevit dry-run 工具：`Preview Missing Marks`。
+- pyRevit dry-run 工具：`Preview Missing Room Numbers`。
 - Revit 2027 C# `.addin + .dll` 正式插件骨架。
 
 ## 现在应该做什么
@@ -46,8 +47,10 @@ cd "D:\codex\Yang Agent_Revit"
 7. 检查是否生成中文 Markdown 报告。
 8. 运行 `导出报告 -> 预览缺失标记`。
 9. 检查是否生成 dry-run Markdown 和 CSV。
-10. 再运行 `系统设置`，设置 English。
-11. 重复运行三个报告按钮，检查英文输出。
+10. 运行 `导出报告 -> 预览缺失房间编号`。
+11. 检查是否生成 dry-run Markdown 和 CSV。
+12. 再运行 `系统设置`，设置 English。
+13. 重复运行报告按钮，检查英文输出。
 
 如果所有按钮都是灰色，优先清理 pyRevit 缓存并重启 Revit。
 
@@ -80,12 +83,11 @@ cd "D:\codex\Yang Agent_Revit"
 下一轮开发目标：
 
 - `Apply Missing Door Window Marks`
-- `Preview Missing Room Numbers`
 - `Preview Unplaced Views`
 
 其中 `Apply Missing Door Window Marks` 会进入受控修改阶段，必须先读取 dry-run CSV、显示影响数量，并要求用户二次确认。
 
-`Preview Missing Room Numbers` 和 `Preview Unplaced Views` 仍然只预览，不修改模型。
+`Preview Unplaced Views` 仍然只预览，不修改模型。
 
 ## 判断是否进入下一阶段
 

@@ -13,6 +13,7 @@
 - 新增 `docs/testing-and-qa.md` 测试与质量保证规范文档。
 - 新增 `docs/security-preparations.md` 项目初期安全防范与备份预案。
 - 新增 `CHANGELOG.md` 更新日志文档以规范化版本控制。
+- 新增 `Preview Missing Room Numbers` dry-run 工具，导出缺少编号房间的 Markdown 和 CSV 清单。
 
 ### Changed (变更)
 - 完善初期项目框架与文档体系。
