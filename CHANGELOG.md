@@ -18,6 +18,7 @@
 - 新增 `Preview Unplaced Views` dry-run 工具，导出可能未上图视图的 Markdown 和 CSV 清单。
 - 新增 `Preview Views By Naming Rules` dry-run 工具，导出视图命名问题 Markdown 和 CSV 清单。
 - 新增 `docs/view-naming-rules.md`，说明视图命名规则的本地配置方式。
+- 新增 `docs/handoff-2026-05-23.md` 交接记录，方便后续同事接手。
 - 新增 `Apply Missing Door Window Marks` 受控修改工具，从 dry-run CSV 写入门窗标记并输出日志。
 
 ### Changed (变更)

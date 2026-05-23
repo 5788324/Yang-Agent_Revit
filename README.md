@@ -17,6 +17,7 @@
 - [故障排查](docs/troubleshooting.md)
 - [AI 协作开发流程](docs/collaboration-workflow.md)
 - [视图命名规则配置](docs/view-naming-rules.md)
+- [2026-05-23 交接记录](docs/handoff-2026-05-23.md)
 
 当前 pyRevit 工具：
 
