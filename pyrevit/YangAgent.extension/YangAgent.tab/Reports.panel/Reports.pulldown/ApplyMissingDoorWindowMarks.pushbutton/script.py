@@ -33,6 +33,7 @@ TEXT = {
         "pick_csv": u"选择 missing_door_window_marks_*.csv",
         "no_csv": u"已取消。未选择 CSV。",
         "bad_csv": u"CSV 缺少必要字段，不能执行。",
+        "bad_csv_fields": u"CSV 缺少必要字段，不能执行。\n\n需要字段：{0}\n实际字段：{1}",
         "no_rows": u"没有可应用的门窗标记行。",
         "confirm": u"确认应用",
         "cancel": u"取消",
@@ -59,6 +60,7 @@ TEXT = {
         "pick_csv": u"Select missing_door_window_marks_*.csv",
         "no_csv": u"Cancelled. No CSV selected.",
         "bad_csv": u"CSV is missing required fields. Cannot apply.",
+        "bad_csv_fields": u"CSV is missing required fields. Cannot apply.\n\nRequired fields: {0}\nActual fields: {1}",
         "no_rows": u"No applicable door/window mark rows were found.",
         "confirm": u"Apply",
         "cancel": u"Cancel",
@@ -124,13 +126,20 @@ def is_blank(value):
 
 
 def normalize_key(value):
+    text = safe_text(value)
+    text = text.replace(u"\ufeff", u"")
+    text = text.replace(u"\u00a0", u" ")
+    return text.strip().lower()
+
+
+def normalize_value(value):
     return safe_text(value).replace(u"\ufeff", u"").strip()
 
 
 def read_preview_csv(path):
     rows = []
-    with open(path, "rb") as raw_stream:
-        reader = csv.DictReader(raw_stream)
+    with codecs.open(path, "r", "utf-8-sig") as text_stream:
+        reader = csv.DictReader(text_stream)
         if not reader.fieldnames:
             return rows, []
 
@@ -140,7 +149,7 @@ def read_preview_csv(path):
             index = 0
             for raw_key in reader.fieldnames:
                 key = fieldnames[index]
-                row[key] = safe_text(raw_row.get(raw_key, u"")).strip()
+                row[key] = normalize_value(raw_row.get(raw_key, u""))
                 index += 1
             rows.append(row)
     return rows, fieldnames
@@ -149,7 +158,7 @@ def read_preview_csv(path):
 def validate_fields(fieldnames):
     available = set(fieldnames)
     for field in REQUIRED_FIELDS:
-        if field not in available:
+        if normalize_key(field) not in available:
             return False
     return True
 
@@ -386,7 +395,15 @@ def main():
 
     rows, fieldnames = read_preview_csv(csv_path)
     if not validate_fields(fieldnames):
-        forms.alert(tr(lang, "bad_csv"), title=tr(lang, "alert_title"))
+        message = tr(lang, "bad_csv_fields").format(
+            u", ".join(REQUIRED_FIELDS),
+            u", ".join(fieldnames),
+        )
+        output.print_md(u"# CSV field validation failed")
+        output.print_md(u"")
+        output.print_md(u"- Required: `{0}`".format(u", ".join(REQUIRED_FIELDS)))
+        output.print_md(u"- Actual: `{0}`".format(u", ".join(fieldnames)))
+        forms.alert(message, title=tr(lang, "alert_title"))
         return
 
     apply_rows = collect_apply_rows(rows)
