@@ -55,6 +55,8 @@ scripts/
 - 创建 `导出报告` 面板。
 - 放入几个占位按钮。
 - 点击按钮显示说明弹窗。
+- 打开本机 YangAgent 配置目录。
+- 打开默认报告导出目录。
 
 第一版 DLL 不做：
 
@@ -65,15 +67,23 @@ scripts/
 
 ## 4.1 当前构建结果
 
-当前 Revit 2027 DLL 骨架已在本机通过 `dotnet build`。
+当前 Revit 2027 DLL 骨架已在本机通过 `dotnet build`，并已安装到当前用户 Revit 2027 Addins 目录。
 
 构建环境：
 
 - .NET SDK：10.0.300。
 - Revit：2027。
 - 目标框架：`net10.0-windows`。
+- Addin 清单：`%APPDATA%\Autodesk\Revit\Addins\2027\YangAgent.Revit2027.addin`。
 
 注意：构建时可能出现 `MSB3277` 相关警告，这是 Revit API 引用链和 .NET 引用版本之间的提示。当前骨架没有编译错误，可以继续使用。
+
+当前真实 DLL 功能：
+
+- `系统设置 -> 关于更新`：显示版权和更新链接。
+- `系统设置 -> 配置目录`：打开 `%APPDATA%\YangAgent_Revit`。
+- `导出报告 -> 报告目录`：打开桌面默认 `YangAgent_Revit_Exports`。
+- 其它按钮仍为占位说明，不读取或修改 Revit 模型。
 
 ## 5. 后续迁移顺序
 

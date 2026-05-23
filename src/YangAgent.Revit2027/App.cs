@@ -21,7 +21,9 @@ public class App : IExternalApplication
 
             AddButton(settingsPanel, "YangAgentAbout", "关于\n更新", assemblyPath, typeof(Commands.AboutCommand).FullName!);
             AddButton(settingsPanel, "YangAgentSettings", "系统\n设置", assemblyPath, typeof(Commands.OpenSettingsCommand).FullName!);
+            AddButton(settingsPanel, "YangAgentOpenConfig", "配置\n目录", assemblyPath, typeof(Commands.OpenConfigFolderCommand).FullName!);
             AddButton(reportsPanel, "YangAgentReports", "导出\n报告", assemblyPath, typeof(Commands.ExportReportPlaceholderCommand).FullName!);
+            AddButton(reportsPanel, "YangAgentOpenExports", "报告\n目录", assemblyPath, typeof(Commands.OpenExportFolderCommand).FullName!);
 
             return Result.Succeeded;
         }

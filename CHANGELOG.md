@@ -26,6 +26,7 @@
 - 新增 `Export AI Review Prompt` 只读工具，生成安全 AI 分析提示词和最近报告清单。
 - `SystemSettings` 新增本机 AI 工作习惯配置，并将其写入 AI 分析提示词。
 - `SystemSettings` 新增本机公司标准 Markdown 文件配置，并将其写入 AI 分析提示词。
+- Revit 2027 DLL 插件新增真实只读按钮：打开配置目录、打开报告目录。
 
 ### Changed (变更)
 - 完善初期项目框架与文档体系。
@@ -38,6 +39,7 @@
 - 优化房间编号参数读取，避免 Revit 参数对象布尔误判。
 - 将视图命名检查规则抽到共享设置，支持通过本机 `settings.json` 调整。
 - 优化 `Apply Missing Room Numbers` 的 CSV 选择提示，只接受 `missing_room_numbers_*.csv`，避免误选重复编号报告。
+- 更新 Revit 2027 DLL 系统设置占位说明，指向本机配置目录。
 
 ## [1.0.0] - 2026-05-23
 
