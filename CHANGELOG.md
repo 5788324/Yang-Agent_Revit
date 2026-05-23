@@ -16,6 +16,7 @@
 - 新增 `Preview Missing Room Numbers` dry-run 工具，导出缺少编号房间的 Markdown 和 CSV 清单。
 - 新增 `Preview Duplicate Room Numbers` dry-run 工具，导出重复房间编号的 Markdown 和 CSV 清单。
 - 新增 `Preview Unplaced Views` dry-run 工具，导出可能未上图视图的 Markdown 和 CSV 清单。
+- 新增 `Preview Views By Naming Rules` dry-run 工具，导出视图命名问题 Markdown 和 CSV 清单。
 - 新增 `Apply Missing Door Window Marks` 受控修改工具，从 dry-run CSV 写入门窗标记并输出日志。
 
 ### Changed (变更)
