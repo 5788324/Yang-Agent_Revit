@@ -1,0 +1,3 @@
+title: 应用房间编号
+tooltip: Apply suggested room numbers from a dry-run CSV. Requires confirmation and modifies the model.
+author: Yang Agent
