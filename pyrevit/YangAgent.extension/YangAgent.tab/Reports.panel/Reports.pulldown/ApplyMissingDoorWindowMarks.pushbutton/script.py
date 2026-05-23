@@ -176,18 +176,45 @@ def is_applicable_row(row):
 
 def get_mark_param(element):
     try:
-        return element.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
+        param = element.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
+        if param is not None:
+            return param
     except Exception:
-        return None
+        pass
+    for name in ["Mark", u"标记"]:
+        try:
+            param = element.LookupParameter(name)
+            if param is not None:
+                return param
+        except Exception:
+            continue
+    return None
 
 
 def get_param_text(param):
-    if not param:
+    if param is None:
         return u""
     try:
-        return safe_text(param.AsValueString() or param.AsString() or param.AsDouble() or param.AsInteger())
+        value = param.AsString()
+        if value is not None:
+            return safe_text(value)
     except Exception:
-        return u""
+        pass
+    try:
+        value = param.AsValueString()
+        if value is not None:
+            return safe_text(value)
+    except Exception:
+        pass
+    try:
+        return safe_text(param.AsInteger())
+    except Exception:
+        pass
+    try:
+        return safe_text(param.AsDouble())
+    except Exception:
+        pass
+    return u""
 
 
 def collect_apply_rows(rows):

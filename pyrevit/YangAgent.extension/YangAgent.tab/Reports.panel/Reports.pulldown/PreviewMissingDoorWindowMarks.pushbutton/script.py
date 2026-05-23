@@ -120,11 +120,62 @@ def element_id_value(element_id):
 def get_param_as_text(element, built_in_param):
     try:
         param = element.get_Parameter(built_in_param)
-        if not param:
+        if param is None:
             return u""
-        return safe_text(param.AsValueString() or param.AsString() or param.AsDouble() or param.AsInteger())
+        return get_param_text(param)
     except Exception:
         return u""
+
+
+def get_param_text(param):
+    if param is None:
+        return u""
+    try:
+        value = param.AsString()
+        if value is not None:
+            return safe_text(value)
+    except Exception:
+        pass
+    try:
+        value = param.AsValueString()
+        if value is not None:
+            return safe_text(value)
+    except Exception:
+        pass
+    try:
+        return safe_text(param.AsInteger())
+    except Exception:
+        pass
+    try:
+        return safe_text(param.AsDouble())
+    except Exception:
+        pass
+    return u""
+
+
+def get_lookup_param(element, names):
+    for name in names:
+        try:
+            param = element.LookupParameter(name)
+            if param is not None:
+                return param
+        except Exception:
+            continue
+    return None
+
+
+def get_mark_param(element):
+    try:
+        param = element.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
+        if param is not None:
+            return param
+    except Exception:
+        pass
+    return get_lookup_param(element, ["Mark", u"标记"])
+
+
+def get_mark_as_text(element):
+    return get_param_text(get_mark_param(element))
 
 
 def get_family_type(element):
@@ -157,7 +208,7 @@ def collect_category(built_in_category, category_name):
     ).WhereElementIsNotElementType()
 
     for element in collector.ToElements():
-        mark = get_param_as_text(element, BuiltInParameter.ALL_MODEL_MARK)
+        mark = get_mark_as_text(element)
         family_name, type_name = get_family_type(element)
         rows.append({
             "element_id": element_id_value(element.Id),
