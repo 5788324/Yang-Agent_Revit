@@ -1,7 +1,35 @@
 # 故障排查摘要
 
-> 面向个人用户，覆盖最常见的 4 类问题。
+> 面向个人用户，覆盖最常见的 5 类问题。
 > 完整版见 `docs/troubleshooting.md`
+
+---
+
+## 问题 0：Revit 中看不到 YangAgent
+
+### 症状
+
+- Revit 顶部没有任何 `pyRevit` 选项卡。
+- 或有 `pyRevit` 选项卡但里面没有 `YangAgent`。
+
+### 原因
+
+- pyRevit 未安装。
+- YangAgent extension 未安装或安装失败。
+- Revit 未 reload。
+
+### 处理步骤
+
+1. 先确认 Revit 顶部是否有 `pyRevit` 选项卡。
+2. **如果没有 pyRevit**：去 [pyRevit 官网](https://github.com/eirannejad/pyRevit/releases) 下载安装 pyRevit，重启 Revit。
+3. **如果有 pyRevit 但无 YangAgent**：运行安装脚本：
+
+```powershell
+.\scripts\install-pyrevit-extension.ps1
+```
+
+4. 重启 Revit，检查 pyRevit 选项卡中是否出现 YangAgent。
+5. 仍看不到：在 pyRevit 中点击 Reload。
 
 ---
 
@@ -33,7 +61,7 @@ FullClassName 为 Revit 调用附加模块应用程序提供了入口点
 ### 处理步骤
 
 1. **完全关闭 Revit**（包括 Revit 2025/2026/2027 等所有实例）。
-2. 打开任务管理器，确认没有 `Revit.exe` 或 `RevitWorker.exe` 进程。若仍存在进程，优先回到 Revit 正常保存并关闭；不要在有未保存工作时强行结束进程。
+2. 打开任务管理器，确认没有 `Revit.exe` 或 `RevitWorker.exe` 进程。
 3. 运行缓存清理 + 重装：
 
 ```powershell
@@ -145,7 +173,13 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ├─ 任务管理器无 Revit.exe？ → 否 → 先正常保存并关闭 Revit
 ├─ 运行了 -Force -ClearCache？ → 否 → 运行
 ├─ 重启 Revit 后 Reload 了？ → 否 → Reload
-└─ 还不行？ → 手动运行 clear-pyrevit-yangagent-cache.ps1，再重复
+└─ 还不行？检查以下 5 项，再手动清理缓存：
+    ① `.panel` 目录必须是英文（如 `Settings.panel`）。
+    ② `.pushbutton` 目录必须是英文且无空格。
+    ③ `bundle.yaml` 不应包含 `context:`。
+    ④ Revit 是否已经**完全**重启（所有实例关闭）。
+    ⑤ pyRevit 是否已经 Reload。
+    仍不行 → 手动运行 `.\scripts\clear-pyrevit-yangagent-cache.ps1`，再重复
 ```
 
 ---
