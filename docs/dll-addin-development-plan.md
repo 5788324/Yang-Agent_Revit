@@ -112,3 +112,10 @@ C# 插件也必须遵守：
 - 修改必须使用 Transaction。
 - 高风险操作必须二次确认。
 - 所有输出必须有日志。
+## Current Multi-Version Boundary
+
+- First phase targets Revit 2024-2027 only.
+- Revit 2011-2023 are deferred backlog targets, not current support.
+- Revit 2024, 2025/2026, and 2027 should use separate C# projects and separate `.addin` templates.
+- Current Revit 2027 DLL scope stays small: ribbon, about, config folder, report folder, and placeholder commands.
+- See `docs/revit-version-support-plan.md` for the authoritative version support wording.

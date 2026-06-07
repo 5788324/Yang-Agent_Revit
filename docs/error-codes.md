@@ -29,3 +29,8 @@
 | Code | Meaning | User action |
 | --- | --- | --- |
 | `YA-CS-BUILD-LOCKED-DLL` | Revit 正在锁定 DLL，无法覆盖 | 关闭 Revit 2027 后重新构建 |
+## C# DLL Startup
+
+| Code | Meaning | User action |
+| --- | --- | --- |
+| `YA-CS-STARTUP-001` | DLL 启动失败 | 查看弹窗中的异常信息，先确认 Revit 版本和 DLL 安装路径 |

@@ -28,3 +28,22 @@
 5. 对于修改类工具，必须先运行 dry-run，人工检查 CSV，再执行 Apply。
 6. Apply 后必须确认可以通过 Revit 撤销。
 7. 填写测试清单结果；不要提交 `.rvt` 模型到 Git。
+
+## 4. 不依赖 Revit 的静态检查
+
+在没有打开 Revit 的情况下，可以先运行只读检查：
+
+```powershell
+cd "D:\codex\Yang Agent_Revit"
+python tools\static_checks.py --write-report
+```
+
+该脚本只扫描仓库文件，不运行 Revit，不运行安装脚本，不修改模型。
+
+当前检查范围：
+
+- pyRevit 按钮目录是否缺少 `bundle.yaml`、`script.py`、`README.md` 或 `icon.png`。
+- 文档里的 PowerShell 命令是否可能不可复制。
+- 文档是否把 Revit 2011-2027 写成已支持。
+
+Hermes/DeepSeek 可以运行这个脚本并整理报告，但不能据此直接修改核心代码。

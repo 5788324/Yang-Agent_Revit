@@ -292,3 +292,31 @@ Revit 2027 `.addin + .dll` 骨架已存在。
 - 所有交接文档已提交。
 - 已推送到 GitHub。
 - 新对话先读本文件。
+## 2026-06-07 Update
+
+Current local state:
+
+- Branch: `main`.
+- Local branch is ahead of `origin/main`; do not push unless the user asks.
+- Project direction: personal-use Revit assistant, not enterprise platform.
+- First Revit version phase: 2024-2027.
+- Revit 2011-2023: deferred compatibility backlog only.
+- Current C# DLL skeleton: Revit 2027 only.
+
+New authoritative docs:
+
+- `docs/revit-version-support-plan.md` records version support wording.
+- `tools/static_checks.py` provides a no-Revit static check entry point.
+
+Current safety rules:
+
+- Do not directly modify production Revit models.
+- New model-changing functions must follow dry-run -> human confirmation -> apply.
+- Apply tools must provide logs, clear errors, and Revit Undo verification steps.
+- Do not claim Undo is verified unless manually tested in a sandbox model.
+
+Hermes/DeepSeek boundary:
+
+- Hermes may run read-only checks and write draft reports.
+- Hermes must not edit pyRevit `script.py`, C# core, build/install scripts, addin templates, or Revit models.
+- Hermes output remains draft until Codex reviews it.

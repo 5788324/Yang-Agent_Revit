@@ -7,6 +7,8 @@ namespace YangAgent.Revit2027;
 public class App : IExternalApplication
 {
     private const string TabName = "YangAgent";
+    private const string SettingsPanelName = "Settings";
+    private const string ReportsPanelName = "Reports";
 
     public Result OnStartup(UIControlledApplication application)
     {
@@ -14,22 +16,22 @@ public class App : IExternalApplication
         {
             TryCreateTab(application, TabName);
 
-            RibbonPanel settingsPanel = EnsurePanel(application, TabName, "系统设置");
-            RibbonPanel reportsPanel = EnsurePanel(application, TabName, "导出报告");
+            RibbonPanel settingsPanel = EnsurePanel(application, TabName, SettingsPanelName);
+            RibbonPanel reportsPanel = EnsurePanel(application, TabName, ReportsPanelName);
 
             string assemblyPath = Assembly.GetExecutingAssembly().Location;
 
-            AddButton(settingsPanel, "YangAgentAbout", "关于\n更新", assemblyPath, typeof(Commands.AboutCommand).FullName!);
-            AddButton(settingsPanel, "YangAgentSettings", "系统\n设置", assemblyPath, typeof(Commands.OpenSettingsCommand).FullName!);
-            AddButton(settingsPanel, "YangAgentOpenConfig", "配置\n目录", assemblyPath, typeof(Commands.OpenConfigFolderCommand).FullName!);
-            AddButton(reportsPanel, "YangAgentReports", "导出\n报告", assemblyPath, typeof(Commands.ExportReportPlaceholderCommand).FullName!);
-            AddButton(reportsPanel, "YangAgentOpenExports", "报告\n目录", assemblyPath, typeof(Commands.OpenExportFolderCommand).FullName!);
+            AddButton(settingsPanel, "YangAgentAbout", "About\nUpdate", assemblyPath, typeof(Commands.AboutCommand).FullName!);
+            AddButton(settingsPanel, "YangAgentSettings", "System\nSettings", assemblyPath, typeof(Commands.OpenSettingsCommand).FullName!);
+            AddButton(settingsPanel, "YangAgentOpenConfig", "Config\nFolder", assemblyPath, typeof(Commands.OpenConfigFolderCommand).FullName!);
+            AddButton(reportsPanel, "YangAgentReports", "Export\nReports", assemblyPath, typeof(Commands.ExportReportPlaceholderCommand).FullName!);
+            AddButton(reportsPanel, "YangAgentOpenExports", "Reports\nFolder", assemblyPath, typeof(Commands.OpenExportFolderCommand).FullName!);
 
             return Result.Succeeded;
         }
         catch (Exception ex)
         {
-            Autodesk.Revit.UI.TaskDialog.Show("YangAgent", "YangAgent 启动失败：\n" + ex.Message);
+            TaskDialog.Show("YangAgent", "YA-CS-STARTUP-001: YangAgent startup failed.\n\n" + ex.Message);
             return Result.Failed;
         }
     }
@@ -68,7 +70,7 @@ public class App : IExternalApplication
     {
         PushButtonData data = new(name, text, assemblyPath, className)
         {
-            ToolTip = "YangAgent Revit 2027 正式插件骨架。当前为占位按钮，不修改模型。"
+            ToolTip = "YangAgent Revit 2027 DLL skeleton. Current commands do not modify the Revit model."
         };
 
         panel.AddItem(data);

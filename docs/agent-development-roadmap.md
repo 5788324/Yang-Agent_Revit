@@ -179,3 +179,10 @@ Hermes 不可以做：
 7. MCP / skill 等到数据导出稳定后再做。
 
 这个路线更符合个人工具：少做架构，多做能马上帮你工作的功能。
+## 8. Revit Version Boundary
+
+- First phase targets Revit 2024-2027.
+- Current C# DLL skeleton is Revit 2027 only.
+- Revit 2011-2023 are deferred compatibility backlog items.
+- Do not describe Revit 2011-2027 as already supported.
+- Detailed version wording is recorded in `docs/revit-version-support-plan.md`.

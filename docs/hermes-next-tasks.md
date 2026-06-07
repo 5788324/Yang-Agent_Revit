@@ -1,13 +1,19 @@
 # Hermes Next Tasks
 
-Hermes/DeepSeek 当前能力评估：可以承担 docs-only 自主辅助任务。仍然不允许修改代码、脚本、addin 模板或 Revit 模型。
+Hermes/DeepSeek 当前能力评估：可以承担文档、测试、只读静态检查任务。仍然不允许修改核心代码、安装脚本、addin 模板或 Revit 模型。
 
 ## 工作边界
 
-继续使用分支：
+文档草稿可继续使用分支：
 
 ```powershell
 hermes/docs-personal-mvp
+```
+
+只读检查试运行使用分支：
+
+```powershell
+hermes/read-only-checks
 ```
 
 不做：
@@ -134,3 +140,47 @@ Questions for Codex:
 - 不接受危险 Revit 操作建议。
 - 不接受企业级复杂化。
 - 不接受核心代码改动。
+## 只读代码试运行任务
+
+Hermes/DeepSeek 当前可以承担文档、测试、只读静态检查任务。仍然不允许修改核心代码、安装脚本、addin 模板或 Revit 模型。
+
+分支建议：
+
+```powershell
+hermes/read-only-checks
+```
+
+允许做：
+
+- 运行 `python tools\static_checks.py --write-report`。
+- 整理 `docs/drafts/static-check-report.md` 的结果。
+- 修改 `docs/drafts/*.md` 草稿。
+- 在新分支上新增只读测试草稿或审计报告。
+
+禁止做：
+
+- 不改 `pyrevit/**/script.py`。
+- 不改 `src/**`。
+- 不改 `scripts/**`。
+- 不改 `addins/**`。
+- 不运行 Revit。
+- 不运行 install/build 脚本。
+- 不做 git merge / push / pull。
+- 不添加 `.rvt`。
+
+任务：
+
+1. 运行静态检查：
+
+   ```powershell
+   cd "G:\Hermes Agent\YangAgent Revit\YangAgent Revit"
+   python tools\static_checks.py --write-report
+   ```
+
+2. 阅读生成的 `docs/drafts/static-check-report.md`。
+3. 新增 `docs/drafts/hermes-static-check-review.md`，只写：
+   - 发现了哪些 `ERROR`。
+   - 发现了哪些 `WARN`。
+   - 哪些是文档问题。
+   - 哪些需要 Codex 判断。
+4. 不直接修核心代码。
