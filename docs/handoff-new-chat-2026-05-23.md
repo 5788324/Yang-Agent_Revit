@@ -307,6 +307,10 @@ New authoritative docs:
 
 - `docs/revit-version-support-plan.md` records version support wording.
 - `tools/static_checks.py` provides a no-Revit static check entry point.
+- Generic DLL scripts now exist:
+  - `scripts\build-revit-addin.ps1 -Version 2027`
+  - `scripts\install-revit-addin.ps1 -Version 2027`
+  - Revit 2024/2025/2026 currently stop with `YA-CS-VERSION-PLANNED`.
 
 Current safety rules:
 

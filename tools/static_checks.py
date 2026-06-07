@@ -76,12 +76,13 @@ def iter_markdown_files() -> list[Path]:
 
 def check_doc_commands() -> list[Finding]:
     findings: list[Finding] = []
-    ps1_pattern = re.compile(r"(?<!scripts[\\/])(?<!\.\\scripts\\)(?<!\./scripts/)([A-Za-z0-9_.-]+\.ps1)")
+    ps1_pattern = re.compile(r"([A-Za-z0-9_.-]+\.ps1)")
+    explicit_script_path = re.compile(r"scripts[\\/][A-Za-z0-9_.-]+\.ps1", re.IGNORECASE)
     placeholder_pattern = re.compile(r"<[^>]+>|脚本路径|SCRIPT_PATH|your-path", re.IGNORECASE)
 
     for path in iter_markdown_files():
         for number, line in enumerate(read_text(path).splitlines(), start=1):
-            if ".ps1" in line and ps1_pattern.search(line):
+            if ps1_pattern.search(line) and not explicit_script_path.search(line):
                 findings.append(Finding("WARN", "docs commands", path, f"Line {number}: PowerShell script command may need an explicit scripts path."))
             if placeholder_pattern.search(line):
                 findings.append(Finding("WARN", "docs commands", path, f"Line {number}: Placeholder wording may not be copy/paste friendly."))

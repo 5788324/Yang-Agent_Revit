@@ -29,6 +29,10 @@
 | Code | Meaning | User action |
 | --- | --- | --- |
 | `YA-CS-BUILD-LOCKED-DLL` | Revit 正在锁定 DLL，无法覆盖 | 关闭 Revit 2027 后重新构建 |
+| `YA-CS-VERSION-PLANNED` | 选择的 Revit DLL 版本还只是计划 | 当前只构建/安装 Revit 2027；等待对应版本项目创建 |
+| `YA-CS-PROJECT-MISSING` | C# 项目文件不存在 | 检查 `src/YangAgent.Revit20xx` 是否已创建 |
+| `YA-CS-ADDIN-TEMPLATE-MISSING` | `.addin` 模板不存在 | 检查 `addins/Revit20xx` 是否已创建 |
+| `YA-CS-DLL-MISSING` | 构建后找不到 DLL | 先查看 `dotnet build` 输出 |
 ## C# DLL Startup
 
 | Code | Meaning | User action |

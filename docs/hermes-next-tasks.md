@@ -184,3 +184,18 @@ hermes/read-only-checks
    - 哪些是文档问题。
    - 哪些需要 Codex 判断。
 4. 不直接修核心代码。
+
+## Hermes 后续只读脚本检查
+
+可以检查但不能修改：
+
+- `scripts\build-revit-addin.ps1`
+- `scripts\install-revit-addin.ps1`
+- `scripts\build-revit2027-addin.ps1`
+- `scripts\install-revit2027-addin.ps1`
+
+检查目标：
+
+- 2027 是否是唯一 implemented track。
+- 2024/2025/2026 是否明确返回 `YA-CS-VERSION-PLANNED`。
+- 文档是否没有把 2024/2025/2026 写成已经可构建。

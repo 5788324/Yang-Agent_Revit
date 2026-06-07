@@ -119,3 +119,19 @@ C# 插件也必须遵守：
 - Revit 2024, 2025/2026, and 2027 should use separate C# projects and separate `.addin` templates.
 - Current Revit 2027 DLL scope stays small: ribbon, about, config folder, report folder, and placeholder commands.
 - See `docs/revit-version-support-plan.md` for the authoritative version support wording.
+
+Current script entry points:
+
+```powershell
+.\scripts\build-revit-addin.ps1 -Version 2027
+.\scripts\install-revit-addin.ps1 -Version 2027
+```
+
+Beginner-friendly wrappers are still available:
+
+```powershell
+.\scripts\build-revit2027-addin.ps1
+.\scripts\install-revit2027-addin.ps1
+```
+
+If `-Version 2024`, `-Version 2025`, or `-Version 2026` is used now, the script must stop with `YA-CS-VERSION-PLANNED`. That is intentional: those versions are planned, not implemented.

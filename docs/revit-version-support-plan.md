@@ -24,6 +24,13 @@ This is a personal-use project, so the short path is to make recent versions use
 | 2026 | .NET 8 expected | Planned | Must verify before implementation |
 | 2027 | .NET 10 | Skeleton exists | Keep ribbon and folder entry points only |
 
+Current script behavior:
+
+- `scripts\build-revit-addin.ps1 -Version 2027` builds the current DLL skeleton.
+- `scripts\install-revit-addin.ps1 -Version 2027` installs the current DLL skeleton manifest.
+- `2024`, `2025`, and `2026` are accepted as planned version names, but the scripts stop with `YA-CS-VERSION-PLANNED` until those projects exist.
+- `scripts\build-revit2027-addin.ps1` and `scripts\install-revit2027-addin.ps1` remain as beginner-friendly wrappers for Revit 2027.
+
 ## 2011-2023 Backlog
 
 Revit 2011-2023 are backlog targets:
