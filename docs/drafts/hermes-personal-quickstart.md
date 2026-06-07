@@ -127,11 +127,11 @@ cd "D:\YangAgent"   # 替换为你的实际路径
 
 | 问题 | 处理 |
 |------|------|
-| 按钮灰色 | 关 Revit → `install-pyrevit-extension.ps1 -Force -ClearCache` → 开 Revit → Reload |
+| 按钮灰色 | 关 Revit → `.\scripts\install-pyrevit-extension.ps1 -Force -ClearCache` → 开 Revit → Reload |
 | 提示 FullClassName 错误 | 同上，清理旧缓存 |
 | 找不到 pyRevit 选项卡 | 先安装 pyRevit |
 | DLL 被锁定 | 保存工作 → 正常关闭 Revit → 确认任务管理器无 Revit.exe → 重新构建 |
-| PowerShell 脚本不能运行 | 用 `powershell -NoProfile -ExecutionPolicy Bypass -File 脚本路径` |
+| PowerShell 脚本不能运行 | 用 `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install-pyrevit-extension.ps1` |
 
 ---
 
