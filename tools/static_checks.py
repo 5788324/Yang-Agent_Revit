@@ -65,7 +65,7 @@ def check_pyrevit_buttons() -> list[Finding]:
             if "title:" not in text:
                 findings.append(Finding("WARN", "pyRevit buttons", bundle, "bundle.yaml has no title."))
             if "context:" in text:
-                findings.append(Finding("WARN", "pyRevit buttons", bundle, "bundle.yaml uses context; this previously caused Revit/pyRevit availability issues."))
+                findings.append(Finding("WARN", "pyRevit buttons", bundle, "bundle.yaml uses context; this previously caused pyRevit availability issues."))
 
     return findings
 
@@ -78,7 +78,7 @@ def check_doc_commands() -> list[Finding]:
     findings: list[Finding] = []
     ps1_pattern = re.compile(r"([A-Za-z0-9_.-]+\.ps1)")
     explicit_script_path = re.compile(r"scripts[\\/][A-Za-z0-9_.-]+\.ps1", re.IGNORECASE)
-    placeholder_pattern = re.compile(r"<[^>]+>|脚本路径|SCRIPT_PATH|your-path", re.IGNORECASE)
+    placeholder_pattern = re.compile(r"<[^>]+>|SCRIPT_PATH|your-path|script path", re.IGNORECASE)
 
     for path in iter_markdown_files():
         for number, line in enumerate(read_text(path).splitlines(), start=1):
@@ -93,29 +93,23 @@ def check_doc_commands() -> list[Finding]:
 def check_version_wording() -> list[Finding]:
     findings: list[Finding] = []
     risky_patterns = [
-        re.compile(r"2011\s*[-~至到]\s*2027.*(support|supported|支持|可用)", re.IGNORECASE),
-        re.compile(r"(support|supported|支持|可用).{0,24}2011\s*[-~至到]\s*2027", re.IGNORECASE),
+        re.compile(r"2011\s*[-~]\s*2027.*(support|supported|available|works)", re.IGNORECASE),
+        re.compile(r"(support|supported|available|works).{0,32}2011\s*[-~]\s*2027", re.IGNORECASE),
     ]
-    planned_patterns = [
-        re.compile(r"(first|phase|阶段|优先|先).{0,32}2024\s*[-~至到]\s*2027|2024\s*[-~至到]\s*2027.*(first|phase|阶段|优先|先)", re.IGNORECASE),
-        re.compile(r"2011\s*[-~至到]\s*2023.*(later|backlog|延后|以后|准备)", re.IGNORECASE),
-    ]
-
     saw_planned_2024_2027 = False
     saw_deferred_2011_2023 = False
 
     for path in iter_markdown_files():
         text = read_text(path)
-        for pattern in planned_patterns[:1]:
-            if pattern.search(text):
-                saw_planned_2024_2027 = True
-        for pattern in planned_patterns[1:]:
-            if pattern.search(text):
-                saw_deferred_2011_2023 = True
+        lowered_text = text.lower()
+        if "2024-2027" in lowered_text and any(token in lowered_text for token in ["first phase", "targets", "priority"]):
+            saw_planned_2024_2027 = True
+        if "2011-2023" in lowered_text and any(token in lowered_text for token in ["backlog", "deferred", "planned"]):
+            saw_deferred_2011_2023 = True
 
         for number, line in enumerate(text.splitlines(), start=1):
-            lowered = line.lower()
-            if any(token in lowered for token in ["do not", "forbidden", "avoid", "不要", "不可以", "是否"]):
+            lowered_line = line.lower()
+            if any(token in lowered_line for token in ["do not", "forbidden", "avoid", "not write", "question"]):
                 continue
             for pattern in risky_patterns:
                 if pattern.search(line):

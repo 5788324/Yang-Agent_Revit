@@ -47,3 +47,25 @@ python tools\static_checks.py --write-report
 - 文档是否把 Revit 2011-2027 写成已支持。
 
 Hermes/DeepSeek 可以运行这个脚本并整理报告，但不能据此直接修改核心代码。
+
+## 5. Apply CSV 离线校验
+
+在 Revit 里运行 apply 之前，可以先用只读脚本检查 dry-run CSV：
+
+```powershell
+cd "D:\codex\Yang Agent_Revit"
+python tools\validate_apply_csv.py --kind room --csv path\to\missing_room_numbers_YYYYMMDD_HHMMSS.csv
+python tools\validate_apply_csv.py --kind mark --csv path\to\missing_door_window_marks_YYYYMMDD_HHMMSS.csv
+```
+
+该脚本不打开 Revit，不修改模型，只检查：
+
+- 文件名是否匹配对应 apply 工具。
+- CSV 必要字段是否存在。
+- `dry_run` 是否为 `true`。
+- `element_id` 是否可解析。
+- `category` 是否匹配。
+- `suggested_*` 是否为空。
+- 是否有重复 `element_id`。
+
+有 `ERROR` 时不要在 Revit 中执行 apply。先重新生成 dry-run CSV 或让 Codex 检查原因。

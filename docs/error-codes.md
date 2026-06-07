@@ -13,6 +13,22 @@
 | `YA-APPLY-ROOM-005` | 找不到房间编号参数 | 检查模型房间参数 |
 | `YA-APPLY-ROOM-006` | 房间编号参数只读 | 跳过该房间，人工处理 |
 
+## Offline Apply CSV Validation
+
+These codes are emitted by `tools\validate_apply_csv.py`; they do not mean Revit was modified.
+
+| Code | Meaning | User action |
+| --- | --- | --- |
+| `YA-APPLY-ROOM-CSV-001` / `YA-APPLY-MARK-CSV-001` | CSV 文件不存在 | 检查路径 |
+| `YA-APPLY-ROOM-CSV-002` / `YA-APPLY-MARK-CSV-002` | 文件名不匹配 | 选择对应 preview 生成的 CSV |
+| `YA-APPLY-ROOM-CSV-003` / `YA-APPLY-MARK-CSV-003` | CSV 读取失败 | 检查文件编码或是否损坏 |
+| `YA-APPLY-ROOM-CSV-004` / `YA-APPLY-MARK-CSV-004` | 缺少必要字段 | 重新运行 preview |
+| `YA-APPLY-ROOM-CSV-006` / `YA-APPLY-MARK-CSV-006` | `element_id` 无效 | 不要 apply，重新导出 |
+| `YA-APPLY-ROOM-CSV-008` / `YA-APPLY-MARK-CSV-008` | `dry_run` 不是 `true` | 不要 apply，重新导出 |
+| `YA-APPLY-ROOM-CSV-009` / `YA-APPLY-MARK-CSV-009` | `category` 不匹配 | 不要 apply，检查 CSV 来源 |
+| `YA-APPLY-ROOM-CSV-010` / `YA-APPLY-MARK-CSV-010` | 建议值为空 | 不要 apply，先人工补全或重新导出 |
+| `YA-APPLY-ROOM-CSV-012` / `YA-APPLY-MARK-CSV-012` | 没有可应用行 | 不需要 apply 或 CSV 不适合 apply |
+
 ## Apply Missing Door Window Marks
 
 | Code | Meaning | User action |

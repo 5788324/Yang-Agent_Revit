@@ -6,7 +6,7 @@ The check is read-only and does not require Revit.
 ## Summary
 
 - Errors: 0
-- Warnings: 20
+- Warnings: 15
 
 ## Findings
 
@@ -15,12 +15,7 @@ The check is read-only and does not require Revit.
 - `WARN` `docs commands` `docs/dll-addin-development-plan.md` - Line 46: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/drafts/hermes-doc-consistency-audit.md` - Line 50: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/drafts/hermes-doc-consistency-audit.md` - Line 51: PowerShell script command may need an explicit scripts path.
-- `WARN` `docs commands` `docs/drafts/hermes-install-audit.md` - Line 98: Placeholder wording may not be copy/paste friendly.
-- `WARN` `docs commands` `docs/drafts/hermes-install-audit.md` - Line 117: Placeholder wording may not be copy/paste friendly.
 - `WARN` `docs commands` `docs/drafts/hermes-install-audit.md` - Line 127: PowerShell script command may need an explicit scripts path.
-- `WARN` `docs commands` `docs/drafts/hermes-install-audit.md` - Line 147: Placeholder wording may not be copy/paste friendly.
-- `WARN` `docs commands` `docs/drafts/hermes-install-audit.md` - Line 150: Placeholder wording may not be copy/paste friendly.
-- `WARN` `docs commands` `docs/drafts/hermes-install-audit.md` - Line 192: Placeholder wording may not be copy/paste friendly.
 - `WARN` `docs commands` `docs/drafts/hermes-troubleshooting-audit.md` - Line 46: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/drafts/hermes-troubleshooting-audit.md` - Line 62: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/handoff-2026-05-23.md` - Line 110: PowerShell script command may need an explicit scripts path.

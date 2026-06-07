@@ -311,6 +311,10 @@ New authoritative docs:
   - `scripts\build-revit-addin.ps1 -Version 2027`
   - `scripts\install-revit-addin.ps1 -Version 2027`
   - Revit 2024/2025/2026 currently stop with `YA-CS-VERSION-PLANNED`.
+- Offline apply CSV validation now exists:
+  - `python tools\validate_apply_csv.py --kind room --csv path\to\missing_room_numbers_YYYYMMDD_HHMMSS.csv`
+  - `python tools\validate_apply_csv.py --kind mark --csv path\to\missing_door_window_marks_YYYYMMDD_HHMMSS.csv`
+  - This is read-only and does not require Revit.
 
 Current safety rules:
 

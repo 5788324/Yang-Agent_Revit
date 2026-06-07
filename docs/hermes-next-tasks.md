@@ -199,3 +199,20 @@ hermes/read-only-checks
 - 2027 是否是唯一 implemented track。
 - 2024/2025/2026 是否明确返回 `YA-CS-VERSION-PLANNED`。
 - 文档是否没有把 2024/2025/2026 写成已经可构建。
+
+## Hermes Apply CSV 离线检查任务
+
+允许运行：
+
+```powershell
+python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
+python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
+```
+
+如果用户提供真实 dry-run CSV，也可以只读检查该 CSV，但必须遵守：
+
+- 不打开 Revit。
+- 不运行 apply。
+- 不修改 CSV。
+- 不提交任何项目模型或客户数据。
+- 报告只写错误代码、字段问题和建议下一步。
