@@ -31,6 +31,13 @@
 
 ## 现在应该做什么
 
+### 当前分工
+
+- Codex 继续在 `main` 做核心代码和主线整理。
+- Hermes/DeepSeek 必须新建 `hermes/docs-personal-mvp` 分支。
+- Hermes 只做文档草稿和清单整理，任务边界见 `docs/hermes-agent-brief.md`。
+- 用户通知前不频繁 pull/push。
+
 ### 第 1 步：在本机安装 pyRevit 工具栏
 
 先确认 Revit 里能看到 `pyRevit` 选项卡。如果看不到，请先安装 pyRevit。

@@ -33,8 +33,9 @@ TEXT = {
         "no_doc": u"没有打开的 Revit 文档。",
         "pick_csv": u"选择 missing_door_window_marks_*.csv",
         "no_csv": u"已取消。未选择 CSV。",
+        "wrong_csv_name": u"YA-APPLY-MARK-001: 请选择 `预览缺失标记` 生成的 missing_door_window_marks_*.csv。\n\n当前文件：{0}",
         "bad_csv": u"CSV 缺少必要字段，不能执行。",
-        "bad_csv_fields": u"CSV 缺少必要字段，不能执行。\n\n需要字段：{0}\n实际字段：{1}",
+        "bad_csv_fields": u"YA-APPLY-MARK-002: CSV 缺少必要字段，不能执行。\n\n需要字段：{0}\n实际字段：{1}",
         "no_rows": u"没有可应用的门窗标记行。",
         "confirm": u"确认应用",
         "cancel": u"取消",
@@ -60,8 +61,9 @@ TEXT = {
         "no_doc": u"No active Revit document.",
         "pick_csv": u"Select missing_door_window_marks_*.csv",
         "no_csv": u"Cancelled. No CSV selected.",
+        "wrong_csv_name": u"YA-APPLY-MARK-001: Please select missing_door_window_marks_*.csv exported by `Preview Missing Marks`.\n\nCurrent file: {0}",
         "bad_csv": u"CSV is missing required fields. Cannot apply.",
-        "bad_csv_fields": u"CSV is missing required fields. Cannot apply.\n\nRequired fields: {0}\nActual fields: {1}",
+        "bad_csv_fields": u"YA-APPLY-MARK-002: CSV is missing required fields. Cannot apply.\n\nRequired fields: {0}\nActual fields: {1}",
         "no_rows": u"No applicable door/window mark rows were found.",
         "confirm": u"Apply",
         "cancel": u"Cancel",
@@ -135,6 +137,11 @@ def normalize_key(value):
 
 def normalize_value(value):
     return safe_text(value).replace(u"\ufeff", u"").strip()
+
+
+def is_expected_csv_name(path):
+    name = safe_text(os.path.basename(path)).lower().strip()
+    return name.startswith("missing_door_window_marks_") and name.endswith(".csv")
 
 
 def read_preview_csv(path):
@@ -256,28 +263,28 @@ def apply_marks(rows):
             element_id = parse_element_id(row.get("element_id"))
             if element_id is None:
                 result["result"] = "failed"
-                result["message"] = "Invalid ElementId"
+                result["message"] = "YA-APPLY-MARK-003: Invalid ElementId"
                 results.append(result)
                 continue
 
             element = doc.GetElement(ElementId(Int64(element_id)))
             if element is None:
                 result["result"] = "failed"
-                result["message"] = "Element not found"
+                result["message"] = "YA-APPLY-MARK-004: Element not found"
                 results.append(result)
                 continue
 
             param = get_mark_param(element)
             if param is None:
                 result["result"] = "failed"
-                result["message"] = "Mark parameter not found"
+                result["message"] = "YA-APPLY-MARK-005: Mark parameter not found"
                 results.append(result)
                 continue
 
             try:
                 if param.IsReadOnly:
                     result["result"] = "failed"
-                    result["message"] = "Mark parameter is read-only"
+                    result["message"] = "YA-APPLY-MARK-006: Mark parameter is read-only"
                     results.append(result)
                     continue
             except Exception:
@@ -392,6 +399,13 @@ def main():
     if not csv_path:
         output.print_md(tr(lang, "output_cancel"))
         forms.toast(tr(lang, "no_csv"), title=tr(lang, "alert_title"))
+        return
+
+    if not is_expected_csv_name(csv_path):
+        forms.alert(
+            tr(lang, "wrong_csv_name").format(os.path.basename(csv_path)),
+            title=tr(lang, "alert_title"),
+        )
         return
 
     rows, fieldnames = read_preview_csv(csv_path)

@@ -101,3 +101,36 @@ RevitWorker.exe
 - `bundle.yaml` 中是否没有 `context:`。
 - Revit 是否已经完全重启。
 - pyRevit 是否已经 reload。
+
+## 5. C# DLL 构建提示 DLL 被 Revit 锁定
+
+典型报错：
+
+```text
+DLL is locked and cannot be overwritten: ...YangAgent.Revit2027.dll.
+Locked by Revit process id(s): ...
+Close Revit 2027, then run this script again.
+```
+
+原因：
+
+- Revit 已经加载了当前 DLL，Windows 会锁住该文件。
+- `build-revit2027-addin.ps1` 和 `install-revit2027-addin.ps1` 需要覆盖 `bin\Debug\net10.0-windows\YangAgent.Revit2027.dll`。
+
+处理步骤：
+
+1. 保存测试模型。
+2. 完全关闭 Revit 2027。
+3. 确认任务管理器中没有 `Revit.exe`。
+4. 重新运行：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-revit2027-addin.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install-revit2027-addin.ps1
+```
+
+如果只想验证代码能否编译、暂时不覆盖已加载 DLL，可以使用临时输出目录：
+
+```powershell
+dotnet build .\src\YangAgent.Revit2027\YangAgent.Revit2027.csproj -c Debug -o C:\tmp\YangAgent_Revit2027_build_check
+```

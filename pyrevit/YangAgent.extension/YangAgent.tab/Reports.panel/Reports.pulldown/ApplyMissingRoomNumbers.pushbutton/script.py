@@ -33,8 +33,8 @@ TEXT = {
         "no_doc": u"没有打开的 Revit 文档。",
         "pick_csv": u"选择 missing_room_numbers_*.csv",
         "no_csv": u"已取消。未选择 CSV。",
-        "wrong_csv_name": u"请选择 `预览缺失房间编号` 生成的 missing_room_numbers_*.csv。\n\n当前文件：{0}\n\n如果你选择的是 duplicate_room_numbers_*.csv，它是重复编号检查结果，不能用于自动写入缺失编号。",
-        "bad_csv_fields": u"CSV 缺少必要字段，不能执行。\n\n需要字段：{0}\n实际字段：{1}",
+        "wrong_csv_name": u"YA-APPLY-ROOM-001: 请选择 `预览缺失房间编号` 生成的 missing_room_numbers_*.csv。\n\n当前文件：{0}\n\n如果你选择的是 duplicate_room_numbers_*.csv，它是重复编号检查结果，不能用于自动写入缺失编号。",
+        "bad_csv_fields": u"YA-APPLY-ROOM-002: CSV 缺少必要字段，不能执行。\n\n需要字段：{0}\n实际字段：{1}",
         "no_rows": u"没有可应用的房间编号行。",
         "confirm": u"确认应用",
         "cancel": u"取消",
@@ -60,8 +60,8 @@ TEXT = {
         "no_doc": u"No active Revit document.",
         "pick_csv": u"Select missing_room_numbers_*.csv",
         "no_csv": u"Cancelled. No CSV selected.",
-        "wrong_csv_name": u"Please select missing_room_numbers_*.csv exported by `Preview Missing Room Numbers`.\n\nCurrent file: {0}\n\nIf you selected duplicate_room_numbers_*.csv, that file is for duplicate-number review and cannot be used to write missing numbers.",
-        "bad_csv_fields": u"CSV is missing required fields. Cannot apply.\n\nRequired fields: {0}\nActual fields: {1}",
+        "wrong_csv_name": u"YA-APPLY-ROOM-001: Please select missing_room_numbers_*.csv exported by `Preview Missing Room Numbers`.\n\nCurrent file: {0}\n\nIf you selected duplicate_room_numbers_*.csv, that file is for duplicate-number review and cannot be used to write missing numbers.",
+        "bad_csv_fields": u"YA-APPLY-ROOM-002: CSV is missing required fields. Cannot apply.\n\nRequired fields: {0}\nActual fields: {1}",
         "no_rows": u"No applicable room number rows were found.",
         "confirm": u"Apply",
         "cancel": u"Cancel",
@@ -261,28 +261,28 @@ def apply_room_numbers(rows):
             element_id = parse_element_id(row.get("element_id"))
             if element_id is None:
                 result["result"] = "failed"
-                result["message"] = "Invalid ElementId"
+                result["message"] = "YA-APPLY-ROOM-003: Invalid ElementId"
                 results.append(result)
                 continue
 
             element = doc.GetElement(ElementId(Int64(element_id)))
             if element is None:
                 result["result"] = "failed"
-                result["message"] = "Element not found"
+                result["message"] = "YA-APPLY-ROOM-004: Element not found"
                 results.append(result)
                 continue
 
             param = get_room_number_param(element)
             if param is None:
                 result["result"] = "failed"
-                result["message"] = "Room number parameter not found"
+                result["message"] = "YA-APPLY-ROOM-005: Room number parameter not found"
                 results.append(result)
                 continue
 
             try:
                 if param.IsReadOnly:
                     result["result"] = "failed"
-                    result["message"] = "Room number parameter is read-only"
+                    result["message"] = "YA-APPLY-ROOM-006: Room number parameter is read-only"
                     results.append(result)
                     continue
             except Exception:
