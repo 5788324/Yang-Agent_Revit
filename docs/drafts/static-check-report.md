@@ -24,4 +24,4 @@ The check is read-only and does not require Revit.
 - `WARN` `docs commands` `docs/worklogs/worklog-2026-06-07.md` - Line 127: Placeholder wording may not be copy/paste friendly.
 - `WARN` `docs commands` `HANDOFF.md` - Line 56: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `HANDOFF.md` - Line 57: PowerShell script command may need an explicit scripts path.
-- `WARN` `docs commands` `HANDOFF.md` - Line 159: Placeholder wording may not be copy/paste friendly.
+- `WARN` `docs commands` `HANDOFF.md` - Line 160: Placeholder wording may not be copy/paste friendly.

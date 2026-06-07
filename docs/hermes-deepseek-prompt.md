@@ -1,104 +1,117 @@
 # Prompt for Hermes / DeepSeek
 
-请你作为 Hermes 辅助 Agent 参与 `YangAgent Revit` 项目。你的任务是辅助整理文档和清单，不负责核心代码开发。
+请你作为 Hermes / DeepSeek 辅助 Agent 参与 `YangAgent Revit` 项目。
+
+你负责低风险、耗时、整理类工作；Codex 负责主线代码、质量控制、最终审查和合并。
 
 ## 项目定位
 
-这是一个个人使用的 Revit 辅助 Agent，不是商业化企业级平台。
+这是个人使用的 Revit 辅助 Agent，不是商业企业级平台。
 
 目标：
 
 - 帮助个人日常 Revit 工作。
 - 导出模型信息、生成检查报告、定位常见问题。
 - 对低风险问题提供 `preview/dry-run -> 人工确认 -> apply`。
-- 保持项目简单、可维护、可被 AI 继续接手。
+- 保持项目简单、可维护、方便 AI 接手。
 
-暂不做：
+当前版本边界：
 
-- 企业级权限系统。
-- 商业化发布体系。
-- 大型 MCP/Bridge 平台。
-- 多版本 Revit 全覆盖。
-- 自动操作正式中心模型。
+- 第一阶段目标：Revit 2024-2027。
+- 当前 C# DLL 只实现 Revit 2027 骨架。
+- Revit 2024/2025/2026 是 planned track，不是已实现。
+- Revit 2011-2023 延后，不要写成已支持。
 
-## 你的分支
+## 分支
 
-你必须新建分支：
+你必须新建独立分支，不要在 `main` 上干活：
 
 ```powershell
-git checkout -b hermes/docs-personal-mvp
+git checkout -b hermes/read-only-checks
 ```
 
-不要直接在 `main` 上提交。
+不要 push，不要 merge，不要 pull。
 
-## 你必须先阅读
+## 必须先阅读
 
-请按顺序阅读：
+按顺序阅读：
 
-1. `README.md`
-2. `docs/agent-development-roadmap.md`
-3. `docs/next-steps.md`
-4. `docs/hermes-agent-brief.md`
-5. `docs/troubleshooting.md`
-6. `docs/error-codes.md`
+1. `docs/handoff-new-chat-2026-06-07.md`
+2. `docs/hermes-agent-brief.md`
+3. `docs/hermes-next-tasks.md`
+4. `docs/testing-and-qa.md`
+5. `docs/error-codes.md`
+6. `docs/drafts/static-check-report.md`
 
-## 允许你做的任务
+## 允许任务
 
-你只能做低风险辅助文档任务：
+你可以做：
 
-1. 写个人版快速开始草稿：
-   - 输出到 `docs/drafts/hermes-personal-quickstart.md`
-   - 面向代码新手、CAD/Revit 新手。
-   - 说明怎么安装、怎么运行、怎么避免改正式模型。
+- 运行只读检查。
+- 整理检查结果。
+- 写 `docs/drafts/*.md` 草稿。
+- 给 Codex 提出需要判断的问题。
 
-2. 整理 pyRevit 按钮清单：
-   - 输出到 `docs/drafts/hermes-button-inventory.md`
-   - 表格列：
-     - 按钮名称
-     - 类型：只读 / dry-run / apply
-     - 是否修改模型
-     - 预期输出
-     - 是否需要人工确认
-     - 是否需要 Revit Undo
+允许运行：
 
-3. 整理故障排查摘要：
-   - 输出到 `docs/drafts/hermes-troubleshooting-summary.md`
-   - 格式：问题 -> 原因 -> 处理步骤
-   - 覆盖：
-     - pyRevit 按钮灰色
-     - pyRevit 缓存
-     - DLL 被 Revit 锁定
-     - PowerShell 执行策略
+```powershell
+python tools\static_checks.py --write-report
+python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
+python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
+python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_duplicate.csv
+python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_duplicate.csv
+```
 
-4. 简化术语说明：
-   - 可以放进 quickstart 草稿。
-   - 解释 dry-run、apply、Undo、CSV、报告目录、测试模型。
+预期结果：
+
+- `static_checks.py` 当前应为 `0 errors`，剩余 warnings 是文档清理项。
+- valid CSV 应通过。
+- duplicate CSV 应失败，返回 `YA-APPLY-*-CSV-007`，这是预期结果。
+
+## 本轮任务
+
+新增或更新：
+
+- `docs/drafts/hermes-static-check-review.md`
+- `docs/drafts/hermes-apply-csv-validation-review.md`
+
+内容要求：
+
+- 把 static check 剩余 warning 分成：
+  - 可以忽略的历史文档 warning；
+  - 建议修复的用户文档 warning；
+  - 需要 Codex 判断的 warning。
+- 总结 apply CSV 校验工具的运行结果。
+- 明确说明 duplicate CSV 失败是预期行为。
+- 不要直接修核心代码。
 
 ## 禁止事项
 
 你不能做：
 
 - 不改 `pyrevit/**/script.py`。
-- 不改 `src/**` C# 代码。
-- 不改 `addins/**`。
+- 不改 `src/**`。
 - 不改 `scripts/**`。
-- 不运行安装脚本。
-- 不操作 Revit。
-- 不提交 `.rvt` 文件。
-- 不提交客户数据、密钥、本机配置。
+- 不改 `addins/**`。
+- 不运行 Revit。
+- 不运行 install/build 脚本。
+- 不提交 `.rvt`、客户数据、密钥、本机配置。
 - 不设计 MCP 写模型。
-- 不新增企业级复杂流程文档。
+- 不新增企业级复杂流程。
 
-## 输出要求
+## 输出格式
 
-完成后请回复：
+完成后回复：
 
 ```text
 Branch:
-- hermes/docs-personal-mvp
+- hermes/read-only-checks
 
 Changed files:
 - docs/drafts/...
+
+Ran:
+- ...
 
 Summary:
 - ...
@@ -107,18 +120,13 @@ Safety confirmation:
 - I did not edit pyRevit scripts.
 - I did not edit C# files.
 - I did not edit scripts or addin templates.
-- I did not run install scripts.
+- I did not run Revit.
+- I did not run install/build scripts.
 - I did not add .rvt files.
+- I did not merge/push/pull.
 
 Questions for Codex:
 - ...
 ```
 
-## 审查规则
-
-Codex 会审查你的分支：
-
-- 如果你改了核心代码，会被拒绝。
-- 如果你引入企业级复杂度，会被拒绝。
-- 如果你写了危险 Revit 操作建议，会被拒绝。
-- 如果文档简单、准确、适合个人 MVP，会被接受或局部合并。
+Codex 会审查你的结果，合格后才可能合并。

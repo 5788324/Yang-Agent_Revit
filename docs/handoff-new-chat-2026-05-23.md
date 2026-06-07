@@ -288,10 +288,10 @@ Revit 2027 `.addin + .dll` 骨架已存在。
 
 本次对话结束前必须确认：
 
-- `git status --short --branch` 干净。
+- `git status --short --branch` 状态可解释。
 - 所有交接文档已提交。
-- 已推送到 GitHub。
-- 新对话先读本文件。
+- 不要 push，除非用户明确通知。
+- 新对话优先阅读 `docs/handoff-new-chat-2026-06-07.md`，再读本文件。
 ## 2026-06-07 Update
 
 Current local state:
@@ -328,3 +328,11 @@ Hermes/DeepSeek boundary:
 - Hermes may run read-only checks and write draft reports.
 - Hermes must not edit pyRevit `script.py`, C# core, build/install scripts, addin templates, or Revit models.
 - Hermes output remains draft until Codex reviews it.
+
+## 2026-06-07 Final Handoff Pointer
+
+The current active handoff is now:
+
+- `docs/handoff-new-chat-2026-06-07.md`
+
+Use that file first for new Codex chats. This 2026-05-23 file is retained for historical context.

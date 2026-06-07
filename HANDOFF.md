@@ -108,7 +108,8 @@ Yang-Agent_Revit/
 2. 记录：做了什么、遇到什么问题、下一步计划。
 3. 更新 `CHANGELOG.md` 的 `[Unreleased]` 部分。
 4. 更新 `docs/next-steps.md` 的任务状态。
-5. 执行 `git add . && git commit -m "..." && git push`。
+5. 执行 `git add` 和 `git commit` 保存本地进度。
+6. 不要自动 `git push`；只有用户明确通知时才 push。
 
 ### Commit Message 规范
 ```

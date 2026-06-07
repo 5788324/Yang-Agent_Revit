@@ -34,9 +34,33 @@
 ### 当前分工
 
 - Codex 继续在 `main` 做核心代码和主线整理。
-- Hermes/DeepSeek 必须新建 `hermes/docs-personal-mvp` 分支。
-- Hermes 只做文档草稿和清单整理，任务边界见 `docs/hermes-agent-brief.md`。
+- Hermes/DeepSeek 必须新建独立分支，当前建议 `hermes/read-only-checks`。
+- Hermes 只做只读检查、文档草稿和清单整理，任务边界见 `docs/hermes-agent-brief.md`。
 - 用户通知前不频繁 pull/push。
+
+### 当前主线优先级
+
+1. 在测试模型中跑 pyRevit MVP 回归清单。
+2. 验证两个 apply 工具的 Revit Undo 行为。
+3. 验证 Revit 2027 DLL 是否能在 Revit 中加载并显示按钮。
+4. 修复第一个真实使用中的阻塞问题。
+5. 继续只增加马上能帮用户工作的低风险功能。
+
+### 当前只读验证入口
+
+```powershell
+python tools\static_checks.py --write-report
+python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
+python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
+python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_duplicate.csv
+python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_duplicate.csv
+```
+
+预期：
+
+- static check 当前为 0 errors，剩余 warnings 交给 Hermes 分类。
+- valid CSV 通过。
+- duplicate CSV 返回 `YA-APPLY-*-CSV-007`，这是预期行为。
 
 ### 第 1 步：在本机安装 pyRevit 工具栏
 
