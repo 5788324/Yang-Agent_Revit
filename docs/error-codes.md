@@ -12,6 +12,7 @@
 | `YA-APPLY-ROOM-004` | Revit 找不到对应元素 | 重新生成 dry-run CSV |
 | `YA-APPLY-ROOM-005` | 找不到房间编号参数 | 检查模型房间参数 |
 | `YA-APPLY-ROOM-006` | 房间编号参数只读 | 跳过该房间，人工处理 |
+| `YA-APPLY-ROOM-007` | CSV 中有重复 `element_id` | 不要 apply，重新生成 dry-run CSV |
 
 ## Offline Apply CSV Validation
 
@@ -24,6 +25,7 @@ These codes are emitted by `tools\validate_apply_csv.py`; they do not mean Revit
 | `YA-APPLY-ROOM-CSV-003` / `YA-APPLY-MARK-CSV-003` | CSV 读取失败 | 检查文件编码或是否损坏 |
 | `YA-APPLY-ROOM-CSV-004` / `YA-APPLY-MARK-CSV-004` | 缺少必要字段 | 重新运行 preview |
 | `YA-APPLY-ROOM-CSV-006` / `YA-APPLY-MARK-CSV-006` | `element_id` 无效 | 不要 apply，重新导出 |
+| `YA-APPLY-ROOM-CSV-007` / `YA-APPLY-MARK-CSV-007` | `element_id` 重复 | 不要 apply，重新导出 |
 | `YA-APPLY-ROOM-CSV-008` / `YA-APPLY-MARK-CSV-008` | `dry_run` 不是 `true` | 不要 apply，重新导出 |
 | `YA-APPLY-ROOM-CSV-009` / `YA-APPLY-MARK-CSV-009` | `category` 不匹配 | 不要 apply，检查 CSV 来源 |
 | `YA-APPLY-ROOM-CSV-010` / `YA-APPLY-MARK-CSV-010` | 建议值为空 | 不要 apply，先人工补全或重新导出 |
@@ -39,6 +41,7 @@ These codes are emitted by `tools\validate_apply_csv.py`; they do not mean Revit
 | `YA-APPLY-MARK-004` | Revit 找不到对应元素 | 重新生成 dry-run CSV |
 | `YA-APPLY-MARK-005` | 找不到 Mark/标记参数 | 检查族或参数 |
 | `YA-APPLY-MARK-006` | Mark/标记参数只读 | 跳过该元素，人工处理 |
+| `YA-APPLY-MARK-007` | CSV 中有重复 `element_id` | 不要 apply，重新生成 dry-run CSV |
 
 ## C# DLL Build
 

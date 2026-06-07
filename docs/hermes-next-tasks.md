@@ -207,6 +207,8 @@ hermes/read-only-checks
 ```powershell
 python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
 python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
+python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_duplicate.csv
+python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_duplicate.csv
 ```
 
 如果用户提供真实 dry-run CSV，也可以只读检查该 CSV，但必须遵守：
@@ -216,3 +218,4 @@ python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door
 - 不修改 CSV。
 - 不提交任何项目模型或客户数据。
 - 报告只写错误代码、字段问题和建议下一步。
+- valid fixture 应通过；duplicate fixture 应返回 `YA-APPLY-*-CSV-007`，这是预期结果。

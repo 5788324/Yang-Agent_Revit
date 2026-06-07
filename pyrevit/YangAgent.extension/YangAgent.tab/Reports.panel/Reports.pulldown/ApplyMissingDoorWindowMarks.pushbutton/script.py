@@ -242,6 +242,17 @@ def collect_apply_rows(rows):
     return apply_rows
 
 
+def find_duplicate_element_ids(rows):
+    seen = set()
+    duplicates = []
+    for row in rows:
+        element_id = safe_text(row.get("element_id")).strip()
+        if element_id in seen and element_id not in duplicates:
+            duplicates.append(element_id)
+        seen.add(element_id)
+    return duplicates
+
+
 def confirm_apply(lang, count):
     selected = forms.CommandSwitchWindow.show(
         [tr(lang, "confirm"), tr(lang, "cancel")],
@@ -430,6 +441,17 @@ def main():
     apply_rows = collect_apply_rows(rows)
     if not apply_rows:
         forms.alert(tr(lang, "no_rows"), title=tr(lang, "alert_title"))
+        return
+
+    duplicate_ids = find_duplicate_element_ids(apply_rows)
+    if duplicate_ids:
+        message = "YA-APPLY-MARK-007: Duplicate element_id values in apply CSV: {0}".format(
+            ", ".join(duplicate_ids)
+        )
+        output.print_md("# Apply CSV validation failed")
+        output.print_md("")
+        output.print_md(message)
+        forms.alert(message, title=tr(lang, "alert_title"))
         return
 
     if not confirm_apply(lang, len(apply_rows)):

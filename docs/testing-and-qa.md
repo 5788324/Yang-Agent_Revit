@@ -69,3 +69,14 @@ python tools\validate_apply_csv.py --kind mark --csv path\to\missing_door_window
 - 是否有重复 `element_id`。
 
 有 `ERROR` 时不要在 Revit 中执行 apply。先重新生成 dry-run CSV 或让 Codex 检查原因。
+
+当前仓库内有最小样例：
+
+```powershell
+python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
+python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
+python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_duplicate.csv
+python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_duplicate.csv
+```
+
+前两个应通过；后两个应因为重复 `element_id` 返回 `YA-APPLY-*-CSV-007`。

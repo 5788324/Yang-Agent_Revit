@@ -117,7 +117,7 @@ def validate(path: Path, kind: str) -> list[Finding]:
         if not element_id.isdigit():
             findings.append(Finding("ERROR", f"{code_prefix}-CSV-006", f"Line {number}: element_id is not a positive integer."))
         elif element_id in seen_ids:
-            findings.append(Finding("WARN", f"{code_prefix}-CSV-007", f"Line {number}: duplicate element_id {element_id}."))
+            findings.append(Finding("ERROR", f"{code_prefix}-CSV-007", f"Line {number}: duplicate element_id {element_id}."))
         else:
             seen_ids.add(element_id)
 
