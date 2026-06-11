@@ -115,7 +115,7 @@ Close Revit 2027, then run this script again.
 原因：
 
 - Revit 已经加载了当前 DLL，Windows 会锁住该文件。
-- `build-revit2027-addin.ps1` 和 `install-revit2027-addin.ps1` 需要覆盖 `bin\Debug\net10.0-windows\YangAgent.Revit2027.dll`。
+- `scripts\build-revit2027-addin.ps1` 和 `scripts\install-revit2027-addin.ps1` 需要覆盖 `bin\Debug\net10.0-windows\YangAgent.Revit2027.dll`。
 
 处理步骤：
 

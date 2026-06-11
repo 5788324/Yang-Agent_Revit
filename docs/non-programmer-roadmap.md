@@ -1,5 +1,9 @@
 # 非程序员也能推进的 YangAgent 路线图
 
+> Historical reference only.
+>
+> The current simplified roadmap is `docs/simple-roadmap.md`.
+
 这份文档面向不熟悉编程、AI、Revit API 的使用者。
 
 ## 1. 你只需要理解三件事

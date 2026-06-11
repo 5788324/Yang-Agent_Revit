@@ -1,5 +1,9 @@
 # `.addin + .dll` 正式插件开发计划
 
+> Historical reference only.
+>
+> The current mainline is pyRevit sandbox usefulness. The C# DLL remains a small Revit 2027 skeleton until there is a concrete personal-work need.
+
 ## 1. 为什么需要 DLL 插件
 
 pyRevit 适合快速验证，C# DLL 插件适合公司正式部署。

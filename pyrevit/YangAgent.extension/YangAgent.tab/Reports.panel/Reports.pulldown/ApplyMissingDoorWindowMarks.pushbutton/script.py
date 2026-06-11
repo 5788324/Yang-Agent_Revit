@@ -20,6 +20,20 @@ clr.AddReference("RevitAPIUI")
 from System import Int64  # noqa: E402
 from Autodesk.Revit.DB import BuiltInParameter, ElementId  # noqa: E402
 from pyrevit import forms, revit, script  # noqa: E402
+from yang_agent_apply import (  # noqa: E402
+    collect_apply_rows,
+    confirm_apply,
+    count_results,
+    find_duplicate_element_ids,
+    get_param_text,
+    is_blank,
+    is_expected_csv_name,
+    parse_element_id,
+    read_preview_csv,
+    safe_text,
+    validate_fields,
+    write_utf8_csv,
+)
 from yang_agent_lang import get_export_dir, get_or_choose_language  # noqa: E402
 
 
@@ -99,85 +113,6 @@ REQUIRED_FIELDS = [
 def tr(lang, key):
     return TEXT.get(lang, TEXT["zh"]).get(key, TEXT["zh"].get(key, key))
 
-
-def safe_text(value):
-    if value is None:
-        return u""
-    try:
-        if isinstance(value, unicode):  # noqa: F821  # IronPython
-            return value
-    except NameError:
-        pass
-    try:
-        if isinstance(value, bytes):
-            return value.decode("utf-8-sig")
-    except Exception:
-        pass
-    try:
-        return unicode(value)  # noqa: F821  # IronPython
-    except NameError:
-        return str(value)
-    except Exception:
-        try:
-            return str(value)
-        except Exception:
-            return u""
-
-
-def is_blank(value):
-    return safe_text(value).strip() == u""
-
-
-def normalize_key(value):
-    text = safe_text(value)
-    text = text.replace(u"\ufeff", u"")
-    text = text.replace(u"\u00a0", u" ")
-    return text.strip().lower()
-
-
-def normalize_value(value):
-    return safe_text(value).replace(u"\ufeff", u"").strip()
-
-
-def is_expected_csv_name(path):
-    name = safe_text(os.path.basename(path)).lower().strip()
-    return name.startswith("missing_door_window_marks_") and name.endswith(".csv")
-
-
-def read_preview_csv(path):
-    rows = []
-    with codecs.open(path, "r", "utf-8-sig") as text_stream:
-        reader = csv.DictReader(text_stream)
-        if not reader.fieldnames:
-            return rows, []
-
-        fieldnames = [normalize_key(field) for field in reader.fieldnames]
-        for raw_row in reader:
-            row = {}
-            index = 0
-            for raw_key in reader.fieldnames:
-                key = fieldnames[index]
-                row[key] = normalize_value(raw_row.get(raw_key, u""))
-                index += 1
-            rows.append(row)
-    return rows, fieldnames
-
-
-def validate_fields(fieldnames):
-    available = set(fieldnames)
-    for field in REQUIRED_FIELDS:
-        if normalize_key(field) not in available:
-            return False
-    return True
-
-
-def parse_element_id(value):
-    try:
-        return int(safe_text(value).strip())
-    except Exception:
-        return None
-
-
 def is_applicable_row(row):
     category = safe_text(row.get("category")).strip()
     if category not in ["Door", "Window"]:
@@ -206,60 +141,6 @@ def get_mark_param(element):
         except Exception:
             continue
     return None
-
-
-def get_param_text(param):
-    if param is None:
-        return u""
-    try:
-        value = param.AsString()
-        if value is not None:
-            return safe_text(value)
-    except Exception:
-        pass
-    try:
-        value = param.AsValueString()
-        if value is not None:
-            return safe_text(value)
-    except Exception:
-        pass
-    try:
-        return safe_text(param.AsInteger())
-    except Exception:
-        pass
-    try:
-        return safe_text(param.AsDouble())
-    except Exception:
-        pass
-    return u""
-
-
-def collect_apply_rows(rows):
-    apply_rows = []
-    for row in rows:
-        if is_applicable_row(row):
-            apply_rows.append(row)
-    return apply_rows
-
-
-def find_duplicate_element_ids(rows):
-    seen = set()
-    duplicates = []
-    for row in rows:
-        element_id = safe_text(row.get("element_id")).strip()
-        if element_id in seen and element_id not in duplicates:
-            duplicates.append(element_id)
-        seen.add(element_id)
-    return duplicates
-
-
-def confirm_apply(lang, count):
-    selected = forms.CommandSwitchWindow.show(
-        [tr(lang, "confirm"), tr(lang, "cancel")],
-        message=tr(lang, "confirm_message").format(count),
-    )
-    return selected == tr(lang, "confirm")
-
 
 def apply_marks(rows):
     results = []
@@ -322,22 +203,6 @@ def apply_marks(rows):
 
     return results
 
-
-def count_results(results):
-    applied = 0
-    skipped = 0
-    failed = 0
-    for row in results:
-        status = safe_text(row.get("result"))
-        if status == "applied":
-            applied += 1
-        elif status == "skipped":
-            skipped += 1
-        else:
-            failed += 1
-    return applied, skipped, failed
-
-
 def write_markdown(path, lang, source_csv, results):
     applied, skipped, failed = count_results(results)
     lines = []
@@ -388,18 +253,7 @@ def write_csv(path, rows):
         "result",
         "message",
     ]
-    with open(path, "wb") as raw_stream:
-        raw_stream.write(codecs.BOM_UTF8)
-        writer = csv.DictWriter(raw_stream, fieldnames=fieldnames)
-        header = {}
-        for field in fieldnames:
-            header[field] = field.encode("utf-8")
-        writer.writerow(header)
-        for row in rows:
-            encoded = {}
-            for field in fieldnames:
-                encoded[field] = safe_text(row.get(field, u"")).encode("utf-8")
-            writer.writerow(encoded)
+    write_utf8_csv(path, rows, fieldnames)
 
 
 def main():
@@ -418,7 +272,7 @@ def main():
         forms.toast(tr(lang, "no_csv"), title=tr(lang, "alert_title"))
         return
 
-    if not is_expected_csv_name(csv_path):
+    if not is_expected_csv_name(csv_path, "missing_door_window_marks_"):
         forms.alert(
             tr(lang, "wrong_csv_name").format(os.path.basename(csv_path)),
             title=tr(lang, "alert_title"),
@@ -426,7 +280,7 @@ def main():
         return
 
     rows, fieldnames = read_preview_csv(csv_path)
-    if not validate_fields(fieldnames):
+    if not validate_fields(fieldnames, REQUIRED_FIELDS):
         message = tr(lang, "bad_csv_fields").format(
             u", ".join(REQUIRED_FIELDS),
             u", ".join(fieldnames),
@@ -438,7 +292,7 @@ def main():
         forms.alert(message, title=tr(lang, "alert_title"))
         return
 
-    apply_rows = collect_apply_rows(rows)
+    apply_rows = collect_apply_rows(rows, is_applicable_row)
     if not apply_rows:
         forms.alert(tr(lang, "no_rows"), title=tr(lang, "alert_title"))
         return
@@ -454,7 +308,12 @@ def main():
         forms.alert(message, title=tr(lang, "alert_title"))
         return
 
-    if not confirm_apply(lang, len(apply_rows)):
+    if not confirm_apply(
+        forms,
+        tr(lang, "confirm"),
+        tr(lang, "cancel"),
+        tr(lang, "confirm_message").format(len(apply_rows)),
+    ):
         output.print_md(tr(lang, "output_cancel"))
         return
 

@@ -1,5 +1,9 @@
 # 系统架构设计 (Architecture Design)
 
+> Historical reference only.
+>
+> This document reflects an older architecture-first direction. The current project is a personal Revit AI assistant. Use `docs/product-brief.md`, `docs/simple-roadmap.md`, and `docs/project-rules.md` as the active plan.
+
 本文档描述 Yang Agent Revit 项目的整体架构设计，说明各个模块如何协同工作。
 
 ## 1. 核心模块与组件

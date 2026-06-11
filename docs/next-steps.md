@@ -1,164 +1,100 @@
-# 下一步工作清单
+# Next Steps
 
-当前阶段目标：让 Revit AI Agent 先具备“看懂模型、生成报告、让人确认”的能力。
-
-## 已完成
-
-- 2026-05-23 交接记录：`docs/handoff-2026-05-23.md`。
-- 项目仓库初始化。
-- GitHub 远程仓库连接。
-- 项目方案文档。
-- Claude 文档整合评审。
-- 安全规则。
-- 开发指南。
-- Agent 提示词模板。
-- pyRevit 只读工具：`Export Model Snapshot`。
-- pyRevit 只读工具：`Model Health Report`。
-- pyRevit 只读工具：`Export Regression Checklist`。
-- pyRevit 只读工具：`Export AI Review Prompt`。
-- pyRevit dry-run 工具：`Preview Missing Marks`。
-- pyRevit dry-run 工具：`Preview Missing Room Numbers`。
-- pyRevit dry-run 工具：`Preview Duplicate Room Numbers`。
-- pyRevit dry-run 工具：`Preview Unplaced Views`。
-- pyRevit dry-run 工具：`Preview Views By Naming Rules`。
-- pyRevit 受控修改工具：`Apply Missing Door Window Marks`。
-- pyRevit 受控修改工具：`Apply Missing Room Numbers`。
-- 系统设置支持维护视图命名规则前缀和临时关键词。
-- 系统设置支持维护本机 AI 工作习惯，并写入 AI 分析提示词。
-- 系统设置支持维护本机公司标准 Markdown 文件，并写入 AI 分析提示词。
-- Revit 2027 C# `.addin + .dll` 正式插件骨架。
-- Revit 2027 DLL 支持打开本机配置目录和默认报告目录。
-
-## 现在应该做什么
-
-### 当前分工
-
-- Codex 继续在 `main` 做核心代码和主线整理。
-- Hermes/DeepSeek 必须新建独立分支，当前建议 `hermes/read-only-checks`。
-- Hermes 只做只读检查、文档草稿和清单整理，任务边界见 `docs/hermes-agent-brief.md`。
-- 用户通知前不频繁 pull/push。
-
-### 当前主线优先级
-
-1. 在测试模型中跑 pyRevit MVP 回归清单。
-2. 验证两个 apply 工具的 Revit Undo 行为。
-3. 验证 Revit 2027 DLL 是否能在 Revit 中加载并显示按钮。
-4. 修复第一个真实使用中的阻塞问题。
-5. 继续只增加马上能帮用户工作的低风险功能。
-
-### 当前只读验证入口
-
-```powershell
-python tools\static_checks.py --write-report
-python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
-python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
-python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_duplicate.csv
-python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_duplicate.csv
-```
-
-预期：
-
-- static check 当前为 0 errors，剩余 warnings 交给 Hermes 分类。
-- valid CSV 通过。
-- duplicate CSV 返回 `YA-APPLY-*-CSV-007`，这是预期行为。
-
-### 第 1 步：在本机安装 pyRevit 工具栏
-
-先确认 Revit 里能看到 `pyRevit` 选项卡。如果看不到，请先安装 pyRevit。
-
-运行：
-
-```powershell
-cd "D:\codex\Yang Agent_Revit"
-.\scripts\install-pyrevit-extension.ps1
-```
-
-然后重启 Revit 或 reload pyRevit。
-
-### 第 2 步：用测试模型运行工具箱
-
-先不要用正式项目模型。
-
-测试顺序：
-
-1. 打开测试 Revit 模型。
-2. 运行 `系统设置`，设置中文。
-3. 运行 `导出报告 -> 导出路径`，选择一个项目报告目录。
-4. 运行 `导出报告 -> 导出模型快照`。
-5. 检查导出目录是否生成 JSON 和 CSV。
-6. 运行 `导出报告 -> 模型健康报告`。
-7. 检查是否生成中文 Markdown 报告。
-8. 运行 `导出报告 -> 回归测试清单`。
-9. 后续测试按生成的 Markdown 清单逐项记录 Pass / Fail。
-10. 运行 `导出报告 -> AI分析提示词`。
-11. 检查是否生成安全分析提示词和最近报告清单。
-12. 运行 `导出报告 -> 预览缺失标记`。
-13. 检查是否生成 dry-run Markdown 和 CSV。
-14. 运行 `导出报告 -> 预览缺失房间编号`。
-15. 检查是否生成 dry-run Markdown 和 CSV。
-16. 运行 `导出报告 -> 预览重复房间编号`。
-17. 检查是否生成 dry-run Markdown 和 CSV。
-18. 运行 `导出报告 -> 预览未上图视图`。
-19. 检查是否生成 dry-run Markdown 和 CSV。
-20. 运行 `导出报告 -> 预览视图命名`。
-21. 检查是否生成 dry-run Markdown 和 CSV。
-22. 在测试模型中运行 `导出报告 -> 应用门窗标记`。
-23. 选择已人工确认的 `missing_door_window_marks_*.csv`。
-24. 检查是否生成 apply 日志，并确认 Revit 可一次撤销。
-25. 在测试模型中运行 `导出报告 -> 应用房间编号`。
-26. 选择已人工确认的 `missing_room_numbers_*.csv`。
-27. 检查是否生成 apply 日志，并确认 Revit 可一次撤销。
-28. 再运行 `系统设置`，设置 English。
-29. 重复运行报告按钮，检查英文输出。
-
-如果所有按钮都是灰色，优先清理 pyRevit 缓存并重启 Revit。
-
-### 第 3 步：把报告交给 AI 分析
-
-可以把 `model_health_report_*.md` 发给 Codex 或 Claude，然后问：
+Current goal:
 
 ```text
-请分析这份 Revit 模型健康报告，按严重程度列出问题。
-只给建议，不要生成会直接修改模型的脚本。
+Make the pyRevit MVP usable in a sandbox Revit model.
 ```
 
-### 第 4 步：选择一个低风险修复任务
+## Current Project Position
 
-建议优先选择：
+- Personal Revit AI assistant.
+- Not a company platform.
+- Not a commercial plugin.
+- Not an MCP-first project.
+- Current implementation focus: pyRevit.
+- C# DLL stays small unless there is a concrete work need.
+- Long-term target includes Revit 2022-2027 and MCP controlled read/write, but not before the personal MVP is useful.
 
-- 缺少门窗标记检查。
-- 缺少房间编号检查。
-- 未上图视图检查。
+## This Week
 
-不要一开始做：
+1. Keep the project scope simple and personal.
+2. Run the offline preflight.
+3. Use the sandbox checklist for the first live Revit run.
+4. Capture the first real blocker with the feedback template.
+5. Fix only that first blocker.
+6. Do not expand feature scope until the sandbox flow works.
 
-- 删除元素。
-- 批量重编号。
-- 修改中心文件。
-- 操作链接模型。
+## Current Execution Pack
 
-### 第 5 步：生成 dry-run 修复工具
+- `docs/sandbox-pyrevit-mvp-runbook.md`
+- `docs/sandbox-pyrevit-mvp-checklist.md`
+- `docs/sandbox-pyrevit-mvp-feedback-template.md`
+- `python tools\run_sandbox_preflight.py --write-report`
 
-下一轮开发目标：
+## Current Validation Commands
 
-- 整理一份标准测试模型，用于后续回归测试。
-- 与 BIM 负责人确认公司实际视图命名规范，并写入本机公司标准文件。
+Run from repository root:
 
-## 判断是否进入下一阶段
+```powershell
+python tools\check_pyrevit_extension.py
+python tools\run_sandbox_preflight.py --write-report
+python tools\static_checks.py --write-report
+```
 
-满足以下条件后，再进入“受控修改”阶段：
+Expected:
 
-- 只读和 dry-run 按钮能在测试模型稳定运行。
-- 输出文件能被 AI 正确分析。
-- BIM 负责人确认报告里的检查规则有价值。
-- 用户确认哪些问题可以自动修复。
+- `check_pyrevit_extension.py`: `0 errors`
+- sandbox preflight: all steps `PASS`
+- static checks: `0 errors`
 
-## 后续阶段
+## Human Sandbox Run
 
-1. 在 Revit 2027 中重启加载 DLL 插件，并验证 `配置目录`、`报告目录` 按钮。
-2. 继续完善 pyRevit dry-run 修复脚本。
-3. 把稳定的 pyRevit 功能迁移到 DLL。
-4. 加入人工确认后的 `apply_*` 工具。
-5. 开发只读 MCP。
-6. 开发结构化 C# Bridge。
-7. 继续完善公司标准知识库。
+Use only a test model:
+
+- file name should include `_sandbox` or `_test`;
+- do not use a production model;
+- stop at the first blocker;
+- fill `docs/sandbox-pyrevit-mvp-feedback-template.md`.
+
+## AI Agent Work Split
+
+Codex:
+
+- project direction;
+- task breakdown;
+- final review;
+- key blocker fixes;
+- Git release decisions.
+
+Hermes / Gemini / DeepSeek:
+
+- draft docs;
+- review reports;
+- checklist cleanup;
+- external toolbox inventory;
+- low-risk candidate patches after Codex scopes the task.
+
+## Gemini Toolbox
+
+When the Gemini C# toolbox path is available, use:
+
+- `docs/external-toolbox-intake.md`
+
+Do not merge the toolbox directly.
+
+First classify every tool as:
+
+- read-only;
+- low-risk model change;
+- high-risk model change;
+- useful idea but poor implementation;
+- not needed.
+
+## Later, Not This Week
+
+- Revit 2022-2027 support.
+- MCP automatic model reading.
+- MCP controlled model modification.
+- Wider C# migration.
+- More daily-work plugins from the Gemini toolbox.

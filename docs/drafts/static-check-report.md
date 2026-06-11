@@ -6,22 +6,18 @@ The check is read-only and does not require Revit.
 ## Summary
 
 - Errors: 0
-- Warnings: 15
+- Warnings: 11
 
 ## Findings
 
-- `WARN` `docs commands` `docs/architecture-design.md` - Line 43: PowerShell script command may need an explicit scripts path.
-- `WARN` `docs commands` `docs/dll-addin-development-plan.md` - Line 45: PowerShell script command may need an explicit scripts path.
-- `WARN` `docs commands` `docs/dll-addin-development-plan.md` - Line 46: PowerShell script command may need an explicit scripts path.
+- `WARN` `docs commands` `docs/architecture-design.md` - Line 47: PowerShell script command may need an explicit scripts path.
+- `WARN` `docs commands` `docs/dll-addin-development-plan.md` - Line 49: PowerShell script command may need an explicit scripts path.
+- `WARN` `docs commands` `docs/dll-addin-development-plan.md` - Line 50: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/drafts/hermes-doc-consistency-audit.md` - Line 50: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/drafts/hermes-doc-consistency-audit.md` - Line 51: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/drafts/hermes-install-audit.md` - Line 127: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/drafts/hermes-troubleshooting-audit.md` - Line 46: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/drafts/hermes-troubleshooting-audit.md` - Line 62: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/handoff-2026-05-23.md` - Line 110: PowerShell script command may need an explicit scripts path.
-- `WARN` `docs commands` `docs/troubleshooting.md` - Line 118: PowerShell script command may need an explicit scripts path.
 - `WARN` `docs commands` `docs/worklogs/worklog-2026-06-07.md` - Line 91: Placeholder wording may not be copy/paste friendly.
 - `WARN` `docs commands` `docs/worklogs/worklog-2026-06-07.md` - Line 127: Placeholder wording may not be copy/paste friendly.
-- `WARN` `docs commands` `HANDOFF.md` - Line 56: PowerShell script command may need an explicit scripts path.
-- `WARN` `docs commands` `HANDOFF.md` - Line 57: PowerShell script command may need an explicit scripts path.
-- `WARN` `docs commands` `HANDOFF.md` - Line 160: Placeholder wording may not be copy/paste friendly.

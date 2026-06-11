@@ -8,6 +8,11 @@
 ## [Unreleased]
 
 ### Added (新增)
+- Added `docs/product-brief.md`, `docs/simple-roadmap.md`, `docs/project-rules.md`, `docs/agent-operating-model.md`, and `docs/external-toolbox-intake.md` as the simplified personal-assistant planning set.
+- Added `tools/check_pyrevit_extension.py` for offline pyRevit bundle preflight checks before sandbox-model runs.
+- Added `docs/sandbox-pyrevit-mvp-runbook.md` to standardize the first live sandbox validation sequence.
+- Added `docs/sandbox-pyrevit-mvp-checklist.md` as a compact operator execution sheet for the first sandbox run.
+- Added `docs/sandbox-pyrevit-mvp-feedback-template.md` for first-blocker live run reporting.
 - 新增 `docs/architecture-design.md` 系统架构设计文档。
 - 新增 `docs/api-and-data-schema.md` API与数据结构规范文档。
 - 新增 `docs/testing-and-qa.md` 测试与质量保证规范文档。
@@ -29,6 +34,18 @@
 - Revit 2027 DLL 插件新增真实只读按钮：打开配置目录、打开报告目录。
 
 ### Changed (变更)
+- Refocused the active project plan on a personal Revit AI assistant, with Revit 2022-2027 and MCP controlled read/write retained as later goals.
+- Marked older architecture, MCP, DLL, Claude integration, and non-programmer roadmap documents as historical reference where they no longer match the active plan.
+- Reframed `README.md` to the current personal-assistant scope and explicit document authority order.
+- Downgraded `HANDOFF.md` to legacy reference status and removed it as a current source of truth.
+- Downgraded `docs/colleague-quickstart.md` to historical/optional shared-use reference.
+- Downgraded `docs/revit-ai-agent-project-plan.md` to historical archive status.
+- Tightened Hermes collaboration into a documented task-pack -> report-back -> Codex-review loop.
+- Upgraded Hermes from docs-only support to bounded read-only code review support without implementation authority.
+- Added `tools/run_sandbox_preflight.py` to make the first sandbox-session offline gate runnable as one read-only command.
+- Added `pyrevit/YangAgent.extension/lib/yang_agent_apply.py` to centralize duplicated apply-tool utility logic.
+- Tightened Hermes Round 1 intake so screenshot summaries are no longer accepted in place of structured draft reports under `docs/drafts/`.
+- Tightened the sandbox feedback template to capture runbook step numbers, first failing button order, preflight report path, warning count, and whether a blocker stops later steps.
 - 完善初期项目框架与文档体系。
 - 将报告工具整理到 `Reports.pulldown`。
 - 将语言、用户、主题、关于更新合并为统一的 `SystemSettings` 设置窗口。

@@ -1,5 +1,9 @@
 # Claude 文档整合评审
 
+> Historical reference only.
+>
+> This document contains older MCP, Bridge, and platform planning. The current active direction is the simplified personal assistant plan.
+
 源文档：`C:/Users/YANG/Desktop/Revit-AI-Agent-开发文档.md`
 
 GitHub 仓库：`https://github.com/5788324/Yang-Agent_Revit`

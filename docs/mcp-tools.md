@@ -1,5 +1,9 @@
 # 开源 MCP 工具调研与推荐 (Model Context Protocol)
 
+> Historical reference only.
+>
+> MCP remains a future goal for automatic model reading and controlled preview/apply modification. It is not the current one-week delivery target.
+
 在 Revit AI Agent 的演进路线中，我们需要让大语言模型（如 Claude Desktop、Cursor 或 Antigravity）直接读取并操作 Revit 模型上下文。这就需要借助 MCP (Model Context Protocol) 标准。
 
 ## 当前开源生态与可行方案

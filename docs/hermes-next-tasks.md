@@ -1,118 +1,165 @@
 # Hermes Next Tasks
 
-Hermes/DeepSeek 当前能力评估：可以承担文档、测试、只读静态检查任务。仍然不允许修改核心代码、安装脚本、addin 模板或 Revit 模型。
+Hermes/DeepSeek is now enabled for bounded read-only code review, but still not for implementation.
 
-## 工作边界
+This file is the active task contract. If any older draft conflicts with it, follow this file.
 
-文档草稿可继续使用分支：
+## Task Status
+
+- Round 1 status: accepted by Codex on 2026-06-11
+- Round 1 review result: accepted with low-risk follow-up backlog
+- Hermes screenshot summaries are not accepted as final delivery; the structured draft files are now present
+
+## Round 1 Accepted Files
+
+Accepted Round 1 reports:
+
+- `docs/drafts/hermes-code-review-apply-tools.md`
+- `docs/drafts/hermes-feature-review-sandbox-runbook.md`
+
+Remaining code-review follow-ups are low risk and do not block the sandbox MVP:
+
+- Marks `wrong_csv_name` can optionally add duplicate-CSV guidance.
+- `is_applicable_row` style can optionally be normalized.
+- Markdown detail output can optionally be made more symmetric.
+
+Do not start broad Round 2 implementation work until Codex assigns a new bounded task.
+
+## Current Direction
+
+- Project position: personal Revit assistant, optionally shareable with friends
+- Mainline owner: Codex
+- Hermes role: docs support, read-only checks, read-only code review, feature review summaries
+- Do not use Hermes for core implementation, install/build flow, or Revit execution
+
+## Branch
+
+Hermes must work on a separate branch:
 
 ```powershell
-hermes/docs-personal-mvp
+git checkout -b hermes/read-only-checks
 ```
 
-只读检查试运行使用分支：
+Do not work on `main`.
 
-```powershell
-hermes/read-only-checks
-```
+## Hard Boundaries
 
-不做：
+Hermes must not:
 
-- 不改 `pyrevit/**/script.py`
-- 不改 `src/**`
-- 不改 `scripts/**`
-- 不改 `addins/**`
-- 不运行 Revit
-- 不运行 install/build 脚本
-- 不做 git merge / push / pull
-- 不添加 `.rvt`
+- edit `pyrevit/**/script.py`
+- edit `src/**`
+- edit `tools/**`
+- edit `tests/**`
+- edit `scripts/**`
+- edit `addins/**`
+- run Revit
+- run install/build scripts
+- merge, push, or pull
+- add `.rvt`, `.rfa`, client data, or local config exports
+- reintroduce enterprise/company-platform wording into current mainline docs
 
-## Day 1：安装文档修正复查
+Hermes may:
 
-目标：确认安装相关文档可复制、可执行、面向新手。
+- run `python tools\static_checks.py --write-report`
+- run `python tools\validate_apply_csv.py` on fixture CSVs or user-provided dry-run CSVs
+- read `pyrevit/**/script.py`, `src/**`, `tools/**`, and `tests/**` in a review-only mode
+- edit or add `docs/drafts/*.md`
+- prepare Codex-review notes for documentation cleanup, code review, or feature review
 
-只允许修改：
+## Task Template: Code Review Task
 
-- `docs/drafts/hermes-personal-quickstart.md`
+Every Hermes code review task must include:
 
-任务：
+- review subject
+- allowed read paths
+- review goals
+- output file
+- forbidden actions
+- report-back format
 
-- 修正安装命令中缺少 `.\scripts\` 的地方。
-- 替换不可复制的自然语言占位符命令。
-- 检查所有 PowerShell 命令是否都可以直接复制。
-- 输出修改摘要。
+Output naming:
 
-## Day 2：README 草稿建议
+- Code review reports use the form `docs/drafts/hermes-code-review-apply-tools.md`.
+- Feature review reports use the form `docs/drafts/hermes-feature-review-sandbox-runbook.md`.
+- For future rounds, keep the same prefix and replace only the final slug with a short lowercase topic name.
 
-目标：给主 README 提供个人版简化建议，但不要直接改 README。
+## Round 1 Tasks
 
-新增文件：
+Hermes must complete only the two tasks below in this round.
 
-- `docs/drafts/hermes-readme-improvement-notes.md`
+### Task 1: Apply Tools Code Review
 
-内容：
+Review subject:
 
-- README 里哪些内容适合保留。
-- 哪些地方应补 pyRevit 下载链接。
-- 哪些地方应强调 Revit 2027。
-- 哪些地方应提醒先用测试模型。
-- 不要写企业级内容。
+- `pyrevit/**/ApplyMissingDoorWindowMarks.pushbutton/script.py`
+- `pyrevit/**/ApplyMissingRoomNumbers.pushbutton/script.py`
 
-## Day 3：用户指南草稿
+Allowed read paths:
 
-目标：把 quickstart 扩展成更完整的个人用户指南草稿。
+- `pyrevit/YangAgent.extension/**/ApplyMissingDoorWindowMarks.pushbutton/*`
+- `pyrevit/YangAgent.extension/**/ApplyMissingRoomNumbers.pushbutton/*`
+- `docs/error-codes.md`
+- `docs/testing-and-qa.md`
+- `docs/safety-rules.md`
 
-新增文件：
+Review goals:
 
-- `docs/drafts/hermes-personal-user-guide-outline.md`
+- confirm whether the `dry-run -> confirm -> apply` flow is consistent across both tools
+- identify user-misoperation risks
+- identify inconsistencies in errors, logs, or Undo/rollback wording
+- identify any obvious review-only bug risks that do not require live Revit to notice
+- identify which questions cannot be answered without live Revit
 
-内容：
+Output file:
 
-- 安装。
-- 第一次运行。
-- 如何选择导出目录。
-- 如何读报告。
-- 如何把报告交给 AI。
-- 如何安全使用 apply。
-- 如何撤销。
-- 常见问题入口。
+- `docs/drafts/hermes-code-review-apply-tools.md`
 
-## Day 4：错误代码易读化
+Forbidden actions:
 
-目标：把 `docs/error-codes.md` 转成新手容易看懂的摘要。
+- do not suggest direct code patches as if they are approved fixes
+- do not claim Revit API behavior unless it is supported by the current code or current docs
+- do not edit any mainline code files
 
-新增文件：
+### Task 2: Sandbox Runbook Feature Review
 
-- `docs/drafts/hermes-error-code-cheatsheet.md`
+Review subject:
 
-内容：
+- `docs/sandbox-pyrevit-mvp-runbook.md`
 
-- 错误代码。
-- 你看到这个错误时发生了什么。
-- 是否改动了模型。
-- 下一步怎么做。
+Allowed read paths:
 
-## Day 5：文档一致性总审查
+- `docs/sandbox-pyrevit-mvp-runbook.md`
+- `docs/next-steps.md`
+- `docs/testing-and-qa.md`
+- `docs/troubleshooting.md`
+- `docs/handoff-new-chat-2026-06-07.md`
 
-目标：审查 drafts 文档之间是否互相矛盾。
+Review goals:
 
-新增文件：
+- check whether the live sandbox sequence is clear for a human operator
+- identify missing feedback fields needed after a failed live run
+- identify steps that may be easy to misunderstand or skip
+- suggest where a compact human checklist would help
+- if a compact checklist is clearly derivable now, include it only as an appendix inside the draft review report, not as a replacement for the main runbook
+- identify which parts still depend on live Revit evidence
 
-- `docs/drafts/hermes-doc-consistency-audit.md`
+Output file:
 
-检查：
+- `docs/drafts/hermes-feature-review-sandbox-runbook.md`
 
-- Revit 版本表述是否一致。
-- 安装命令是否一致。
-- dry-run/apply/Undo 说法是否一致。
-- 是否有危险建议。
-- 是否有企业级复杂化内容。
+Forbidden actions:
 
-## 每次完成后汇报格式
+- do not rewrite the main runbook directly
+- do not invent new recovery steps that are not grounded in current docs
+- do not mark any live Revit step as already verified
+
+## Required Report Back
+
+Hermes must report back in this format:
 
 ```text
 Branch:
-- hermes/docs-personal-mvp
+- hermes/read-only-checks
 
 Changed files:
 - ...
@@ -120,102 +167,40 @@ Changed files:
 Summary:
 - ...
 
+Checks run:
+- ...
+
+Review conclusions:
+- ...
+
 Safety confirmation:
 - I did not edit pyRevit scripts.
 - I did not edit C# files.
-- I did not edit scripts or addin templates.
+- I did not edit tools, tests, scripts, or addin templates.
 - I did not run install/build scripts.
 - I did not run Revit.
-- I did not add .rvt files.
+- I did not add .rvt or .rfa files.
 - I did not run git merge / push / pull.
+- My code conclusions are review findings only, not implementation decisions.
 
 Questions for Codex:
 - ...
 ```
 
-## Codex 验收标准
+## Codex Review Standard
 
-- 只接受 docs/drafts 范围内的低风险文档。
-- 有命令的地方必须可复制。
-- 不接受危险 Revit 操作建议。
-- 不接受企业级复杂化。
-- 不接受核心代码改动。
-## 只读代码试运行任务
+Codex should accept Hermes output only when it contains:
 
-Hermes/DeepSeek 当前可以承担文档、测试、只读静态检查任务。仍然不允许修改核心代码、安装脚本、addin 模板或 Revit 模型。
+- clear bug risk or user-flow risk
+- clear test gaps
+- clear inconsistency findings in logs, errors, or instructions
+- clear separation between code facts and live-Revit unknowns
 
-分支建议：
+Codex should reject Hermes output that:
 
-```powershell
-hermes/read-only-checks
-```
-
-允许做：
-
-- 运行 `python tools\static_checks.py --write-report`。
-- 整理 `docs/drafts/static-check-report.md` 的结果。
-- 修改 `docs/drafts/*.md` 草稿。
-- 在新分支上新增只读测试草稿或审计报告。
-
-禁止做：
-
-- 不改 `pyrevit/**/script.py`。
-- 不改 `src/**`。
-- 不改 `scripts/**`。
-- 不改 `addins/**`。
-- 不运行 Revit。
-- 不运行 install/build 脚本。
-- 不做 git merge / push / pull。
-- 不添加 `.rvt`。
-
-任务：
-
-1. 运行静态检查：
-
-   ```powershell
-   cd "G:\Hermes Agent\YangAgent Revit\YangAgent Revit"
-   python tools\static_checks.py --write-report
-   ```
-
-2. 阅读生成的 `docs/drafts/static-check-report.md`。
-3. 新增 `docs/drafts/hermes-static-check-review.md`，只写：
-   - 发现了哪些 `ERROR`。
-   - 发现了哪些 `WARN`。
-   - 哪些是文档问题。
-   - 哪些需要 Codex 判断。
-4. 不直接修核心代码。
-
-## Hermes 后续只读脚本检查
-
-可以检查但不能修改：
-
-- `scripts\build-revit-addin.ps1`
-- `scripts\install-revit-addin.ps1`
-- `scripts\build-revit2027-addin.ps1`
-- `scripts\install-revit2027-addin.ps1`
-
-检查目标：
-
-- 2027 是否是唯一 implemented track。
-- 2024/2025/2026 是否明确返回 `YA-CS-VERSION-PLANNED`。
-- 文档是否没有把 2024/2025/2026 写成已经可构建。
-
-## Hermes Apply CSV 离线检查任务
-
-允许运行：
-
-```powershell
-python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
-python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
-python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_duplicate.csv
-python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_duplicate.csv
-```
-
-如果用户提供真实 dry-run CSV，也可以只读检查该 CSV，但必须遵守：
-
-- 不打开 Revit。
-- 不运行 apply。
-- 不修改 CSV。
-- 不提交任何项目模型或客户数据。
-- 报告只写错误代码、字段问题和建议下一步。
-- valid fixture 应通过；duplicate fixture 应返回 `YA-APPLY-*-CSV-007`，这是预期结果。
+- touches implementation files
+- reintroduces enterprise/platform scope
+- gives unsafe Revit execution advice
+- treats audit evidence as copy/paste instructions
+- makes unsupported Revit API claims
+- drifts into approved-fix language instead of review language
