@@ -51,7 +51,7 @@ That means:
 - `Apply Missing Door Window Marks`
 - `Apply Missing Room Numbers`
 
-The toolbox supports `中文` and `English`.
+The toolbox supports Chinese and English.
 
 ## Core Documents
 
@@ -59,6 +59,10 @@ The toolbox supports `中文` and `English`.
 - [Simple roadmap](docs/simple-roadmap.md)
 - [Project rules](docs/project-rules.md)
 - [Agent operating model](docs/agent-operating-model.md)
+- [Agent development rules](docs/agent-development-rules.md)
+- [Agent task template](docs/agent-task-template.md)
+- [Agent delivery report template](docs/agent-delivery-report-template.md)
+- [Agent review checklist](docs/agent-review-checklist.md)
 - [External toolbox intake](docs/external-toolbox-intake.md)
 - [Sandbox checklist](docs/sandbox-pyrevit-mvp-checklist.md)
 - [Sandbox feedback template](docs/sandbox-pyrevit-mvp-feedback-template.md)

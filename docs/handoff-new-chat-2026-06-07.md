@@ -20,8 +20,10 @@ Older company, enterprise, MCP-first, Bridge, and commercial planning material i
 
 - Repository: `https://github.com/5788324/Yang-Agent_Revit`
 - Local path: `D:\codex\Yang Agent_Revit`
+- Future target path requested by user: `G:\Codex\YangAgent Revit\YangAgent Revit`
+- Migration warning: as of 2026-06-13, the G path contains `Gemini 资料` but is not yet a Git repository. Do not delete the D path until the G path has the repo, latest commit, and a clean `git status`.
 - Branch: `main`
-- Local status at handoff time: `main...origin/main [ahead 11]`
+- Local status before 2026-06-13 documentation edits: `main...origin/main`
 - Do not push unless the user explicitly asks.
 - Current project goal: personal-use Revit assistant, not an enterprise/commercial plugin platform.
 
@@ -33,7 +35,8 @@ Older company, enterprise, MCP-first, Bridge, and commercial planning material i
 - C# DLL: lightweight Revit 2027 skeleton only, not the current mainline.
 - Long-term version target: Revit 2022-2027, with pyRevit as the first multi-version route.
 - MCP: future automatic reading and controlled modification only after the plugin workflow is stable.
-- Gemini C# toolbox: external asset pending isolated intake after the user provides the path.
+- Gemini C# toolbox: external asset at `G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode`; use isolated intake before any migration.
+- Hermes/Gemini/DeepSeek: may do bounded code/plugin/test drafts only from task sheets, with delivery reports and Codex review.
 
 ## Recent Mainline Commits
 
@@ -75,6 +78,8 @@ Older company, enterprise, MCP-first, Bridge, and commercial planning material i
 - Do not commit `.rvt`, `.rfa`, customer data, API keys, `%APPDATA%` config, or generated local exports.
 - Hermes/DeepSeek output is draft until Codex reviews it.
 - Hermes/DeepSeek review findings are advisory only and do not authorize implementation changes.
+- Hermes/Gemini/DeepSeek code deliveries require a task sheet and delivery report before Codex review.
+- External deliveries should go through `docs/incoming/` and `docs/reviews/`.
 
 ## Verified Commands
 
@@ -118,12 +123,23 @@ Do not mark these as verified until the user or a live Revit session confirms th
 4. Use `docs/sandbox-pyrevit-mvp-checklist.md` for the first live sandbox run.
 5. Use `docs/sandbox-pyrevit-mvp-feedback-template.md` to capture the first blocker.
 6. Fix only that first live blocker before expanding scope.
-7. When the user provides the Gemini C# toolbox path, intake it through `docs/external-toolbox-intake.md`.
+7. Intake the Gemini C# toolbox through `docs/external-toolbox-intake.md`.
 8. Keep C# DLL, MCP, and Revit 2022-2027 expansion out of this week's hard target.
+9. Complete the G path repo migration before deleting the old D path.
 
-## Hermes / DeepSeek Tasks
+## Hermes / Gemini / DeepSeek Tasks
 
-Hermes should work on a separate branch, not `main`.
+External agents may now do bounded implementation drafts, but only with a task sheet and delivery report.
+
+Use these documents:
+
+- `docs/agent-development-rules.md`
+- `docs/agent-task-template.md`
+- `docs/agent-delivery-report-template.md`
+- `docs/agent-review-checklist.md`
+- `docs/daily-agent-log-template.md`
+
+When Git is available, Hermes should work on a separate branch, not `main`.
 
 Recommended branch:
 
@@ -138,6 +154,8 @@ Allowed:
 - Read `pyrevit/**/script.py`, `src/**`, `tools/**`, and `tests/**` in a review-only mode.
 - Write draft reports under `docs/drafts/`.
 - Perform only the currently assigned bounded tasks from `docs/hermes-next-tasks.md`.
+- Write bounded candidate code only when a Codex task sheet explicitly allows it.
+- Deliver zip/folder/Markdown reports when the user environment has no Git.
 
 Forbidden:
 
@@ -151,6 +169,8 @@ Forbidden:
 - Do not run Revit.
 - Do not add `.rvt` files.
 - Do not merge, push, or pull.
+- Do not modify production Revit models.
+- Do not introduce MCP or dynamic script execution as a model-changing default.
 
 Review note for Hermes draft output:
 
@@ -158,7 +178,7 @@ Review note for Hermes draft output:
 - Treat those quoted examples as review artifacts, not as execution instructions.
 - Only commands repeated in the main handoff, user guide, troubleshooting, or testing docs should be treated as active guidance.
 - Hermes task iteration is controlled through `docs/hermes-next-tasks.md`; Hermes should not self-expand beyond the current task pack.
-- Hermes may now perform bounded read-only code review, but its conclusions remain advisory and do not authorize implementation changes.
+- Hermes/Gemini/DeepSeek may now perform bounded code or plugin drafts when assigned, but their conclusions and patches remain advisory until Codex accepts them.
 - Hermes Round 1 is currently `reviewed: follow-up required` because the required structured draft report files were missing and a screenshot summary is not accepted as final delivery.
 
 ## New Chat Startup Prompt
@@ -169,7 +189,10 @@ Copy this into the next Codex chat:
 We are continuing the YangAgent Revit project.
 
 Repository: https://github.com/5788324/Yang-Agent_Revit
-Local path: D:\codex\Yang Agent_Revit
+Current local path: D:\codex\Yang Agent_Revit
+Future target path: G:\Codex\YangAgent Revit\YangAgent Revit
+
+Important: verify the G path is a real Git repo before deleting the D path.
 
 Please start by running:
 1. git status --short --branch
@@ -185,8 +208,8 @@ Current state:
 - All model-changing features must follow dry-run -> human confirmation -> apply.
 - Long-term target includes Revit 2022-2027, but current C# DLL implementation is Revit 2027 only.
 - MCP automatic reading and controlled modification are future goals, not this week's delivery target.
-- Gemini C# toolbox should be isolated and reviewed before any migration.
-- Hermes/DeepSeek handles read-only checks, draft docs, and bounded read-only code review only; Codex owns core code, implementation, and final review.
+- Gemini C# toolbox is at G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode and should be isolated, inventoried, and selectively rewritten rather than directly merged.
+- Hermes/Gemini/DeepSeek may do bounded code/plugin drafts only with task sheets and delivery reports; Codex owns final review, merge, and quality gates.
 
 Continue mainline work from the current repo state.
 ```

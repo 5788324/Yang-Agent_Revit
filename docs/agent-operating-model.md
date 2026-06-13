@@ -23,7 +23,7 @@ Codex should avoid spending time on bulk documentation or mechanical review when
 
 ## Hermes / Gemini / DeepSeek
 
-These agents are treated as auxiliary execution models.
+These agents are treated as controlled external development models.
 
 They may do:
 
@@ -31,7 +31,8 @@ They may do:
 - write draft documentation;
 - prepare review reports;
 - classify issues;
-- propose low-risk patches;
+- write bounded code or plugin drafts from a Codex-approved task sheet;
+- propose low-risk patches inside the assigned scope;
 - organize checklists;
 - inspect external toolboxes.
 
@@ -42,6 +43,16 @@ They must not independently:
 - claim live Revit behavior without evidence;
 - merge or push;
 - expand project scope.
+
+They must follow:
+
+- `docs/agent-development-rules.md`
+- `docs/agent-task-template.md`
+- `docs/agent-delivery-report-template.md`
+- `docs/agent-review-checklist.md`
+- `docs/daily-agent-log-template.md`
+
+If they deliver work without a task sheet and delivery report, Codex treats it as unreviewable.
 
 ## User
 
@@ -57,9 +68,18 @@ The user does not need to understand all implementation details.
 ## Review Flow
 
 1. Codex writes a bounded task.
-2. Auxiliary agent completes the task in a draft or candidate patch.
-3. Codex reviews and accepts, rejects, or requests follow-up.
-4. Only accepted work becomes part of the mainline.
+2. Auxiliary agent completes the task in a draft, source package, or candidate patch.
+3. Auxiliary agent provides a delivery report.
+4. Codex reviews and marks the result as `accepted`, `needs changes`, or `rejected`.
+5. Only accepted work becomes part of the mainline.
+
+When the user works without Git or Codex, the agent may deliver a zip, folder, screenshot, or Markdown report. The delivery must still include a `delivery-report.md` and a date / agent / topic / version name.
+
+## Review Records
+
+Use `docs/incoming/` for external deliveries and `docs/reviews/` for Codex review records.
+
+Use `docs/agent-review-checklist.md` before accepting any external work.
 
 ## Live Revit Rule
 

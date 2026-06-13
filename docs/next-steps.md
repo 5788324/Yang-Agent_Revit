@@ -73,11 +73,28 @@ Hermes / Gemini / DeepSeek:
 - review reports;
 - checklist cleanup;
 - external toolbox inventory;
-- low-risk candidate patches after Codex scopes the task.
+- bounded code, plugin, and test drafts after Codex scopes the task.
+
+Rules:
+
+- use `docs/agent-development-rules.md`;
+- use `docs/agent-task-template.md` for assigned work;
+- use `docs/agent-delivery-report-template.md` for every delivery;
+- place external packages or reports under `docs/incoming/`;
+- record Codex review under `docs/reviews/`;
+- do not merge external work without Codex review.
+
+If the user works in an environment without Git or Codex, Gemini/DeepSeek may deliver zip files, folders, screenshots, and Markdown reports. Every delivery still needs a `delivery-report.md`.
 
 ## Gemini Toolbox
 
-When the Gemini C# toolbox path is available, use:
+Gemini C# toolbox path:
+
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode
+```
+
+Use:
 
 - `docs/external-toolbox-intake.md`
 
@@ -90,6 +107,8 @@ First classify every tool as:
 - high-risk model change;
 - useful idea but poor implementation;
 - not needed.
+
+Default decision: rewrite selected useful tools in YangAgent style instead of modifying the whole Gemini toolbox in place.
 
 ## Later, Not This Week
 
