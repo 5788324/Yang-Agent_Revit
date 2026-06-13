@@ -97,6 +97,7 @@ G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode
 Use:
 
 - `docs/external-toolbox-intake.md`
+- `docs/reviews/gemini-toolbox-initial-inventory-2026-06-13.md`
 
 Do not merge the toolbox directly.
 
@@ -109,6 +110,12 @@ First classify every tool as:
 - not needed.
 
 Default decision: rewrite selected useful tools in YangAgent style instead of modifying the whole Gemini toolbox in place.
+
+Current intake status:
+
+- Initial inventory completed.
+- High-risk areas identified: auto-start MCP server, dynamic Python execution, auto-deploy build target, broad family/delete/batch operations.
+- Next decision should come from the user's real work need: pick one useful daily-work tool and rebuild it safely.
 
 ## Later, Not This Week
 

@@ -19,9 +19,10 @@ Older company, enterprise, MCP-first, Bridge, and commercial planning material i
 ## Repository State
 
 - Repository: `https://github.com/5788324/Yang-Agent_Revit`
-- Local path: `D:\codex\Yang Agent_Revit`
-- Future target path requested by user: `G:\Codex\YangAgent Revit\YangAgent Revit`
-- Migration warning: as of 2026-06-13, the G path contains `Gemini 资料` but is not yet a Git repository. Do not delete the D path until the G path has the repo, latest commit, and a clean `git status`.
+- Current local path: `G:\Codex\YangAgent Revit\YangAgent Revit`
+- Previous local path: `D:\codex\Yang Agent_Revit`
+- Migration status: completed on 2026-06-13. The G path is now a Git repository on `main...origin/main`.
+- Deletion warning: do not delete the previous D path unless the user explicitly confirms deletion after checking the G path.
 - Branch: `main`
 - Local status before 2026-06-13 documentation edits: `main...origin/main`
 - Do not push unless the user explicitly asks.
@@ -125,7 +126,7 @@ Do not mark these as verified until the user or a live Revit session confirms th
 6. Fix only that first live blocker before expanding scope.
 7. Intake the Gemini C# toolbox through `docs/external-toolbox-intake.md`.
 8. Keep C# DLL, MCP, and Revit 2022-2027 expansion out of this week's hard target.
-9. Complete the G path repo migration before deleting the old D path.
+9. Keep the G path as the active development path.
 
 ## Hermes / Gemini / DeepSeek Tasks
 
@@ -189,10 +190,10 @@ Copy this into the next Codex chat:
 We are continuing the YangAgent Revit project.
 
 Repository: https://github.com/5788324/Yang-Agent_Revit
-Current local path: D:\codex\Yang Agent_Revit
-Future target path: G:\Codex\YangAgent Revit\YangAgent Revit
+Current local path: G:\Codex\YangAgent Revit\YangAgent Revit
+Previous local path: D:\codex\Yang Agent_Revit
 
-Important: verify the G path is a real Git repo before deleting the D path.
+Important: do not delete the previous D path unless the user explicitly confirms deletion.
 
 Please start by running:
 1. git status --short --branch
