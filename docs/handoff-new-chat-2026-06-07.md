@@ -37,6 +37,7 @@ Older company, enterprise, MCP-first, Bridge, and commercial planning material i
 - Long-term version target: Revit 2022-2027, with pyRevit as the first multi-version route.
 - MCP: future automatic reading and controlled modification only after the plugin workflow is stable.
 - Gemini C# toolbox: external asset at `G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode`; use isolated intake before any migration.
+- Gemini feature priority: the toolbox functions are important, especially MCP, micro toolbox, and project asset manager, but migration is deferred until the YangAgent core is usable in sandbox.
 - Hermes/Gemini/DeepSeek: may do bounded code/plugin/test drafts only from task sheets, with delivery reports and Codex review.
 
 ## Recent Mainline Commits
@@ -125,7 +126,7 @@ Do not mark these as verified until the user or a live Revit session confirms th
 5. Use `docs/sandbox-pyrevit-mvp-feedback-template.md` to capture the first blocker.
 6. Fix only that first live blocker before expanding scope.
 7. Intake the Gemini C# toolbox through `docs/external-toolbox-intake.md`.
-8. Keep C# DLL, MCP, and Revit 2022-2027 expansion out of this week's hard target.
+8. Keep C# DLL, MCP, micro toolbox, project asset manager, and Revit 2022-2027 expansion out of this week's hard target.
 9. Keep the G path as the active development path.
 
 ## Hermes / Gemini / DeepSeek Tasks
@@ -210,6 +211,7 @@ Current state:
 - Long-term target includes Revit 2022-2027, but current C# DLL implementation is Revit 2027 only.
 - MCP automatic reading and controlled modification are future goals, not this week's delivery target.
 - Gemini C# toolbox is at G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode and should be isolated, inventoried, and selectively rewritten rather than directly merged.
+- Gemini toolbox functions are important but should not delay the first usable YangAgent core.
 - Hermes/Gemini/DeepSeek may do bounded code/plugin drafts only with task sheets and delivery reports; Codex owns final review, merge, and quality gates.
 
 Continue mainline work from the current repo state.

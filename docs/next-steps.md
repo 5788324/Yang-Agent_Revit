@@ -6,6 +6,12 @@ Current goal:
 Make the pyRevit MVP usable in a sandbox Revit model.
 ```
 
+Primary execution rule:
+
+```text
+Finish the usable YangAgent core first. Gemini toolbox migration comes later.
+```
+
 ## Current Project Position
 
 - Personal Revit AI assistant.
@@ -23,7 +29,8 @@ Make the pyRevit MVP usable in a sandbox Revit model.
 3. Use the sandbox checklist for the first live Revit run.
 4. Capture the first real blocker with the feedback template.
 5. Fix only that first blocker.
-6. Do not expand feature scope until the sandbox flow works.
+6. Do not expand Gemini toolbox migration until the sandbox flow works.
+7. Keep MCP, micro toolbox, and project asset manager as important later core features, but do not let them block the first usable pyRevit MVP.
 
 ## Current Execution Pack
 
@@ -115,7 +122,9 @@ Current intake status:
 
 - Initial inventory completed.
 - High-risk areas identified: auto-start MCP server, dynamic Python execution, auto-deploy build target, broad family/delete/batch operations.
-- Next decision should come from the user's real work need: pick one useful daily-work tool and rebuild it safely.
+- User confirmed the Gemini toolbox functions are important for daily work.
+- MCP, micro toolbox, and project asset manager are important later core features.
+- Current decision: defer Gemini feature migration until the YangAgent core is usable in sandbox.
 
 ## Later, Not This Week
 
