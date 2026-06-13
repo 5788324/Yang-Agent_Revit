@@ -67,6 +67,7 @@ The toolbox supports Chinese and English.
 - [Sandbox checklist](docs/sandbox-pyrevit-mvp-checklist.md)
 - [Sandbox feedback template](docs/sandbox-pyrevit-mvp-feedback-template.md)
 - [Current handoff](docs/handoff-new-chat-2026-06-07.md)
+- [New chat startup](docs/new-chat-startup-2026-06-13.md)
 - [Next steps](docs/next-steps.md)
 
 ## Install pyRevit Toolbox

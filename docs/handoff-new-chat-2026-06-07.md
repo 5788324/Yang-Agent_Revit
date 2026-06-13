@@ -13,6 +13,7 @@ Use these documents first:
 3. `docs/project-rules.md`
 4. `docs/agent-operating-model.md`
 5. this handoff
+6. `docs/new-chat-startup-2026-06-13.md`
 
 Older company, enterprise, MCP-first, Bridge, and commercial planning material is historical reference only.
 
@@ -24,7 +25,7 @@ Older company, enterprise, MCP-first, Bridge, and commercial planning material i
 - Migration status: completed on 2026-06-13. The G path is now a Git repository on `main...origin/main`.
 - Deletion warning: do not delete the previous D path unless the user explicitly confirms deletion after checking the G path.
 - Branch: `main`
-- Local status before 2026-06-13 documentation edits: `main...origin/main`
+- Latest confirmed status on 2026-06-13: `main...origin/main`
 - Do not push unless the user explicitly asks.
 - Current project goal: personal-use Revit assistant, not an enterprise/commercial plugin platform.
 
@@ -85,7 +86,11 @@ Older company, enterprise, MCP-first, Bridge, and commercial planning material i
 
 ## Verified Commands
 
-Run from `D:\codex\Yang Agent_Revit`.
+Run from current repository root:
+
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit
+```
 
 ```powershell
 python -m py_compile tools\static_checks.py tools\validate_apply_csv.py tools\check_pyrevit_extension.py
@@ -200,10 +205,11 @@ Please start by running:
 1. git status --short --branch
 2. Read docs/handoff-new-chat-2026-06-07.md
 3. Read docs/next-steps.md
-4. Read docs/worklogs/worklog-2026-06-07.md from the latest relevant section
+4. Read docs/worklogs/worklog-2026-06-13.md from the latest relevant section
+5. Read docs/new-chat-startup-2026-06-13.md
 
 Current state:
-- main is ahead of origin locally; do not push unless I explicitly ask.
+- main is synced with origin unless `git status` says otherwise.
 - This is a personal Revit AI assistant, not an enterprise platform or commercial plugin.
 - Prioritize getting the pyRevit MVP usable in a sandbox model.
 - Do not directly modify production Revit models.
