@@ -1,84 +1,48 @@
-# 更新日志 (Changelog)
+# Changelog
 
-所有针对本项目的重要修改都会记录在这个文件中。
-为了方便版本回滚、团队对接与追溯，每次进行重要的代码或文档修改后，请务必在此记录并及时提交 Git。
+This file records meaningful project changes that still matter to the current repository state.
 
-日志格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，本项目版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
+The project is still in an early MVP phase, so this changelog is intentionally concise.
 
 ## [Unreleased]
 
-### Added (新增)
-- Added `docs/product-brief.md`, `docs/simple-roadmap.md`, `docs/project-rules.md`, `docs/agent-operating-model.md`, and `docs/external-toolbox-intake.md` as the simplified personal-assistant planning set.
-- Added `tools/check_pyrevit_extension.py` for offline pyRevit bundle preflight checks before sandbox-model runs.
-- Added `docs/sandbox-pyrevit-mvp-runbook.md` to standardize the first live sandbox validation sequence.
-- Added `docs/sandbox-pyrevit-mvp-checklist.md` as a compact operator execution sheet for the first sandbox run.
-- Added `docs/sandbox-pyrevit-mvp-feedback-template.md` for first-blocker live run reporting.
-- 新增 `docs/architecture-design.md` 系统架构设计文档。
-- 新增 `docs/api-and-data-schema.md` API与数据结构规范文档。
-- 新增 `docs/testing-and-qa.md` 测试与质量保证规范文档。
-- 新增 `docs/security-preparations.md` 项目初期安全防范与备份预案。
-- 新增 `CHANGELOG.md` 更新日志文档以规范化版本控制。
-- 新增 `Preview Missing Room Numbers` dry-run 工具，导出缺少编号房间的 Markdown 和 CSV 清单。
-- 新增 `Preview Duplicate Room Numbers` dry-run 工具，导出重复房间编号的 Markdown 和 CSV 清单。
-- 新增 `Preview Unplaced Views` dry-run 工具，导出可能未上图视图的 Markdown 和 CSV 清单。
-- 新增 `Preview Views By Naming Rules` dry-run 工具，导出视图命名问题 Markdown 和 CSV 清单。
-- 新增 `docs/view-naming-rules.md`，说明视图命名规则的本地配置方式。
-- 新增 `docs/handoff-2026-05-23.md` 交接记录，方便后续同事接手。
-- 新增 `Apply Missing Door Window Marks` 受控修改工具，从 dry-run CSV 写入门窗标记并输出日志。
-- 新增 `Apply Missing Room Numbers` 受控修改工具，从 dry-run CSV 写入缺失房间编号并输出日志。
-- 在 `SystemSettings` 中新增视图命名规则配置入口，可维护视图类型前缀和临时关键词。
-- 新增 `Export Regression Checklist` 只读工具，生成标准回归测试 Markdown 清单。
-- 新增 `Export AI Review Prompt` 只读工具，生成安全 AI 分析提示词和最近报告清单。
-- `SystemSettings` 新增本机 AI 工作习惯配置，并将其写入 AI 分析提示词。
-- `SystemSettings` 新增本机公司标准 Markdown 文件配置，并将其写入 AI 分析提示词。
-- Revit 2027 DLL 插件新增真实只读按钮：打开配置目录、打开报告目录。
-
-### Changed (变更)
-- Refocused the active project plan on a personal Revit AI assistant, with Revit 2022-2027 and MCP controlled read/write retained as later goals.
-- Marked older architecture, MCP, DLL, Claude integration, and non-programmer roadmap documents as historical reference where they no longer match the active plan.
-- Reframed `README.md` to the current personal-assistant scope and explicit document authority order.
-- Downgraded `HANDOFF.md` to legacy reference status and removed it as a current source of truth.
-- Downgraded `docs/colleague-quickstart.md` to historical/optional shared-use reference.
-- Downgraded `docs/revit-ai-agent-project-plan.md` to historical archive status.
-- Tightened Hermes collaboration into a documented task-pack -> report-back -> Codex-review loop.
-- Upgraded Hermes from docs-only support to bounded read-only code review support without implementation authority.
-- Added `tools/run_sandbox_preflight.py` to make the first sandbox-session offline gate runnable as one read-only command.
-- Added `pyrevit/YangAgent.extension/lib/yang_agent_apply.py` to centralize duplicated apply-tool utility logic.
-- Tightened Hermes Round 1 intake so screenshot summaries are no longer accepted in place of structured draft reports under `docs/drafts/`.
-- Tightened the sandbox feedback template to capture runbook step numbers, first failing button order, preflight report path, warning count, and whether a blocker stops later steps.
-- 完善初期项目框架与文档体系。
-- 将报告工具整理到 `Reports.pulldown`。
-- 将语言、用户、主题、关于更新合并为统一的 `SystemSettings` 设置窗口。
-- 设置窗口补回头像路径、版权声明和插件更新链接。
-- 优化门窗 `Mark/标记` 参数读写，避免 Revit 参数对象布尔误判并增加中英文参数名兜底。
-- 优化 `Apply Missing Door Window Marks` 的 dry-run CSV 读取，支持 UTF-8 BOM 表头并在字段校验失败时输出实际字段。
-- 修复 Revit 2027 / IronPython 中 `ElementId` 构造函数重载歧义导致应用门窗标记失败的问题。
-- 优化房间编号参数读取，避免 Revit 参数对象布尔误判。
-- 将视图命名检查规则抽到共享设置，支持通过本机 `settings.json` 调整。
-- 优化 `Apply Missing Room Numbers` 的 CSV 选择提示，只接受 `missing_room_numbers_*.csv`，避免误选重复编号报告。
-- 更新 Revit 2027 DLL 系统设置占位说明，指向本机配置目录。
-
-## [1.0.0] - 2026-05-23
-
 ### Added
-- 发布首个 YangAgent Revit MVP 版本。
-- 新增 pyRevit 工具箱基础结构：系统设置、导出报告。
-- 新增中英双语设置、用户简称、头像路径、Light/Dark Theme 配置。
-- 新增报告导出路径、模型快照、模型健康报告、缺失门窗标记 dry-run 预览。
-- 新增 Revit 2027 C# `.addin + .dll` 插件骨架。
-- 新增用户说明、开发指南、故障排查、AI 协作流程文档。
+
+- shared theme engine modules:
+  - `pyrevit/YangAgent.extension/lib/yang_agent_settings.py`
+  - `pyrevit/YangAgent.extension/lib/yang_agent_theme.py`
+  - `pyrevit/YangAgent.extension/lib/yang_agent_report_style.py`
+- `Project Info Report` pyRevit button
+- governance framework under:
+  - `docs/framework/`
+  - `docs/design-system/`
+  - `docs/governance/`
+- daily ops and document-governance rules
+- offline syntax-check helper:
+  - `tools/check_offline_python_syntax.py`
+
+### Changed
+
+- current repo direction is now explicitly a personal Revit AI assistant, not a company platform
+- document authority order has been simplified and tightened
+- many older planning and architecture docs were downgraded to historical-reference stubs
+- `docs/drafts/` was pruned to keep only current generated evidence plus its README
+- sandbox testing, troubleshooting, error-code, and handoff docs were rewritten into current readable versions
+- top-level and auxiliary READMEs/templates were normalized to current project rules
+- `pyrevit/YangAgent.extension/lib/yang_agent_lang.py` was cleaned up to remove garbled Chinese text in shared language defaults
 
 ### Fixed
-- 修复 pyRevit 2027 中文目录名与 `context:` availability 导致按钮灰色的问题。
-- 修复 pyRevit 旧缓存导致 FullClassName 加载错误的问题。
 
-## [0.1.0] - 2026-05-22
+- offline preflight now avoids unreliable `py_compile` cache writes by using source-only syntax checking
+- stale Hermes draft clutter was removed after its useful content was promoted into current docs
+- shared language helper text no longer contains garbled Chinese defaults
 
-### Added
-- 初始化项目仓库。
-- 新增核心方案文档 (`revit-ai-agent-project-plan.md`, `claude-doc-integration-review.md` 等)。
-- 新增 pyRevit 工具基础框架：
-  - `Export Model Snapshot`
-  - `Model Health Report`
-  - `Preview Missing Marks`
-- 新增 Revit 2027 C# 插件骨架代码。
+## Historical Note
+
+Older milestone-style entries from the repository bootstrap phase were intentionally removed from this file once they stopped being reliable day-to-day guidance.
+
+Historical progress is still preserved in:
+
+- `docs/worklogs/`
+- current handoff/startup docs
+- Git history

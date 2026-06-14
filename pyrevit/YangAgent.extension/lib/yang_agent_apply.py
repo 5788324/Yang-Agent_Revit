@@ -94,6 +94,26 @@ def get_param_text(param):
     if param is None:
         return u""
     try:
+        storage_name = safe_text(param.StorageType)
+    except Exception:
+        storage_name = u""
+    if storage_name == "String":
+        try:
+            value = param.AsString()
+            return safe_text(value) if value is not None else u""
+        except Exception:
+            return u""
+    if storage_name == "Integer":
+        try:
+            return safe_text(param.AsInteger())
+        except Exception:
+            return u""
+    if storage_name == "Double":
+        try:
+            return safe_text(param.AsDouble())
+        except Exception:
+            return u""
+    try:
         value = param.AsString()
         if value is not None:
             return safe_text(value)
@@ -103,14 +123,6 @@ def get_param_text(param):
         value = param.AsValueString()
         if value is not None:
             return safe_text(value)
-    except Exception:
-        pass
-    try:
-        return safe_text(param.AsInteger())
-    except Exception:
-        pass
-    try:
-        return safe_text(param.AsDouble())
     except Exception:
         pass
     return u""

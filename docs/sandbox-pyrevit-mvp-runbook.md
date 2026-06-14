@@ -1,118 +1,151 @@
 # pyRevit MVP Sandbox Runbook
 
-Use this runbook for the first real sandbox-model validation of the current pyRevit MVP.
+本文件用于人工 Revit 会话中的第一轮真实 sandbox 验证。
 
-This file is execution guidance for a human Revit session. It is not proof that the checks already happened.
+它是执行指引，不代表这些检查已经自动完成。
 
-For the compact execution sheet, use `docs/sandbox-pyrevit-mvp-checklist.md`.
+配套短版执行单：
 
-## Purpose
+- `docs/sandbox-pyrevit-mvp-checklist.md`
 
-- verify that the pyRevit MVP actually loads in Revit
-- verify the current report and preview buttons on a sandbox model
-- verify the two low-risk apply tools with Undo in a sandbox model
-- capture the first real blocking issue for Codex to fix
+高密度人工 live 测试入口：
 
-## Safety Rules
+- `docs/sandbox-snowdon-live-pack-2026-06-13.md`
 
-- Do not use a production model.
-- Use only a local sandbox/test model such as `*_sandbox.rvt` or `*_test.rvt`.
-- For apply testing, keep the model disposable or backed up.
-- Do not mark Undo as verified unless one Revit Undo was manually tested after an apply run.
+## 目标
 
-## Offline Preflight Before Opening Revit
+- 验证当前 pyRevit MVP 能否在 Revit 中正常加载
+- 验证当前只读导出和 preview 按钮
+- 验证两个低风险 apply 工具的基本执行链路
+- 在第一处真实 blocker 停下，并把证据交给 Codex
 
-Run from `D:\codex\Yang Agent_Revit`:
+## 安全规则
+
+- 不要使用生产模型。
+- 只使用本地 sandbox/test 模型，例如 `*_sandbox.rvt` 或 `*_test.rvt`。
+- apply 测试前，确认模型可丢弃或已备份。
+- 只有手动做过一次 Revit `Undo`，才能声称 Undo 已验证。
+
+## 打开 Revit 前的离线预检查
+
+在仓库根目录运行：
 
 ```powershell
 python tools\run_sandbox_preflight.py --write-report
 ```
 
-Expected:
+预期：
 
-- sandbox preflight: all steps `PASS`
-- pyRevit preflight: `0 errors`
-- static check: `0 errors`
-- valid CSV fixtures: pass
-- duplicate CSV fixtures: expected fail with `YA-APPLY-*-CSV-007`
-- report written to `docs/drafts/sandbox-preflight-report.md`
+- sandbox preflight 全部 `PASS`
+- pyRevit preflight：`0 errors`
+- static check：`0 errors`
+- 合法 CSV fixture：通过
+- 重复 `element_id` fixture：按预期失败并给出 `YA-APPLY-*-CSV-007`
+- 生成报告：`docs/drafts/sandbox-preflight-report.md`
 
-If you need to troubleshoot one step manually, expand the single-command preflight into the individual commands recorded in the generated report.
+如果某一步失败：
 
-## Install / Refresh the pyRevit Extension
+1. 先停，不进 Revit。
+2. 先看 `docs/drafts/sandbox-preflight-report.md`。
+3. 只修第一个失败点，不并行扩 scope。
 
-If the extension is not already installed or you suspect stale cache:
+## 安装或刷新 pyRevit Extension
+
+如果 extension 未安装，或怀疑缓存旧：
 
 ```powershell
 .\scripts\install-pyrevit-extension.ps1 -Force -ClearCache
 ```
 
-Then restart Revit or reload pyRevit.
+然后：
 
-## Live Revit Validation Order
+1. 完全重开 Revit，或
+2. 在 pyRevit 中执行 `Reload`
 
-Use this exact order to reduce ambiguity when a button fails:
+## 建议测试模型
 
-1. Open Revit.
-2. Confirm the `pyRevit` tab is visible.
-3. Confirm the `YangAgent` tab is visible.
-4. Open a sandbox/test model.
-5. Run `System Settings`.
-6. Set language to `中文`.
-7. Set or confirm the report export directory.
-8. Run `Export Model Snapshot`.
-9. Confirm JSON and CSV output files were created.
-10. Run `Model Health Report`.
-11. Confirm Markdown report output was created.
-12. Run `Export Regression Checklist`.
-13. Confirm checklist output was created.
-14. Run `Export AI Review Prompt`.
-15. Confirm prompt output was created.
-16. Run `Preview Missing Marks`.
-17. Confirm dry-run Markdown and CSV were created.
-18. Run `Preview Missing Room Numbers`.
-19. Confirm dry-run Markdown and CSV were created.
-20. Run `Preview Duplicate Room Numbers`.
-21. Confirm dry-run Markdown and CSV were created.
-22. Run `Preview Unplaced Views`.
-23. Confirm dry-run Markdown and CSV were created.
-24. Run `Preview View Naming Rules`.
-25. Confirm dry-run Markdown and CSV were created.
-26. Run `Apply Missing Door Window Marks` on a reviewed `missing_door_window_marks_*.csv`.
-27. Confirm apply log files were created.
-28. Immediately test one Revit Undo.
-29. Run `Apply Missing Room Numbers` on a reviewed `missing_room_numbers_*.csv`.
-30. Confirm apply log files were created.
-31. Immediately test one Revit Undo.
-32. Reopen `System Settings`.
-33. Switch language to `English`.
-34. Rerun one or two report buttons and confirm English output.
+基础只读验证可用任意 sandbox 模型。
 
-## What To Record
+当前更推荐的完整测试模型：
 
-For each failure, record:
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\Revit 测试模型\Snowdon Towers Sample Architectural_sandbox.rvt
+```
 
-- button name
-- exact visible error message
-- whether the button was gray, clickable, or failed after click
-- whether any output files were created
-- model name
-- Revit version
-- whether pyRevit reload or full restart was already tried
+当前报告目录：
 
-Use:
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\Revit 测试模型\报告
+```
+
+## Revit 内验证顺序
+
+按这个顺序执行，减少歧义：
+
+1. 打开 Revit。
+2. 确认 `pyRevit` 选项卡可见。
+3. 确认 `YangAgent` 选项卡可见。
+4. 打开 sandbox/test 模型。
+5. 打开 `System Settings`。
+6. 语言先设为 `中文`。
+7. 确认报告导出目录。
+8. 运行 `Project Info Report`。
+9. 确认报告文件已生成。
+10. 运行 `Export Model Snapshot`。
+11. 确认 JSON/CSV 已生成。
+12. 运行 `Model Health Report`。
+13. 确认 Markdown 报告已生成。
+14. 运行 `Export Regression Checklist`。
+15. 确认清单文件已生成。
+16. 运行 `Export AI Review Prompt`。
+17. 确认提示词文件已生成。
+18. 运行 `Preview Missing Door Window Marks`。
+19. 确认 dry-run Markdown/CSV 已生成。
+20. 运行 `Preview Missing Room Numbers`。
+21. 确认 dry-run Markdown/CSV 已生成。
+22. 运行 `Preview Duplicate Room Numbers`。
+23. 确认 dry-run Markdown/CSV 已生成。
+24. 运行 `Preview Unplaced Views`。
+25. 确认 dry-run Markdown/CSV 已生成。
+26. 运行 `Preview View Naming Rules`。
+27. 确认 dry-run Markdown/CSV 已生成。
+28. 对已审阅的 `missing_door_window_marks_*.csv` 运行 `Apply Missing Door Window Marks`。
+29. 确认 apply 日志已生成。
+30. 立即手动执行一次 Revit `Undo`。
+31. 对已审阅的 `missing_room_numbers_*.csv` 运行 `Apply Missing Room Numbers`。
+32. 确认 apply 日志已生成。
+33. 立即手动执行一次 Revit `Undo`。
+34. 再次打开 `System Settings`。
+35. 切换语言到 `English`。
+36. 重跑一到两个只读报告按钮，确认英文输出可用。
+
+## 记录什么
+
+每次失败，至少记录：
+
+- 按钮名
+- 原始报错文本
+- 按钮是灰色、可点后失败，还是导出后内容异常
+- 是否生成了任何输出文件
+- 模型名
+- Revit 版本
+- 是否已经尝试过 pyRevit `Reload` 或完整重启
+
+使用：
 
 - `docs/sandbox-pyrevit-mvp-checklist.md`
 - `docs/sandbox-pyrevit-mvp-feedback-template.md`
+- `docs/troubleshooting.md`
+- `docs/error-codes.md`
 
-## First Blocker Rule
+## 第一阻塞规则
 
-Do not branch into many fixes at once.
+不要一次扩很多修复方向。
 
-If the first live run fails:
+如果第一轮 live run 失败：
 
-1. record the first blocker clearly
-2. stop expanding scope
-3. give Codex the exact symptom, button name, and any output/log text
+1. 先记录第一处 blocker。
+2. 立即停在这里。
+3. 把按钮名、原始错误、输出文件情况和模型信息交给 Codex。
 
-The next coding step should target that first blocker only.
+下一次编码只应针对这个第一 blocker。

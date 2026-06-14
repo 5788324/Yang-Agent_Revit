@@ -14,6 +14,12 @@ Copy this file when assigning work to Hermes, Gemini, DeepSeek, or another helpe
 
 Write the exact result needed.
 
+## Rewrite Identity
+
+- Source tool id, if any:
+- Target YangAgent feature id:
+- YangAgent core or external rewrite:
+
 ## Allowed Work
 
 - Allowed paths:
@@ -44,7 +50,11 @@ If this task is read-only, state that clearly.
 
 - Files or folders to deliver:
 - Required report file:
+- Required operation log file or section:
 - Required screenshots or logs:
+- Required theme/UI constraints:
+- Required safety gate:
+- Required live validation expectation:
 
 ## Validation
 
@@ -61,6 +71,7 @@ The agent must record:
 The final response must include:
 
 - Changed files
+- Operation log
 - Checks run
 - Review or implementation summary
 - Safety confirmation

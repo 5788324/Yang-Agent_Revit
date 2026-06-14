@@ -1,144 +1,147 @@
 # YangAgent Revit New Chat Handoff - 2026-06-07
 
-Use this file when starting a new Codex chat after context compaction.
+本文件用于上下文压缩后的新对话接手。
 
-## Current Authority
+它保留当前主线脉络，但不再单独承担全部日常启动职责。每日启动请同时读最新 startup、next-steps、worklog。
 
-The active project direction was simplified on 2026-06-11.
+## 当前权威顺序
 
-Use these documents first:
+文档冲突时，优先级如下：
 
-1. `docs/product-brief.md`
-2. `docs/simple-roadmap.md`
+1. `README.md`
+2. `docs/product-brief.md`
 3. `docs/project-rules.md`
-4. `docs/agent-operating-model.md`
-5. this handoff
-6. `docs/new-chat-startup-2026-06-13.md`
+4. `docs/framework/daily-ops-routine.md`
+5. `docs/new-chat-startup-2026-06-13.md`
+6. `docs/next-steps.md`
+7. 最新相关 `docs/worklogs/worklog-YYYY-MM-DD.md`
+8. 本 handoff
 
-Older company, enterprise, MCP-first, Bridge, and commercial planning material is historical reference only.
+旧的公司化、平台化、MCP-first、Bridge-first 规划都视为历史参考。
 
-## Repository State
+## 仓库状态
 
-- Repository: `https://github.com/5788324/Yang-Agent_Revit`
-- Current local path: `G:\Codex\YangAgent Revit\YangAgent Revit`
-- Previous local path: `D:\codex\Yang Agent_Revit`
-- Migration status: completed on 2026-06-13. The G path is now a Git repository on `main...origin/main`.
-- Deletion warning: do not delete the previous D path unless the user explicitly confirms deletion after checking the G path.
-- Branch: `main`
-- Latest confirmed status on 2026-06-13: `main...origin/main`
-- Do not push unless the user explicitly asks.
-- Current project goal: personal-use Revit assistant, not an enterprise/commercial plugin platform.
+- 仓库：`https://github.com/5788324/Yang-Agent_Revit`
+- 当前本地路径：`G:\Codex\YangAgent Revit\YangAgent Revit`
+- 旧路径：`D:\codex\Yang Agent_Revit`
+- 路径迁移状态：已完成，当前主线以 G 盘仓库为准
+- 删除警告：没有用户明确确认前，不要删除旧 D 盘目录
+- 默认分支：`main`
+- Git 规则：默认不主动 push；只有真实检查点、跨天收尾或用户明确要求时再 push
 
-## Current Scope
+## 当前产品定位
 
-- Product: personal Revit AI assistant.
-- Current one-week target: pyRevit MVP usable in a sandbox model.
-- Primary implementation layer: pyRevit.
-- C# DLL: lightweight Revit 2027 skeleton only, not the current mainline.
-- Long-term version target: Revit 2022-2027, with pyRevit as the first multi-version route.
-- MCP: future automatic reading and controlled modification only after the plugin workflow is stable.
-- Gemini C# toolbox: external asset at `G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode`; use isolated intake before any migration.
-- Gemini feature priority: the toolbox functions are important, especially MCP, micro toolbox, and project asset manager, but migration is deferred until the YangAgent core is usable in sandbox.
-- Hermes/Gemini/DeepSeek: may do bounded code/plugin/test drafts only from task sheets, with delivery reports and Codex review.
+- 个人自用 Revit AI 助手
+- 不是企业平台
+- 不是商业化插件产品
+- 当前主实现层：pyRevit
+- C# DLL 目前只保留轻量轨道，不是当前交付主线
 
-## Recent Mainline Commits
+## 当前阶段目标
 
-- `686997a fix: block duplicate apply csv rows`
-- `e16a95c chore: add apply csv validator`
-- `7d72bc4 chore: add generic Revit addin scripts`
-- `90806dd chore: add version plan and static checks`
-
-## Key Completed Work
-
-- Added version boundary doc: `docs/revit-version-support-plan.md`.
-- Added sandbox run guidance doc: `docs/sandbox-pyrevit-mvp-runbook.md`.
-- Added compact sandbox operator checklist: `docs/sandbox-pyrevit-mvp-checklist.md`.
-- Added one-command offline sandbox preflight: `python tools\run_sandbox_preflight.py --write-report`.
-- Added sandbox feedback template: `docs/sandbox-pyrevit-mvp-feedback-template.md`.
-- Added shared apply helper module: `pyrevit/YangAgent.extension/lib/yang_agent_apply.py`.
-- Added static repo checker: `tools/static_checks.py`.
-- Added offline apply CSV validator: `tools/validate_apply_csv.py`.
-- Added valid and duplicate CSV fixtures under `tests/fixtures/`.
-- Added generic C# DLL scripts:
-  - `scripts\build-revit-addin.ps1`
-  - `scripts\install-revit-addin.ps1`
-- Kept beginner wrappers:
-  - `scripts\build-revit2027-addin.ps1`
-  - `scripts\install-revit2027-addin.ps1`
-- Made Revit 2024/2025/2026 DLL scripts fail clearly with `YA-CS-VERSION-PLANNED`.
-- Hardened both apply tools:
-  - wrong CSV name is blocked;
-  - missing fields are blocked;
-  - duplicate `element_id` is blocked before user confirmation;
-  - logs include Undo / rollback notes.
-
-## Safety Rules
-
-- Do not directly modify production Revit models.
-- Use only sandbox/test Revit models for apply testing.
-- All model-changing features must follow: dry-run -> human confirmation -> apply.
-- Do not claim Revit Undo is verified unless it was manually tested in a sandbox model.
-- Do not commit `.rvt`, `.rfa`, customer data, API keys, `%APPDATA%` config, or generated local exports.
-- Hermes/DeepSeek output is draft until Codex reviews it.
-- Hermes/DeepSeek review findings are advisory only and do not authorize implementation changes.
-- Hermes/Gemini/DeepSeek code deliveries require a task sheet and delivery report before Codex review.
-- External deliveries should go through `docs/incoming/` and `docs/reviews/`.
-
-## Verified Commands
-
-Run from current repository root:
+本周硬目标：
 
 ```text
-G:\Codex\YangAgent Revit\YangAgent Revit
+Make the pyRevit MVP usable in a sandbox Revit model.
 ```
 
-```powershell
-python -m py_compile tools\static_checks.py tools\validate_apply_csv.py tools\check_pyrevit_extension.py
-python tools\check_pyrevit_extension.py
-python tools\static_checks.py --write-report
-python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
-python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
-python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_duplicate.csv
-python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_duplicate.csv
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-revit-addin.ps1 -Version 2027 -OutputPath C:\tmp\YangAgent_Revit2027_build_check
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-revit-addin.ps1 -Version 2024
+展开说明：
+
+- 先把 YangAgent 核心 pyRevit 工作流跑通
+- 先以 sandbox 模型中的只读导出、preview、低风险 apply 为主
+- 所有模型修改工具都必须遵守：
+
+```text
+preview / dry-run -> human confirmation -> apply -> log -> Undo check
 ```
 
-Expected:
+## Gemini / 外部工具定位
 
-- pyRevit preflight: `0 errors`.
-- Static check: `0 errors`, currently `11 warnings`.
-- Valid CSV fixtures: pass.
-- Duplicate CSV fixtures: fail with `YA-APPLY-*-CSV-007`.
-- Revit 2027 temp build: succeeds with known `MSB3277` warnings.
-- Revit 2024 build: stops with `YA-CS-VERSION-PLANNED`.
+Gemini C# 工具箱路径：
 
-## Known Not Yet Verified
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode
+```
 
-- Revit UI button clicks in a live Revit session.
-- Revit 2027 DLL load after restart.
-- Revit Undo for apply tools in a sandbox model.
-- Full pyRevit regression checklist in a real sandbox model.
+当前决策：
 
-Do not mark these as verified until the user or a live Revit session confirms them.
+- 作为外部参考资产，不直接并入主线
+- 先 inventory，再分类，再挑单个工具重写纳入
+- 不允许 Gemini 保留自己的架构权、主题权、命名权
+- 外部 agent 只能按任务包做受限交付，Codex 保留架构、审查、合并、发布决定权
 
-## Next Codex Tasks
+当前治理入口：
 
-1. Keep the project scoped as a personal Revit AI assistant.
-2. Run `python tools\check_pyrevit_extension.py`.
-3. Run `python tools\run_sandbox_preflight.py --write-report`.
-4. Use `docs/sandbox-pyrevit-mvp-checklist.md` for the first live sandbox run.
-5. Use `docs/sandbox-pyrevit-mvp-feedback-template.md` to capture the first blocker.
-6. Fix only that first live blocker before expanding scope.
-7. Intake the Gemini C# toolbox through `docs/external-toolbox-intake.md`.
-8. Keep C# DLL, MCP, micro toolbox, project asset manager, and Revit 2022-2027 expansion out of this week's hard target.
-9. Keep the G path as the active development path.
+- `docs/external-toolbox-intake.md`
+- `docs/governance/tool-registry.md`
+- `docs/governance/rewrite-spec-template.md`
+- `docs/governance/acceptance-gate-template.md`
+- `docs/governance/delegation-pack-template.md`
 
-## Hermes / Gemini / DeepSeek Tasks
+## 当前已完成的重要工作
 
-External agents may now do bounded implementation drafts, but only with a task sheet and delivery report.
+- 路径主线已迁移到 G 盘仓库
+- sandbox preflight 可离线运行
+- pyRevit 共享主题骨架已建立
+- `System Settings` 已接入预设主题机制
+- `Project Info Report` 已加入主线
+- 多个只读/preview/apply 按钮已进入可验证状态
+- 日常文档治理规则已建立：
+  - 每天开始要看 Git 状态和核心文档
+  - 每天结束要更新 worklog、next-steps、startup prompt
+  - 外部 agent 每次交付都必须带操作日志
 
-Use these documents:
+## 已验证与未验证边界
+
+已经有证据支持的范围：
+
+- `YangAgent` 选项卡可见
+- `System Settings` 可打开
+- 多个只读导出与 preview 按钮在 sandbox 中已产生过报告证据
+
+仍然不能默认声称已验证的范围：
+
+- 所有按钮在最新工作树下都再次 live 通过
+- 两个 apply 按钮在完整模型里的最终稳定性
+- Undo 在每条 apply 链路上的持续稳定性
+- 更广泛的 Revit 版本兼容性
+
+## 新对话接手动作
+
+新对话开始时，先做：
+
+1. `git status --short --branch`
+2. `git log -3 --oneline`
+3. 读 `docs/new-chat-startup-2026-06-13.md`
+4. 读 `docs/next-steps.md`
+5. 读当天最新 worklog 的最新相关段落
+6. 如要做 live 测试，再读：
+   - `docs/sandbox-pyrevit-mvp-runbook.md`
+   - `docs/sandbox-pyrevit-mvp-checklist.md`
+   - `docs/sandbox-snowdon-live-pack-2026-06-13.md`
+   - `docs/troubleshooting.md`
+   - `docs/error-codes.md`
+
+## 外部 Agent 规则
+
+Hermes / Gemini / DeepSeek 只允许：
+
+- inventory
+- 草稿代码
+- 草稿文档
+- 测试清单
+- 低风险局部实现
+- 按任务包执行的局部重写
+
+他们不允许：
+
+- 自行设计项目架构
+- 自行设计主题系统
+- 自行改命名体系
+- 绕过任务包直接改主线
+- 未经 Codex 审查直接视为完成
+
+规则入口：
 
 - `docs/agent-development-rules.md`
 - `docs/agent-task-template.md`
@@ -146,79 +149,11 @@ Use these documents:
 - `docs/agent-review-checklist.md`
 - `docs/daily-agent-log-template.md`
 
-When Git is available, Hermes should work on a separate branch, not `main`.
+## 交接提醒
 
-Recommended branch:
+这个仓库当前最重要的不是“再写一堆计划”，而是：
 
-```powershell
-git checkout -b hermes/read-only-checks
-```
-
-Allowed:
-
-- Run `python tools\static_checks.py --write-report`.
-- Run `python tools\validate_apply_csv.py` on fixture CSVs or user-provided dry-run CSVs.
-- Read `pyrevit/**/script.py`, `src/**`, `tools/**`, and `tests/**` in a review-only mode.
-- Write draft reports under `docs/drafts/`.
-- Perform only the currently assigned bounded tasks from `docs/hermes-next-tasks.md`.
-- Write bounded candidate code only when a Codex task sheet explicitly allows it.
-- Deliver zip/folder/Markdown reports when the user environment has no Git.
-
-Forbidden:
-
-- Do not edit `pyrevit/**/script.py`.
-- Do not edit `src/**`.
-- Do not edit `tools/**`.
-- Do not edit `tests/**`.
-- Do not edit `scripts/**`.
-- Do not edit `addins/**`.
-- Do not run install/build scripts.
-- Do not run Revit.
-- Do not add `.rvt` files.
-- Do not merge, push, or pull.
-- Do not modify production Revit models.
-- Do not introduce MCP or dynamic script execution as a model-changing default.
-
-Review note for Hermes draft output:
-
-- Hermes draft audit tables may quote old or intentionally broken command examples as evidence.
-- Treat those quoted examples as review artifacts, not as execution instructions.
-- Only commands repeated in the main handoff, user guide, troubleshooting, or testing docs should be treated as active guidance.
-- Hermes task iteration is controlled through `docs/hermes-next-tasks.md`; Hermes should not self-expand beyond the current task pack.
-- Hermes/Gemini/DeepSeek may now perform bounded code or plugin drafts when assigned, but their conclusions and patches remain advisory until Codex accepts them.
-- Hermes Round 1 is currently `reviewed: follow-up required` because the required structured draft report files were missing and a screenshot summary is not accepted as final delivery.
-
-## New Chat Startup Prompt
-
-Copy this into the next Codex chat:
-
-```text
-We are continuing the YangAgent Revit project.
-
-Repository: https://github.com/5788324/Yang-Agent_Revit
-Current local path: G:\Codex\YangAgent Revit\YangAgent Revit
-Previous local path: D:\codex\Yang Agent_Revit
-
-Important: do not delete the previous D path unless the user explicitly confirms deletion.
-
-Please start by running:
-1. git status --short --branch
-2. Read docs/handoff-new-chat-2026-06-07.md
-3. Read docs/next-steps.md
-4. Read docs/worklogs/worklog-2026-06-13.md from the latest relevant section
-5. Read docs/new-chat-startup-2026-06-13.md
-
-Current state:
-- main is synced with origin unless `git status` says otherwise.
-- This is a personal Revit AI assistant, not an enterprise platform or commercial plugin.
-- Prioritize getting the pyRevit MVP usable in a sandbox model.
-- Do not directly modify production Revit models.
-- All model-changing features must follow dry-run -> human confirmation -> apply.
-- Long-term target includes Revit 2022-2027, but current C# DLL implementation is Revit 2027 only.
-- MCP automatic reading and controlled modification are future goals, not this week's delivery target.
-- Gemini C# toolbox is at G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode and should be isolated, inventoried, and selectively rewritten rather than directly merged.
-- Gemini toolbox functions are important but should not delay the first usable YangAgent core.
-- Hermes/Gemini/DeepSeek may do bounded code/plugin drafts only with task sheets and delivery reports; Codex owns final review, merge, and quality gates.
-
-Continue mainline work from the current repo state.
-```
+1. 保持核心文档每天同步
+2. 用 sandbox 模型持续收集第一 blocker
+3. 只修最高价值阻塞点
+4. 把外部工具和外部 agent 继续关进 YangAgent 的治理框架里

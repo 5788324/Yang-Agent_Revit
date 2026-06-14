@@ -26,7 +26,8 @@ This preflight is read-only and does not launch Revit.
 - Expected success: `True`
 
 ```text
-(no output)
+INFO: Checked 4 offline Python files.
+Summary: 0 errors, 0 warnings
 ```
 
 ### Check pyRevit extension layout
@@ -35,8 +36,8 @@ This preflight is read-only and does not launch Revit.
 - Expected success: `True`
 
 ```text
-INFO: Found 13 pushbutton folders.
-INFO: Compiled 15 Python files.
+INFO: Found 14 pushbutton folders.
+INFO: Compiled 19 Python files.
 Summary: 0 errors, 0 warnings
 ```
 
@@ -46,18 +47,10 @@ Summary: 0 errors, 0 warnings
 - Expected success: `True`
 
 ```text
-WARN: docs commands: docs/architecture-design.md: Line 47: PowerShell script command may need an explicit scripts path.
-WARN: docs commands: docs/dll-addin-development-plan.md: Line 49: PowerShell script command may need an explicit scripts path.
-WARN: docs commands: docs/dll-addin-development-plan.md: Line 50: PowerShell script command may need an explicit scripts path.
-WARN: docs commands: docs/drafts/hermes-doc-consistency-audit.md: Line 50: PowerShell script command may need an explicit scripts path.
-WARN: docs commands: docs/drafts/hermes-doc-consistency-audit.md: Line 51: PowerShell script command may need an explicit scripts path.
-WARN: docs commands: docs/drafts/hermes-install-audit.md: Line 127: PowerShell script command may need an explicit scripts path.
-WARN: docs commands: docs/drafts/hermes-troubleshooting-audit.md: Line 46: PowerShell script command may need an explicit scripts path.
-WARN: docs commands: docs/drafts/hermes-troubleshooting-audit.md: Line 62: PowerShell script command may need an explicit scripts path.
-WARN: docs commands: docs/handoff-2026-05-23.md: Line 110: PowerShell script command may need an explicit scripts path.
+WARN: docs commands: docs/governance/hermes-deepseek-implementation-pack-2026-06-13.md: Line 223: Placeholder wording may not be copy/paste friendly.
 WARN: docs commands: docs/worklogs/worklog-2026-06-07.md: Line 91: Placeholder wording may not be copy/paste friendly.
 WARN: docs commands: docs/worklogs/worklog-2026-06-07.md: Line 127: Placeholder wording may not be copy/paste friendly.
-Summary: 0 errors, 11 warnings
+Summary: 0 errors, 3 warnings
 Report: docs/drafts/static-check-report.md
 ```
 

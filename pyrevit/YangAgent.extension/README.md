@@ -1,38 +1,53 @@
 # YangAgent pyRevit Extension
 
-公司内部 Revit AI Agent 工具栏。
+这是当前仓库的主线实现入口。
 
-当前功能区：
+## 当前结构
 
-系统设置：
+- `lib/`
+  - 共享逻辑
+  - 语言、设置、主题、报告样式、apply helper
+- `YangAgent.tab/Settings.panel/`
+  - 系统设置入口
+- `YangAgent.tab/Reports.panel/Reports.pulldown/`
+  - 报告、预览、低风险 apply 工具
 
-- `系统设置`：统一设置语言、简称、头像路径、Light / Dark Theme、AI 工作习惯、公司标准文件、视图命名规则，并查看版权声明和更新链接。
+## 当前功能类型
 
-导出报告：
+### 设置类
 
-- `导出路径`：设置报告输出目录。
-- `导出模型快照`：只读导出模型快照。
-- `模型健康报告`：只读生成模型健康报告。
-- `回归测试清单`：只读生成标准工具测试清单。
-- `AI分析提示词`：只读生成安全 AI 分析提示词和最近报告清单。
-- `预览缺失标记`：dry-run 预览缺少标记的门窗。
-- `预览缺失房间编号`：dry-run 预览缺少编号的房间。
-- `预览重复房间编号`：dry-run 预览重复编号的房间。
-- `预览未上图视图`：dry-run 预览可能未放置到图纸的视图。
-- `预览视图命名`：dry-run 预览视图命名规则问题。
-- `应用门窗标记`：读取 dry-run CSV，并在二次确认后写入门窗标记。
-- `应用房间编号`：读取 dry-run CSV，并在二次确认后写入缺失房间编号。
+- `System Settings`
 
-工具箱支持：
+### 只读导出 / 报告类
 
-- 中文
-- English
+- `Project Info Report`
+- `Export Model Snapshot`
+- `Model Health Report`
+- `Export Regression Checklist`
+- `Export AI Review Prompt`
 
-默认语言通过 `系统设置` 设置。
+### Preview / dry-run 类
 
-安全原则：
+- `Preview Missing Door Window Marks`
+- `Preview Missing Room Numbers`
+- `Preview Duplicate Room Numbers`
+- `Preview Unplaced Views`
+- `Preview View Naming Rules`
 
-- 报告和预览工具默认只读。
-- 不修改模型。
-- 修改工具必须读取 dry-run CSV，并在 Revit Transaction 中执行。
-- 输出文件写入桌面 `YangAgent_Revit_Exports`。
+### 低风险 apply 类
+
+- `Apply Missing Door Window Marks`
+- `Apply Missing Room Numbers`
+
+## 当前规则
+
+- 报告和 preview 工具默认只读
+- apply 工具必须读取对应 dry-run CSV
+- apply 工具必须在 `Transaction` 中执行
+- 所有模型修改必须保留日志与 Undo 检查语义
+- 用户可见文本支持中文和 English
+- 机器可读字段保持稳定英文
+
+## 当前优先级
+
+这个 extension 的目标不是“功能越多越好”，而是先把 sandbox 模型里的主链路跑通并稳定下来。

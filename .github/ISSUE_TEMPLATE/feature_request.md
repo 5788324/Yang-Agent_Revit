@@ -1,19 +1,39 @@
-name: Feature Request (新功能 / 需求)
-about: 提议此项目的一个新功能或工具
-title: '[FEAT] '
+---
+name: Feature Request
+about: 提议一个符合 YangAgent 当前主线的新功能或改进
+title: "[FEAT] "
 labels: enhancement
-assignees: ''
-
+assignees: ""
 ---
 
-**该功能解决什么问题？(Is your feature request related to a problem?)**
-清晰简洁地描述问题是什么。例如：“我总是对于必须手动执行 [...] 感到沮丧”
+## 想解决什么问题
 
-**你希望的解决方案 (Describe the solution you'd like)**
-清晰简洁地描述你希望发生的事情。是需要一个只读预览(dry-run)工具，还是一个带界面的修改工具？
+先描述真实工作问题，不要只写“想要一个新按钮”。
 
-**替代方案 (Describe alternatives you've considered)**
-描述你考虑过的任何其他解决方案或现有功能。
+## 期望的解决方式
 
-**附加背景 (Additional context)**
-在这里添加任何其他背景信息或功能设想图。
+说明你希望它更像哪一类工具：
+
+- 只读导出
+- 报告/分析
+- preview / dry-run
+- 低风险 apply
+- 设置/流程工具
+
+## 风险判断
+
+这个需求是否会修改模型？
+
+- [ ] 不修改模型
+- [ ] 会修改模型，但可先 preview
+- [ ] 高风险，暂时不确定
+
+## 你能提供的测试条件
+
+- 可用的 sandbox 模型：
+- 目标 Revit 版本：
+- 预期输出格式：
+
+## 补充信息
+
+包括当前手工做法、类似 Gemini 工具、截图、样例文件等。

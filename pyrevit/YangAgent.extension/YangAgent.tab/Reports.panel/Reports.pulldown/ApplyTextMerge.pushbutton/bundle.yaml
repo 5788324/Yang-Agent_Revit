@@ -1,0 +1,3 @@
+title: Apply Text Merge
+tooltip: Merge multiple selected TextNote elements into one. Requires confirmation, modifies the model and deletes elements.
+author: Yang Agent

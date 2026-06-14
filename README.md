@@ -11,8 +11,8 @@ This is not a company platform, commercial plugin, or enterprise deployment syst
 When documents conflict, use this order:
 
 1. `docs/product-brief.md`
-2. `docs/simple-roadmap.md`
-3. `docs/project-rules.md`
+2. `docs/project-rules.md`
+3. `docs/framework/daily-ops-routine.md`
 4. `docs/handoff-new-chat-2026-06-07.md`
 5. `docs/next-steps.md`
 6. latest relevant worklog under `docs/worklogs/`
@@ -63,6 +63,8 @@ The toolbox supports Chinese and English.
 - [Agent task template](docs/agent-task-template.md)
 - [Agent delivery report template](docs/agent-delivery-report-template.md)
 - [Agent review checklist](docs/agent-review-checklist.md)
+- [Daily ops routine](docs/framework/daily-ops-routine.md)
+- [Document governance audit](docs/framework/document-governance-audit-2026-06-13.md)
 - [External toolbox intake](docs/external-toolbox-intake.md)
 - [Sandbox checklist](docs/sandbox-pyrevit-mvp-checklist.md)
 - [Sandbox feedback template](docs/sandbox-pyrevit-mvp-feedback-template.md)

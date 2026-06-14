@@ -44,13 +44,9 @@ def build_steps() -> list[Step]:
             name="Compile offline tools",
             args=[
                 PYTHON,
-                "-m",
-                "py_compile",
-                "tools\\static_checks.py",
-                "tools\\validate_apply_csv.py",
-                "tools\\check_pyrevit_extension.py",
-                "tools\\run_sandbox_preflight.py",
+                "tools\\check_offline_python_syntax.py",
             ],
+            required_text="Summary: 0 errors",
         ),
         Step(
             name="Check pyRevit extension layout",

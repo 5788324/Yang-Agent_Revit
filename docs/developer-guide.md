@@ -1,137 +1,221 @@
 # 开发指南
 
-## 1. 当前 MVP
+这份文档面向当前主线开发。
 
-当前 MVP 目标是先让 AI 看懂 Revit 模型。第一批工具只读，不修改模型。
+当前目标不是大而全的平台，而是先把 `YangAgent` 做成可在 sandbox 模型里稳定工作的 pyRevit MVP。
 
-优先开发：
+## 1. 当前主线
 
-1. `Export Model Snapshot`：导出当前模型基本信息。
-2. `Model Health Report`：直接生成只读模型健康报告。
-3. `Preview Missing Marks`：dry-run 预览缺少标记的门窗。
-4. `Export Rooms`：导出房间列表。
-5. `Export Doors Windows`：导出门窗列表。
-6. `Export Sheets Views`：导出图纸和视图列表。
+当前优先级：
 
-## 2. pyRevit 开发约定
+1. pyRevit 工具可加载
+2. 只读报告可导出
+3. preview 工具可稳定运行
+4. apply 工具走安全链路
+5. live sandbox 验证可复现
 
-pyRevit 工具目录：
+当前不优先：
+
+- 全量 Gemini 迁移
+- 大规模 C# 重构
+- MCP 写模型
+- 企业化部署
+
+## 2. 当前仓库路径
+
+唯一主开发路径：
+
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit
+```
+
+不要回旧路径继续开发。
+
+## 3. pyRevit 目录约束
+
+pyRevit 结构示意：
 
 ```text
 pyrevit/
   YangAgent.extension/
+    lib/
     YangAgent.tab/
       Settings.panel/
-        SystemSettings.pushbutton/
       Reports.panel/
-        Reports.pulldown/
-          ExportModelSnapshot.pushbutton/
-            script.py
-            bundle.yaml
-            README.md
 ```
 
-脚本要求：
+规则：
 
-- pyRevit 的目录名必须使用英文 ASCII，例如 `Settings.panel`、`Reports.panel`。
-- `.pushbutton` 目录名也使用无空格英文名，例如 `ReportExportPath.pushbutton`、`ModelHealthReport.pushbutton`。
-- 中文显示名称写在 `bundle.yaml` 的 `title` 中，不要把中文写进 `.panel` 或 `.pushbutton` 目录名。
-- 暂时不要在 `bundle.yaml` 中使用 `context:` 可用性声明；pyRevit 2027 可能生成 availability 类型失败，导致按钮全灰。
-- 兼容 IronPython 2.7 风格。
-- 不使用 f-string。
-- 不使用 Python 类型注解。
-- 不直接修改模型，除非工具明确是 `apply_*`。
-- 输出文件统一放到用户桌面 `YangAgent_Revit_Exports`。
-- 报告和导出工具必须使用共享设置中的 `get_export_dir()`，不要硬编码桌面路径。
-- 所有按钮必须提供语言选项：`中文` 和 `English`。
-- 用户可见的弹窗、pyRevit 输出、Markdown 报告必须跟随统一语言设置。
-- 给 AI 或脚本读取的 JSON key 建议保持稳定英文，避免双语切换破坏自动化解析。
-- 可配置规则优先放入 `%APPDATA%\YangAgent_Revit\settings.json`，并提供默认值；不要把公司规则硬编码到多个脚本里。
+- `.panel`、`.pulldown`、`.pushbutton` 目录名用英文 ASCII
+- 目录名不要带空格
+- 面向用户的中英文标题放在 `bundle.yaml`
+- 只在按钮目录内改自己负责的功能
 
-语言设置统一使用：
+## 4. pyRevit 脚本编码规则
+
+按 IronPython 2.7 兼容风格写：
+
+- 不用 f-string
+- 不用类型注解
+- 不用 walrus 运算符
+- 中文文本显式处理编码
+- CSV / JSON 输出保持稳定
+
+## 5. 当前共享库
+
+优先复用现有共享库：
+
+- `pyrevit/YangAgent.extension/lib/yang_agent_lang.py`
+- `pyrevit/YangAgent.extension/lib/yang_agent_apply.py`
+- `pyrevit/YangAgent.extension/lib/yang_agent_settings.py`
+- `pyrevit/YangAgent.extension/lib/yang_agent_theme.py`
+- `pyrevit/YangAgent.extension/lib/yang_agent_report_style.py`
+
+当前约束：
+
+- 普通按钮实现可以 import 这些共享库
+- 不要随手改共享 `lib`
+- 如果必须扩共享库接口，先回报再改
+
+## 6. 导出与设置规则
+
+不要硬编码用户桌面路径。
+
+统一走：
 
 ```python
-from yang_agent_lang import get_or_choose_language
-
-lang = get_or_choose_language(forms)
+from yang_agent_settings import get_export_dir
 ```
 
-报告路径统一使用：
+主题统一走：
 
 ```python
-from yang_agent_lang import get_export_dir
-
-export_dir = get_export_dir()
+from yang_agent_theme import get_theme_id
 ```
 
-### 必备开发工具
+报告样式统一走：
 
-1. **Revit Lookup**: 用于实时探查 Revit API 对象、参数和底层结构的必备插件。必须安装。
-2. **pyrevit cli**: 用于通过命令行打包、编译和部署 pyRevit extension。
-3. **Visual Studio 2022**: 用于 C# (.addin) 插件的正式开发。
+```python
+from yang_agent_report_style import build_intro_block, build_status_block
+```
 
-## 3. C# 插件开发约定
+## 7. 按钮类型规则
 
-正式插件源码放在 `src/`。
+### 7.1 Report 类
 
-建议拆分：
+- 只读
+- 输出到统一导出目录
+- 文件名前缀稳定
+- Markdown 可中英双语或中文优先
+
+### 7.2 Preview 类
+
+- 只读 dry-run
+- 不开事务
+- 输出数量、`ElementId`、人工可判断信息
+- 明确这不是直接 apply
+
+### 7.3 Apply 类
+
+必须遵守：
 
 ```text
-src/
-  YangAgent.Revit.Common/
-  YangAgent.Revit2024/
-  YangAgent.Revit2025/
-  YangAgent.Revit2027/
+preview -> confirmation -> apply -> log -> Undo note
 ```
 
-正式 Bridge 只接收结构化命令，不允许执行任意代码。
+并且要：
 
-当前已建立 Revit 2027 DLL 骨架：
+- 读 preview CSV
+- 校验文件名和字段
+- 校验重复 `element_id`
+- 显示影响数量
+- 用户确认后才写入
 
-```text
-src/
-  YangAgent.Revit2027/
-addins/
-  Revit2027/
-```
+## 8. 当前按钮范围
 
-构建：
+当前主线按钮包括：
+
+- `System Settings`
+- `Project Info Report`
+- `Report Export Path`
+- `Export Model Snapshot`
+- `Model Health Report`
+- `Export Regression Checklist`
+- `Export AI Review Prompt`
+- `Preview Missing Marks`
+- `Preview Missing Room Numbers`
+- `Preview Duplicate Room Numbers`
+- `Preview Unplaced Views`
+- `Preview View Naming Rules`
+- `Apply Missing Door Window Marks`
+- `Apply Missing Room Numbers`
+
+## 9. 离线检查
+
+从仓库根目录运行：
 
 ```powershell
-.\scripts\build-revit2027-addin.ps1
+python tools\check_pyrevit_extension.py
+python tools\run_sandbox_preflight.py --write-report
+python tools\static_checks.py --write-report
 ```
 
-安装：
+必要时补跑：
 
 ```powershell
-.\scripts\install-revit2027-addin.ps1
+python tools\check_offline_python_syntax.py
 ```
 
-第一版 DLL 只创建功能区和占位按钮，不修改模型。
+## 10. live 验证原则
 
-## 4. MCP 开发约定
+离线通过不等于 Revit 里真的可用。
 
-MCP 目录：
+只要涉及：
 
-```text
-mcp/
-  revit-context/
-  revit-docs/
-  company-standards/
-```
+- 按钮注册
+- pyRevit 缓存
+- Revit UI
+- Transaction
+- Undo
 
-第一阶段 MCP 只做只读查询和导出。
+就必须用 sandbox 模型 live 验证。
 
-## 5. 提交前检查
+## 11. 文档与交接要求
 
-提交前确认：
+每天都要维护：
 
-- 文档链接可读。
-- pyRevit bundle 目录名为英文 ASCII。
-- pyRevit bundle 目录名不要带空格。
-- `bundle.yaml` 中没有误加 `context:` 导致按钮可用性命令失败。
-- pyRevit 脚本没有 f-string。
-- 只读工具没有 Transaction。
-- 修改工具必须有 dry-run。
-- 没有提交客户模型文件。
-- 没有提交密钥或本地配置。
+- `docs/worklogs/worklog-YYYY-MM-DD.md`
+- `docs/next-steps.md`
+- `docs/new-chat-startup-YYYY-MM-DD.md`
+
+开工先看：
+
+- `README.md`
+- `docs/framework/daily-ops-routine.md`
+- `docs/handoff-new-chat-2026-06-07.md`
+- 当天 worklog
+
+## 12. 外部 AI 协作
+
+Hermes / DeepSeek 可以做：
+
+- 局部按钮草稿
+- 文档整理
+- 审查报告
+- 低风险补丁
+
+但必须：
+
+- 有 task pack
+- 有 delivery report
+- 有 operation log
+- 不碰共享架构边界
+
+## 13. 相关文档
+
+- `docs/product-brief.md`
+- `docs/project-rules.md`
+- `docs/safety-rules.md`
+- `docs/testing-and-qa.md`
+- `docs/agent-development-rules.md`
+- `docs/framework/daily-ops-routine.md`

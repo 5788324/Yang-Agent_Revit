@@ -4,6 +4,8 @@ This file is mandatory for Hermes, Gemini, DeepSeek, and any other AI or human h
 
 The project is a personal Revit AI assistant. The current priority is a pyRevit MVP that can work in a sandbox model.
 
+The only accepted mainline product identity is YangAgent. External toolboxes are reference sources until rewritten into YangAgent boundaries.
+
 ## Roles
 
 | Role | Authority |
@@ -26,6 +28,9 @@ Non-Codex agents may write code only inside a clearly assigned task.
 - Do not introduce automatic model modification as the default behavior.
 - Do not use MCP, dynamic script execution, or AI-generated code execution to modify a model unless Codex has approved a specific safety design.
 - Do not perform broad refactors unless the task explicitly says so.
+- Do not define a new architecture, theme system, naming system, or UI grouping without Codex approval.
+- Do not hardcode a new independent UI color scheme in a feature window.
+- Do not copy external toolbox UI styling directly into YangAgent as-is.
 
 ## Model-Changing Tool Rule
 
@@ -64,6 +69,15 @@ Every non-Codex delivery must include a `delivery-report.md` or equivalent Markd
 
 If there is no delivery report, Codex treats the work as unreviewable.
 
+Every non-Codex delivery must also include an operation log section or separate note that records:
+
+- commands run;
+- manual actions taken;
+- files read before editing;
+- checks not run and why.
+
+If the helper cannot reconstruct its own actions, Codex assumes the delivery is unreliable.
+
 ## No-Git Work Environment
 
 If the user is working in an environment without Codex or Git, agents may deliver:
@@ -101,3 +115,18 @@ Codex reviews every external delivery as one of:
 | rejected | Wrong direction, unsafe, or too costly |
 
 Accepted work still must pass the normal repository checks before commit.
+
+## Theme and UI Rule
+
+All new YangAgent UI must use the shared theme engine.
+
+Required:
+
+- use shared theme tokens
+- use YangAgent naming
+- keep external rewrite UI visually subordinate to YangAgent
+
+Forbidden:
+
+- per-window ad-hoc color systems
+- copied Gemini visual identity as a parallel product brand

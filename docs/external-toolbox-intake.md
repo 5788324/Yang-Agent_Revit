@@ -12,6 +12,13 @@ G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\YangTools_SourceCode
 
 This source is a local external asset. Do not merge it directly.
 
+Primary governance artifacts:
+
+- `docs/governance/tool-registry.md`
+- `docs/governance/rewrite-spec-template.md`
+- `docs/governance/acceptance-gate-template.md`
+- `docs/governance/delegation-pack-template.md`
+
 ## Intake Steps
 
 1. Record the local path.
@@ -24,8 +31,10 @@ This source is a local external asset. Do not merge it directly.
 4. List every command/button/tool.
 5. Classify each tool by value and model-change risk.
 6. Decide whether to keep, rewrite, defer, or discard.
-7. Create a delivery report under `docs/incoming/` or provide one with the source package.
-8. Codex records the review under `docs/reviews/`.
+7. Register the tool status in `docs/governance/tool-registry.md`.
+8. Create a rewrite spec before any implementation starts.
+9. Create a delivery report under `docs/incoming/` or provide one with the source package.
+10. Codex records the review under `docs/reviews/`.
 
 ## Tool Classification
 

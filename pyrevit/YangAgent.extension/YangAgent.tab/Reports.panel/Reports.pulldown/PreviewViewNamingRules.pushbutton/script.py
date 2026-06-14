@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Preview view naming rule issues.
-
-This tool is dry-run only. It does not modify the model and does not open a Transaction.
-"""
+"""Preview view naming rule issues in read-only dry-run mode."""
 
 from __future__ import print_function
 
@@ -19,7 +16,10 @@ clr.AddReference("RevitAPIUI")
 
 from Autodesk.Revit.DB import FilteredElementCollector, View, ViewSheet  # noqa: E402
 from pyrevit import forms, revit, script  # noqa: E402
-from yang_agent_lang import get_export_dir, get_or_choose_language, get_view_naming_rules  # noqa: E402
+from yang_agent_lang import get_or_choose_language, get_view_naming_rules  # noqa: E402
+from yang_agent_report_style import build_intro_block, build_status_block  # noqa: E402
+from yang_agent_settings import get_export_dir  # noqa: E402
+from yang_agent_theme import get_theme_id  # noqa: E402
 
 
 doc = revit.doc
@@ -28,45 +28,51 @@ output = script.get_output()
 
 TEXT = {
     "zh": {
+        "language_message": u"选择报告语言 / Select report language",
         "alert_title": u"Yang Agent",
         "no_doc": u"没有打开的 Revit 文档。",
-        "title": u"# Yang Agent 视图命名规则预览",
-        "read_only": u"此报告为 dry-run 预览，未修改 Revit 模型。",
-        "summary": u"## 汇总",
-        "document": u"- 文档：{0}",
-        "exported_at": u"- 导出时间：{0}",
-        "views_total": u"- 可检查视图总数：{0}",
-        "issue_total": u"- 命名问题数：{0}",
-        "details": u"## 视图命名问题",
-        "none": u"- 无",
-        "next_steps": u"## 建议下一步",
-        "step_1": u"1. BIM 负责人先确认公司视图命名标准。",
-        "step_2": u"2. 根据项目习惯调整前缀和临时关键词规则。",
-        "step_3": u"3. 只在规则稳定后再考虑生成 apply 工具。",
-        "output_done": u"预览完成。此工具未修改模型。",
-        "output_issues": u"- 命名问题数：{0}",
+        "report_title": u"# Yang Agent 预览视图命名规则",
+        "read_only_note": u"这是 dry-run 只读预览，不会修改 Revit 模型。",
+        "summary_heading": u"统计摘要",
+        "document": u"文档：{0}",
+        "exported_at": u"导出时间：{0}",
+        "views_total": u"纳入检查的视图数量：{0}",
+        "issue_total": u"命名问题数量：{0}",
+        "detail_heading": u"视图命名问题明细",
+        "expected_rule": u"建议规则",
+        "next_steps_heading": u"建议下一步",
+        "next_step_1": u"先确认项目当前使用的视图命名前缀，再决定是否统一整改。",
+        "next_step_2": u"临时视图、测试视图和工作视图建议先人工分类，不要直接自动改名。",
+        "next_step_3": u"只有在命名规则稳定后，才适合继续生成 apply 工具。",
+        "none": u"无",
+        "output_title": u"# Yang Agent 预览视图命名规则",
+        "output_done": u"预览完成。该工具未修改模型。",
+        "output_issues": u"- 命名问题数量：{0}",
         "output_report": u"- 报告：`{0}`",
         "output_csv": u"- CSV：`{0}`",
-        "alert_done": u"视图命名规则预览已生成。\n\n此工具未修改模型。\n\n命名问题数：{0}\n\n{1}",
+        "alert_done": u"视图命名规则预览已生成。\n\n该工具未修改模型。\n\n命名问题数量：{0}\n\n{1}",
         "failed_title": u"# 视图命名规则预览失败",
         "failed_alert": u"视图命名规则预览失败。请查看 pyRevit 输出窗口。",
     },
     "en": {
+        "language_message": u"Select report language / 选择报告语言",
         "alert_title": u"Yang Agent",
         "no_doc": u"No active Revit document.",
-        "title": u"# Yang Agent View Naming Rules Preview",
-        "read_only": u"This is a dry-run preview. No Revit model changes were made.",
-        "summary": u"## Summary",
-        "document": u"- Document: {0}",
-        "exported_at": u"- Exported at: {0}",
-        "views_total": u"- Reportable views: {0}",
-        "issue_total": u"- Naming issues: {0}",
-        "details": u"## View Naming Issues",
-        "none": u"- None",
-        "next_steps": u"## Suggested Next Steps",
-        "step_1": u"1. Confirm company view naming standards with the BIM lead.",
-        "step_2": u"2. Adjust prefixes and temporary keywords based on project habits.",
-        "step_3": u"3. Generate apply tools only after the rules are stable.",
+        "report_title": u"# Yang Agent View Naming Rules Preview",
+        "read_only_note": u"This is a dry-run read-only preview. No Revit model changes were made.",
+        "summary_heading": u"Summary",
+        "document": u"Document: {0}",
+        "exported_at": u"Exported at: {0}",
+        "views_total": u"Views checked: {0}",
+        "issue_total": u"Naming issues: {0}",
+        "detail_heading": u"View Naming Issue Details",
+        "expected_rule": u"Suggested rule",
+        "next_steps_heading": u"Suggested Next Steps",
+        "next_step_1": u"Confirm the current project naming prefixes before attempting any cleanup.",
+        "next_step_2": u"Temporary, test, and working views should be reviewed manually before any rename automation.",
+        "next_step_3": u"Only generate apply tools after naming rules are stable.",
+        "none": u"None",
+        "output_title": u"# Yang Agent View Naming Rules Preview",
         "output_done": u"Preview completed. No model changes were made.",
         "output_issues": u"- Naming issues: {0}",
         "output_report": u"- Report: `{0}`",
@@ -78,6 +84,25 @@ TEXT = {
 }
 
 
+FALLBACK_TEMPORARY_KEYWORDS = [
+    u"临时",
+    u"测试",
+    u"工作",
+    u"复制",
+    u"temp",
+    u"test",
+    u"working",
+    u"copy",
+]
+
+
+def choose_language():
+    try:
+        return get_or_choose_language(forms, message=TEXT["zh"]["language_message"])
+    except Exception:
+        return "zh"
+
+
 def tr(lang, key):
     return TEXT.get(lang, TEXT["zh"]).get(key, TEXT["zh"].get(key, key))
 
@@ -86,7 +111,7 @@ def safe_text(value):
     if value is None:
         return u""
     try:
-        return unicode(value)  # noqa: F821  # IronPython
+        return unicode(value)  # noqa: F821
     except NameError:
         return str(value)
     except Exception:
@@ -109,7 +134,23 @@ def element_id_value(element_id):
         return safe_text(element_id)
 
 
-def is_reportable_view(view):
+def get_effective_rules():
+    rules = get_view_naming_rules()
+    keywords = []
+    seen = set()
+    for keyword in list(rules.get("temporary_keywords", [])) + FALLBACK_TEMPORARY_KEYWORDS:
+        text = safe_text(keyword).strip()
+        lowered = text.lower()
+        if text and lowered not in seen:
+            keywords.append(text)
+            seen.add(lowered)
+    return {
+        "prefix_by_view_type": rules.get("prefix_by_view_type", {}),
+        "temporary_keywords": keywords,
+    }
+
+
+def is_reportable_view(view, rules):
     if view is None:
         return False
     try:
@@ -119,10 +160,7 @@ def is_reportable_view(view):
         return False
     if isinstance(view, ViewSheet):
         return False
-
-    view_type = safe_text(view.ViewType)
-    rules = get_view_naming_rules()
-    return view_type in rules["prefix_by_view_type"]
+    return safe_text(view.ViewType) in rules["prefix_by_view_type"]
 
 
 def get_naming_issue(view_name, view_type, rules):
@@ -132,25 +170,25 @@ def get_naming_issue(view_name, view_type, rules):
 
     lowered = name.lower()
     for keyword in rules["temporary_keywords"]:
-        if safe_text(keyword).lower() in lowered:
-            return "TemporaryKeyword", safe_text(keyword)
+        keyword_text = safe_text(keyword).strip()
+        if keyword_text and keyword_text.lower() in lowered:
+            return "TemporaryKeyword", keyword_text
 
     prefixes = rules["prefix_by_view_type"].get(view_type, [])
     upper_name = name.upper()
     for prefix in prefixes:
-        if upper_name.startswith(prefix):
+        if upper_name.startswith(safe_text(prefix).upper()):
             return "", ""
-    return "MissingRecommendedPrefix", u"|".join(prefixes)
+    return "MissingRecommendedPrefix", u"|".join([safe_text(prefix) for prefix in prefixes])
 
 
 def collect_preview_rows():
-    rules = get_view_naming_rules()
-    views = FilteredElementCollector(doc).OfClass(View).ToElements()
-    reportable_count = 0
+    rules = get_effective_rules()
     issues = []
-
+    reportable_count = 0
+    views = FilteredElementCollector(doc).OfClass(View).ToElements()
     for view in views:
-        if not is_reportable_view(view):
+        if not is_reportable_view(view, rules):
             continue
 
         reportable_count += 1
@@ -160,58 +198,64 @@ def collect_preview_rows():
         if not issue_type:
             continue
 
-        issues.append({
-            "dry_run": "true",
-            "element_id": element_id_value(view.Id),
-            "category": "View",
-            "view_name": view_name,
-            "view_type": view_type,
-            "issue_type": issue_type,
-            "expected_rule": expected,
-            "status": "NamingIssue",
-        })
-
+        issues.append(
+            {
+                "dry_run": "true",
+                "element_id": element_id_value(view.Id),
+                "category": "View",
+                "view_name": view_name,
+                "view_type": view_type,
+                "issue_type": issue_type,
+                "expected_rule": expected,
+                "status": "NamingIssue",
+            }
+        )
     return reportable_count, issues
 
 
-def write_markdown(path, lang, reportable_count, issues):
+def build_report_lines(lang, reportable_count, issues):
+    theme_id = get_theme_id()
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    summary_lines = [
+        tr(lang, "document").format(safe_text(doc.Title)),
+        tr(lang, "exported_at").format(timestamp),
+        tr(lang, "views_total").format(reportable_count),
+        tr(lang, "issue_total").format(len(issues)),
+    ]
+    next_step_lines = [
+        tr(lang, "next_step_1"),
+        tr(lang, "next_step_2"),
+        tr(lang, "next_step_3"),
+    ]
+
     lines = []
-    lines.append(tr(lang, "title"))
+    lines.append(build_intro_block(theme_id, tr(lang, "report_title"), tr(lang, "read_only_note")))
     lines.append(u"")
-    lines.append(tr(lang, "read_only"))
+    lines.append(build_status_block(theme_id, tr(lang, "summary_heading"), summary_lines))
     lines.append(u"")
-    lines.append(tr(lang, "summary"))
-    lines.append(u"")
-    lines.append(tr(lang, "document").format(safe_text(doc.Title)))
-    lines.append(tr(lang, "exported_at").format(timestamp))
-    lines.append(tr(lang, "views_total").format(reportable_count))
-    lines.append(tr(lang, "issue_total").format(len(issues)))
-    lines.append(u"")
-    lines.append(tr(lang, "details"))
+    lines.append(u"## {0}".format(tr(lang, "detail_heading")))
     lines.append(u"")
 
     if not issues:
-        lines.append(tr(lang, "none"))
+        lines.append(u"- {0}".format(tr(lang, "none")))
     else:
         for row in issues:
             lines.append(
-                u"- `{0}` {1} | {2} | {3} | {4}".format(
+                u"- ElementId `{0}` | {1} | {2} | {3}: `{4}`".format(
                     row["element_id"],
-                    row["view_type"],
-                    row["view_name"],
+                    row["view_type"] or tr(lang, "none"),
+                    row["view_name"] or tr(lang, "none"),
                     row["issue_type"],
-                    row["expected_rule"],
+                    row["expected_rule"] or tr(lang, "none"),
                 )
             )
 
     lines.append(u"")
-    lines.append(tr(lang, "next_steps"))
-    lines.append(u"")
-    lines.append(tr(lang, "step_1"))
-    lines.append(tr(lang, "step_2"))
-    lines.append(tr(lang, "step_3"))
+    lines.append(build_status_block(theme_id, tr(lang, "next_steps_heading"), next_step_lines))
+    return lines
 
+
+def write_markdown(path, lines):
     with codecs.open(path, "w", "utf-8-sig") as stream:
         stream.write(u"\n".join(lines))
 
@@ -242,8 +286,7 @@ def write_csv(path, rows):
 
 
 def main():
-    lang = get_or_choose_language(forms)
-
+    lang = choose_language()
     if doc is None:
         forms.alert(tr(lang, "no_doc"), title=tr(lang, "alert_title"))
         return
@@ -254,13 +297,12 @@ def main():
     csv_path = os.path.join(export_dir, "view_naming_rules_{0}.csv".format(timestamp))
 
     reportable_count, issues = collect_preview_rows()
-    write_markdown(report_path, lang, reportable_count, issues)
+    write_markdown(report_path, build_report_lines(lang, reportable_count, issues))
     write_csv(csv_path, issues)
 
-    output.print_md(tr(lang, "title"))
+    output.print_md(tr(lang, "output_title"))
     output.print_md(u"")
     output.print_md(tr(lang, "output_done"))
-    output.print_md(u"")
     output.print_md(tr(lang, "output_issues").format(len(issues)))
     output.print_md(tr(lang, "output_report").format(report_path))
     output.print_md(tr(lang, "output_csv").format(csv_path))

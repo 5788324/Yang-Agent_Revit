@@ -124,7 +124,7 @@ From the G path repository:
 ```powershell
 git status --short --branch
 python tools\check_pyrevit_extension.py
-python -m py_compile tools\static_checks.py tools\validate_apply_csv.py tools\check_pyrevit_extension.py tools\run_sandbox_preflight.py
+python tools\check_offline_python_syntax.py
 python tools\static_checks.py --write-report
 ```
 

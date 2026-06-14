@@ -1,43 +1,55 @@
 # 故障排查
 
-## 1. Revit 中看不到 YangAgent
+本文件只保留当前 MVP 阶段最常见、最高频的问题。
 
-先确认 Revit 中能看到 `pyRevit` 选项卡。
+适用范围：
 
-如果没有，说明 pyRevit 没有安装或没有加载。
+- 仓库路径：`G:\Codex\YangAgent Revit\YangAgent Revit`
+- 当前主线：`pyrevit/YangAgent.extension`
+- 当前重点：Sandbox 测试模型中的 pyRevit MVP
 
-## 2. 按钮都是灰色，提示“可用性命令载入失败”
+## 1. Revit 里看不到 `YangAgent` 选项卡
 
-典型报错：
+先确认：
 
-```text
-Revit无法运行可用性命令 ...
-System.TypeLoadException
-Could not resolve type ...
-```
+1. Revit 里是否能看到 `pyRevit` 选项卡。
+2. `pyrevit/YangAgent.extension` 是否已经安装或链接到 pyRevit。
+3. 当前机器是否已经重启过 Revit，而不是只在仓库里改了文件。
 
-原因：
+优先处理：
 
-- pyRevit 会根据 `.panel` 和 `.pushbutton` 目录名生成临时 DLL 类型。
-- 中文目录名可能导致 pyRevit 2027 生成的 availability 类型无法解析。
-- `bundle.yaml` 中的 `context:` 会触发 availability 命令生成。
+- 如果连 `pyRevit` 都看不到，先排 pyRevit 安装或加载问题。
+- 如果能看到 `pyRevit`，但看不到 `YangAgent`，优先检查 extension 安装、缓存和目录命名。
 
-项目修复：
+## 2. 按钮是灰色，或提示可用性命令加载失败
 
-- `.panel` 目录已改为英文 ASCII：`Settings.panel`、`Reports.panel`。
-- 按钮目录保持英文 ASCII。
-- 中文显示名放在 `bundle.yaml` 的 `title`。
-- 已移除 `context:` 声明。
+典型现象：
 
-用户处理步骤：
+- 按钮显示但不可点击；
+- Revit/pyRevit 提示 `System.TypeLoadException`；
+- 提示 availability 类或命令包装类无法加载。
 
-1. 关闭 Revit。
-2. 更新仓库到最新版本。
-3. 清理 pyRevit 缓存中旧的 YangAgent 临时 DLL、生成的 `.cs` 文件和 pickle 缓存。
+当前已知高频原因：
+
+- `.panel` 或 `.pushbutton` 目录命名不符合 pyRevit 约束；
+- 旧缓存中的临时 DLL 仍在被 Revit 使用；
+- `bundle.yaml` 历史写法触发了旧可用性命令缓存。
+
+当前项目约束：
+
+- `.panel`、`.pushbutton` 目录名只用英文 ASCII；
+- 中文显示名只放在 `bundle.yaml` 的 `title`；
+- 不要随意恢复旧的 `context` 写法，除非明确验证需要。
+
+处理步骤：
+
+1. 完全关闭 Revit。
+2. 确认仓库已经更新到当前主线。
+3. 清理 pyRevit 的 YangAgent 相关缓存。
 4. 重新打开 Revit。
-5. 在 pyRevit 中 reload。
+5. 在 pyRevit 中执行 `Reload`。
 
-如果不确定缓存位置，可以在用户临时目录或 pyRevit 缓存目录里搜索：
+如果要手动搜索缓存，可搜：
 
 ```text
 *YangAgent*.dll
@@ -45,92 +57,127 @@ Could not resolve type ...
 *YangAgent*.pickle
 ```
 
-删除旧缓存后，pyRevit 会重新编译工具箱。
-
-## 3. 提示“外部工具-完整类名称错误”
+## 3. 启动时报 `FullClassName` / `IExternalCommand` 相关错误
 
 典型报错：
 
 ```text
-无法初始化附加模块“导出路径”
-FullClassName 为 Revit 调用附加模块应用程序提供了入口点
-必须确保该类实现 Autodesk.Revit.UI.IExternalCommand
+Failed to initialize the add-in ...
+The FullClassName provides the entry point ...
+must implement Autodesk.Revit.UI.IExternalCommand
 ```
 
-原因通常不是业务脚本没有实现 `IExternalCommand`。pyRevit 会自动把 `script.py` 包装成 Revit 外部命令，这个错误多半来自旧的 pyRevit 临时 DLL 或旧 `.addin` 缓存仍在被 Revit 读取。
+这类问题在当前项目里通常不代表业务脚本真的没实现 `IExternalCommand`，更常见原因是：
 
-如果报错出现在新按钮上，例如 `AI分析提示词`，优先怀疑旧缓存仍在。Revit 正在运行时，Windows 可能会锁住旧 DLL，导致清理脚本无法真正删除缓存。
+- pyRevit 旧临时 DLL 还在；
+- Revit 仍锁着旧缓存；
+- 历史 `.addin` 或旧构建残留仍被扫描。
 
-处理步骤：
+优先处理：
 
 1. 完全关闭 Revit。
-2. 更新仓库到最新版本。
-3. 执行缓存清理脚本：
+2. 确认任务管理器里没有 `Revit.exe`、`RevitWorker.exe`。
+3. 清理 pyRevit / YangAgent 相关缓存。
+4. 重新打开 Revit 后再测。
 
-```powershell
-.\scripts\clear-pyrevit-yangagent-cache.ps1
-```
+如果问题出在新按钮上，优先怀疑缓存，不要先怀疑业务脚本本身。
 
-4. 重新安装或刷新 pyRevit extension：
+## 4. `System Settings` 能开，其他按钮打不开
 
-```powershell
-.\scripts\install-pyrevit-extension.ps1 -Force -ClearCache
-```
+这通常说明：
 
-5. 重新打开 Revit，并执行 pyRevit Reload。
+- extension 主体已经被识别；
+- 问题更可能在单个按钮脚本、按钮目录、共享库 import 或缓存。
 
-如果脚本提示仍有缓存无法删除，请确认任务管理器里没有以下进程：
+排查顺序：
 
-```text
-Revit.exe
-RevitWorker.exe
-```
+1. 先试 `Project Info Report` 这类最轻量、只读按钮。
+2. 再试 `Model Health Report`。
+3. 再试 preview 类按钮。
+4. 最后才试 apply 类按钮。
 
-项目修复：
+如果只有单个按钮失败，记录：
 
-- `.panel` 目录使用无中文英文名。
-- `.pushbutton` 目录使用无空格英文名。
-- UI 中文显示名只放在 `bundle.yaml` 的 `title` 中。
+- 按钮名；
+- 原始错误文本；
+- 是否有导出文件生成；
+- 同一面板的其他按钮是否正常。
 
-## 4. 仍然无法点击
+## 5. Apply 类按钮执行前就失败
 
-请检查：
+先确认是不是输入文件问题，而不是 Revit API 问题。
 
-- `pyrevit/YangAgent.extension/YangAgent.tab` 下是否只有英文 `.panel` 目录。
-- `.pushbutton` 目录是否是无空格英文名。
-- `bundle.yaml` 中是否没有 `context:`。
-- Revit 是否已经完全重启。
-- pyRevit 是否已经 reload。
-
-## 5. C# DLL 构建提示 DLL 被 Revit 锁定
-
-典型报错：
+当前 Apply 安全链路要求：
 
 ```text
-DLL is locked and cannot be overwritten: ...YangAgent.Revit2027.dll.
-Locked by Revit process id(s): ...
-Close Revit 2027, then run this script again.
+preview/dry-run -> human confirmation -> apply -> log -> Undo check
+```
+
+先检查：
+
+- 选择的 CSV 是否来自当前 preview；
+- 文件名是否匹配约定；
+- `element_id` 是否重复；
+- `dry_run` 是否仍为 `true`；
+- 是否在 sandbox 模型里测试。
+
+离线先跑：
+
+```powershell
+python tools\run_sandbox_preflight.py --write-report
+```
+
+如需进一步看错误码，直接查：
+
+- `docs/error-codes.md`
+
+## 6. 报告导出路径不对，或找不到文件
+
+先看 `System Settings` 中的导出路径设置。
+
+当前已知测试报告目录：
+
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\Revit 测试模型\报告
+```
+
+排查顺序：
+
+1. 在 `System Settings` 中确认当前导出目录。
+2. 重新执行一个只读导出按钮，例如 `Project Info Report`。
+3. 按修改时间排序查看目标目录。
+4. 如果按钮显示成功但目录没有新文件，再回看 pyRevit 输出。
+
+## 7. C# DLL 构建时提示 DLL 被锁定
+
+典型现象：
+
+```text
+DLL is locked and cannot be overwritten
 ```
 
 原因：
 
-- Revit 已经加载了当前 DLL，Windows 会锁住该文件。
-- `scripts\build-revit2027-addin.ps1` 和 `scripts\install-revit2027-addin.ps1` 需要覆盖 `bin\Debug\net10.0-windows\YangAgent.Revit2027.dll`。
+- Revit 正在占用当前 DLL；
+- Windows 不允许覆盖已加载的程序集。
 
 处理步骤：
 
 1. 保存测试模型。
 2. 完全关闭 Revit 2027。
-3. 确认任务管理器中没有 `Revit.exe`。
-4. 重新运行：
+3. 确认没有残留 `Revit.exe`。
+4. 再执行构建或安装脚本。
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-revit2027-addin.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install-revit2027-addin.ps1
-```
+如果只是验证能否编译，而不想覆盖当前 DLL，可改用单独输出目录。
 
-如果只想验证代码能否编译、暂时不覆盖已加载 DLL，可以使用临时输出目录：
+## 8. 什么时候该停，不要继续乱试
 
-```powershell
-dotnet build .\src\YangAgent.Revit2027\YangAgent.Revit2027.csproj -c Debug -o C:\tmp\YangAgent_Revit2027_build_check
-```
+出现以下任一情况，先停：
+
+- 不是 sandbox 模型；
+- apply 按钮已经准备改模型，但你还没看影响范围；
+- 同一个错误连续重复，且没有新增证据；
+- Revit 已经弹出模型修改相关确认，但你不清楚会改什么；
+- 你无法确认当前按钮是 preview 还是 apply。
+
+当前策略不是一次跑完所有按钮，而是尽快拿到第一个真实 blocker，然后定点修复。

@@ -35,9 +35,9 @@ DEFAULT_VIEW_NAMING_RULES = {
 }
 DEFAULT_AGENT_PREFERENCES = {
     "revit_versions": "2022, 2024, 2025, 2027",
-    "preferred_workflow": u"先 pyRevit 快速验证，再迁移到 C# .addin + .dll 正式插件。",
-    "review_focus": u"优先检查 Revit 2027、中文界面、dry-run CSV、可撤销 Transaction。",
-    "safety_notes": u"不要直接修改正式模型；所有修改先在测试模型 dry-run 并人工确认。",
+    "preferred_workflow": u"先用 pyRevit 快速验证，再迁移到 C# .addin + .dll 正式插件。",
+    "review_focus": u"优先检查 Revit 2027、中文界面、dry-run CSV 和可撤销 Transaction。",
+    "safety_notes": u"不要直接修改正式模型；所有修改先在测试模型 dry-run 并由人工确认。",
 }
 DEFAULT_COMPANY_STANDARDS_TEMPLATE = u"""# Company BIM Standards / 公司 BIM 标准
 

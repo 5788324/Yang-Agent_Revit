@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Apply suggested room numbers from a dry-run CSV.
-
-This tool modifies the model only after the user selects a dry-run CSV and confirms.
-"""
+"""Apply suggested room numbers from a dry-run CSV."""
 
 from __future__ import print_function
 
 import codecs
-import csv
 import os
 import traceback
 from datetime import datetime
@@ -34,7 +30,8 @@ from yang_agent_apply import (  # noqa: E402
     validate_fields,
     write_utf8_csv,
 )
-from yang_agent_lang import get_export_dir, get_or_choose_language  # noqa: E402
+from yang_agent_lang import get_or_choose_language  # noqa: E402
+from yang_agent_settings import get_export_dir  # noqa: E402
 
 
 doc = revit.doc
@@ -46,28 +43,38 @@ TEXT = {
         "alert_title": u"Yang Agent",
         "no_doc": u"没有打开的 Revit 文档。",
         "pick_csv": u"选择 missing_room_numbers_*.csv",
-        "no_csv": u"已取消。未选择 CSV。",
-        "wrong_csv_name": u"YA-APPLY-ROOM-001: 请选择 `预览缺失房间编号` 生成的 missing_room_numbers_*.csv。\n\n当前文件：{0}\n\n如果你选择的是 duplicate_room_numbers_*.csv，它是重复编号检查结果，不能用于自动写入缺失编号。",
-        "bad_csv_fields": u"YA-APPLY-ROOM-002: CSV 缺少必要字段，不能执行。\n\n需要字段：{0}\n实际字段：{1}",
-        "no_rows": u"没有可应用的房间编号行。",
+        "no_csv": u"已取消，未选择 CSV。",
+        "wrong_csv_name": u"YA-APPLY-ROOM-001: 请选择由“预览缺失房间编号”导出的 missing_room_numbers_*.csv。\n\n当前文件：{0}\n\n如果你选的是 duplicate_room_numbers_*.csv，它只用于重复编号检查，不能用于自动写入缺失编号。",
+        "bad_csv_fields": u"YA-APPLY-ROOM-002: CSV 缺少必需字段，不能执行。\n\n需要字段：{0}\n实际字段：{1}",
+        "no_rows": u"没有可应用的房间编号记录。",
         "confirm": u"确认应用",
         "cancel": u"取消",
-        "confirm_message": u"即将修改 {0} 个房间的编号。\n\n请确认：\n1. 当前模型是测试模型或已备份。\n2. CSV 来自 `预览缺失房间编号`。\n3. 已人工检查 suggested_number。\n\n是否继续？",
+        "confirm_message": u"即将修改 {0} 个房间的编号。\n\nElementId:\n{1}\n\n请确认：\n1. 当前模型是 sandbox / 测试模型或已备份。\n2. CSV 来自“预览缺失房间编号”。\n3. 已检查 suggested_number。\n4. 已在 pyRevit 输出窗口核对完整 ElementId 清单。\n\n是否继续？",
+        "confirm_preview_title": u"## 应用前确认",
+        "confirm_preview_count": u"- 计划修改数量：{0}",
+        "confirm_preview_ids": u"- ElementId：{0}",
+        "confirm_preview_csv": u"- 源 CSV：`{0}`",
+        "confirm_preview_undo": u"- Undo 提示：本次写入会放进一个 Revit Transaction，应用后请先验证一次 Undo。",
         "title": u"# Yang Agent 应用房间编号",
         "summary": u"## 汇总",
         "document": u"- 文档：{0}",
-        "csv": u"- 来源 CSV：{0}",
+        "csv": u"- 源 CSV：{0}",
         "applied": u"- 已应用：{0}",
         "skipped": u"- 已跳过：{0}",
         "failed": u"- 失败：{0}",
         "details": u"## 执行明细",
-        "output_done": u"应用完成。模型已通过 Revit Transaction 修改。",
-        "output_cancel": u"已取消。模型未修改。",
+        "undo_title": u"## Undo / 回滚",
+        "undo_line_1": u"- 本次修改在一个 Revit Transaction 内完成：`[Agent] Apply Room Numbers`。",
+        "undo_line_2": u"- 请先在测试模型验证一次 Revit Undo 能否整批回退，再用于真实项目。",
+        "undo_line_3": u"- 如果结果不对，请立刻 Undo，并保留本日志与源 CSV 用于排查。",
+        "output_done": u"应用完成。模型已在 Revit Transaction 内修改。",
+        "output_cancel": u"已取消，模型未修改。",
         "output_log": u"- 日志：`{0}`",
         "output_csv": u"- CSV 日志：`{0}`",
         "alert_done": u"房间编号应用完成。\n\n已应用：{0}\n已跳过：{1}\n失败：{2}\n\n{3}",
         "failed_title": u"# 应用房间编号失败",
         "failed_alert": u"应用房间编号失败。请查看 pyRevit 输出窗口。",
+        "more_ids": u"... 其余 {0} 个 ElementId 请查看 pyRevit 输出窗口",
     },
     "en": {
         "alert_title": u"Yang Agent",
@@ -79,7 +86,12 @@ TEXT = {
         "no_rows": u"No applicable room number rows were found.",
         "confirm": u"Apply",
         "cancel": u"Cancel",
-        "confirm_message": u"This will modify Number values on {0} rooms.\n\nPlease confirm:\n1. The current model is a test model or has been backed up.\n2. The CSV came from `Preview Missing Room Numbers`.\n3. suggested_number values were reviewed.\n\nContinue?",
+        "confirm_message": u"This will modify Number values on {0} rooms.\n\nElementIds:\n{1}\n\nPlease confirm:\n1. The current model is a sandbox/test model or has been backed up.\n2. The CSV came from `Preview Missing Room Numbers`.\n3. suggested_number values were reviewed.\n4. The full ElementId list was reviewed in the pyRevit output window.\n\nContinue?",
+        "confirm_preview_title": u"## Pre-apply Review",
+        "confirm_preview_count": u"- Planned changes: {0}",
+        "confirm_preview_ids": u"- ElementIds: {0}",
+        "confirm_preview_csv": u"- Source CSV: `{0}`",
+        "confirm_preview_undo": u"- Undo note: this write will run inside one Revit Transaction. Verify one Undo immediately after apply.",
         "title": u"# Yang Agent Apply Room Numbers",
         "summary": u"## Summary",
         "document": u"- Document: {0}",
@@ -87,7 +99,11 @@ TEXT = {
         "applied": u"- Applied: {0}",
         "skipped": u"- Skipped: {0}",
         "failed": u"- Failed: {0}",
-        "details": u"## Details",
+        "details": u"## Execution Details",
+        "undo_title": u"## Undo / Rollback",
+        "undo_line_1": u"- Changes were made inside one Revit Transaction: `[Agent] Apply Room Numbers`.",
+        "undo_line_2": u"- Verify that one Revit Undo reverses the full batch in a test model before using this workflow on real project work.",
+        "undo_line_3": u"- If the result is wrong, undo immediately and keep this log with the source CSV for diagnosis.",
         "output_done": u"Apply completed. The model was modified inside a Revit Transaction.",
         "output_cancel": u"Cancelled. No model changes were made.",
         "output_log": u"- Log: `{0}`",
@@ -95,6 +111,7 @@ TEXT = {
         "alert_done": u"Room numbers applied.\n\nApplied: {0}\nSkipped: {1}\nFailed: {2}\n\n{3}",
         "failed_title": u"# Apply Room Numbers failed",
         "failed_alert": u"Apply Room Numbers failed. See pyRevit output for details.",
+        "more_ids": u"... see the pyRevit output for the remaining {0} ElementIds",
     },
 }
 
@@ -110,6 +127,7 @@ REQUIRED_FIELDS = [
 
 def tr(lang, key):
     return TEXT.get(lang, TEXT["zh"]).get(key, TEXT["zh"].get(key, key))
+
 
 def is_applicable_row(row):
     if safe_text(row.get("category")).strip() != "Room":
@@ -138,6 +156,28 @@ def get_room_number_param(element):
         except Exception:
             continue
     return None
+
+
+def summarize_element_ids(rows, lang, limit):
+    ids = []
+    for row in rows:
+        ids.append(safe_text(row.get("element_id")).strip())
+    if len(ids) <= limit:
+        return ", ".join(ids)
+    shown = ", ".join(ids[:limit])
+    return shown + "\n" + tr(lang, "more_ids").format(len(ids) - limit)
+
+
+def print_preapply_review(lang, csv_path, rows):
+    ids = [safe_text(row.get("element_id")).strip() for row in rows]
+    output.print_md(tr(lang, "confirm_preview_title"))
+    output.print_md(u"")
+    output.print_md(tr(lang, "confirm_preview_count").format(len(rows)))
+    output.print_md(tr(lang, "confirm_preview_ids").format(u", ".join(ids)))
+    output.print_md(tr(lang, "confirm_preview_csv").format(csv_path))
+    output.print_md(tr(lang, "confirm_preview_undo"))
+    output.print_md(u"")
+
 
 def apply_room_numbers(rows):
     results = []
@@ -201,6 +241,7 @@ def apply_room_numbers(rows):
 
     return results
 
+
 def write_markdown(path, lang, source_csv, results):
     applied, skipped, failed = count_results(results)
     lines = []
@@ -214,19 +255,20 @@ def write_markdown(path, lang, source_csv, results):
     lines.append(tr(lang, "skipped").format(skipped))
     lines.append(tr(lang, "failed").format(failed))
     lines.append(u"")
-    lines.append(u"## Undo / Rollback")
+    lines.append(tr(lang, "undo_title"))
     lines.append(u"")
-    lines.append(u"- The changes were made inside one Revit Transaction: `[Agent] Apply Room Numbers`.")
-    lines.append(u"- In a test model, verify that one Revit Undo reverses the batch before using this workflow on real project work.")
-    lines.append(u"- If the result is wrong, undo immediately and keep this log with the source CSV for diagnosis.")
+    lines.append(tr(lang, "undo_line_1"))
+    lines.append(tr(lang, "undo_line_2"))
+    lines.append(tr(lang, "undo_line_3"))
     lines.append(u"")
     lines.append(tr(lang, "details"))
     lines.append(u"")
     for row in results:
         lines.append(
-            u"- `{0}` Room `{1}` -> `{2}` | {3} | {4}".format(
+            u"- `{0}` Room `{1}` | `{2}` -> `{3}` | {4} | {5}".format(
                 safe_text(row.get("element_id")),
                 safe_text(row.get("room_name")),
+                safe_text(row.get("actual_old_number")),
                 safe_text(row.get("applied_number") or row.get("suggested_number")),
                 safe_text(row.get("result")),
                 safe_text(row.get("message")),
@@ -305,11 +347,15 @@ def main():
         forms.alert(message, title=tr(lang, "alert_title"))
         return
 
+    print_preapply_review(lang, csv_path, apply_rows)
     if not confirm_apply(
         forms,
         tr(lang, "confirm"),
         tr(lang, "cancel"),
-        tr(lang, "confirm_message").format(len(apply_rows)),
+        tr(lang, "confirm_message").format(
+            len(apply_rows),
+            summarize_element_ids(apply_rows, lang, 50),
+        ),
     ):
         output.print_md(tr(lang, "output_cancel"))
         return
@@ -329,7 +375,7 @@ def main():
     output.print_md(u"")
     output.print_md(tr(lang, "output_done"))
     output.print_md(u"")
-    output.print_md(u"- Undo / rollback: verify one Revit Undo reverses `[Agent] Apply Room Numbers` in a test model.")
+    output.print_md(tr(lang, "undo_line_2"))
     output.print_md(tr(lang, "applied").format(applied))
     output.print_md(tr(lang, "skipped").format(skipped))
     output.print_md(tr(lang, "failed").format(failed))

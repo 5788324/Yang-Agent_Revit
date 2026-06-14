@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Preview views that may not be placed on sheets.
-
-This tool is dry-run only. It does not modify the model and does not open a Transaction.
-"""
+"""Preview views that may not be placed on sheets in read-only dry-run mode."""
 
 from __future__ import print_function
 
@@ -17,13 +14,12 @@ import clr
 clr.AddReference("RevitAPI")
 clr.AddReference("RevitAPIUI")
 
-from Autodesk.Revit.DB import (  # noqa: E402
-    FilteredElementCollector,
-    View,
-    ViewSheet,
-)
+from Autodesk.Revit.DB import FilteredElementCollector, View, ViewSheet  # noqa: E402
 from pyrevit import forms, revit, script  # noqa: E402
-from yang_agent_lang import get_export_dir, get_or_choose_language  # noqa: E402
+from yang_agent_lang import get_or_choose_language  # noqa: E402
+from yang_agent_report_style import build_intro_block, build_status_block  # noqa: E402
+from yang_agent_settings import get_export_dir  # noqa: E402
+from yang_agent_theme import get_theme_id  # noqa: E402
 
 
 doc = revit.doc
@@ -32,45 +28,49 @@ output = script.get_output()
 
 TEXT = {
     "zh": {
+        "language_message": u"选择报告语言 / Select report language",
         "alert_title": u"Yang Agent",
         "no_doc": u"没有打开的 Revit 文档。",
-        "title": u"# Yang Agent 未上图视图预览",
-        "read_only": u"此报告为 dry-run 预览，未修改 Revit 模型。",
-        "summary": u"## 汇总",
-        "document": u"- 文档：{0}",
-        "exported_at": u"- 导出时间：{0}",
-        "reportable_total": u"- 可检查视图总数：{0}",
-        "unplaced_total": u"- 可能未上图视图：{0}",
-        "details": u"## 可能未上图视图",
-        "none": u"- 无",
-        "next_steps": u"## 建议下一步",
-        "step_1": u"1. 人工确认这些视图是否确实需要放到图纸。",
-        "step_2": u"2. 对临时视图、工作视图、分析视图进行人工筛选。",
-        "step_3": u"3. 如需自动处理，先制定公司视图命名和上图规则。",
-        "output_done": u"预览完成。此工具未修改模型。",
-        "output_unplaced": u"- 可能未上图视图：{0}",
+        "report_title": u"# Yang Agent 预览未上图视图",
+        "read_only_note": u"这是 dry-run 只读预览，不会修改 Revit 模型。",
+        "summary_heading": u"统计摘要",
+        "document": u"文档：{0}",
+        "exported_at": u"导出时间：{0}",
+        "reportable_total": u"纳入检查的视图数量：{0}",
+        "unplaced_total": u"可能未上图的视图数量：{0}",
+        "detail_heading": u"可能未上图的视图明细",
+        "next_steps_heading": u"建议下一步",
+        "next_step_1": u"先人工确认这些视图是否本来就不需要上图，例如工作视图、临时视图或分析视图。",
+        "next_step_2": u"如果项目存在依赖视图、图例或特殊出图规则，需要再做人工筛选。",
+        "next_step_3": u"正式自动化前，应先固化视图命名和出图范围规则。",
+        "none": u"无",
+        "output_title": u"# Yang Agent 预览未上图视图",
+        "output_done": u"预览完成。该工具未修改模型。",
+        "output_unplaced": u"- 可能未上图的视图数量：{0}",
         "output_report": u"- 报告：`{0}`",
         "output_csv": u"- CSV：`{0}`",
-        "alert_done": u"未上图视图预览已生成。\n\n此工具未修改模型。\n\n可能未上图视图：{0}\n\n{1}",
+        "alert_done": u"未上图视图预览已生成。\n\n该工具未修改模型。\n\n可能未上图的视图数量：{0}\n\n{1}",
         "failed_title": u"# 未上图视图预览失败",
         "failed_alert": u"未上图视图预览失败。请查看 pyRevit 输出窗口。",
     },
     "en": {
+        "language_message": u"Select report language / 选择报告语言",
         "alert_title": u"Yang Agent",
         "no_doc": u"No active Revit document.",
-        "title": u"# Yang Agent Unplaced Views Preview",
-        "read_only": u"This is a dry-run preview. No Revit model changes were made.",
-        "summary": u"## Summary",
-        "document": u"- Document: {0}",
-        "exported_at": u"- Exported at: {0}",
-        "reportable_total": u"- Reportable views: {0}",
-        "unplaced_total": u"- Views possibly not placed on sheets: {0}",
-        "details": u"## Views Possibly Not Placed On Sheets",
-        "none": u"- None",
-        "next_steps": u"## Suggested Next Steps",
-        "step_1": u"1. Confirm whether these views should be placed on sheets.",
-        "step_2": u"2. Manually filter temporary, working, and analysis views.",
-        "step_3": u"3. Define company view naming and sheet placement rules before automation.",
+        "report_title": u"# Yang Agent Unplaced Views Preview",
+        "read_only_note": u"This is a dry-run read-only preview. No Revit model changes were made.",
+        "summary_heading": u"Summary",
+        "document": u"Document: {0}",
+        "exported_at": u"Exported at: {0}",
+        "reportable_total": u"Views checked: {0}",
+        "unplaced_total": u"Views possibly not placed on sheets: {0}",
+        "detail_heading": u"Views Possibly Not Placed On Sheets",
+        "next_steps_heading": u"Suggested Next Steps",
+        "next_step_1": u"Confirm whether these views are intentionally excluded from sheets, such as working or analysis views.",
+        "next_step_2": u"Dependent views, legends, or custom sheet rules may still need manual review.",
+        "next_step_3": u"Stabilize view naming and sheet placement rules before further automation.",
+        "none": u"None",
+        "output_title": u"# Yang Agent Unplaced Views Preview",
         "output_done": u"Preview completed. No model changes were made.",
         "output_unplaced": u"- Views possibly not placed on sheets: {0}",
         "output_report": u"- Report: `{0}`",
@@ -82,6 +82,26 @@ TEXT = {
 }
 
 
+ALLOWED_VIEW_TYPES = [
+    "FloorPlan",
+    "CeilingPlan",
+    "Section",
+    "Elevation",
+    "ThreeD",
+    "DraftingView",
+    "Legend",
+    "AreaPlan",
+    "EngineeringPlan",
+]
+
+
+def choose_language():
+    try:
+        return get_or_choose_language(forms, message=TEXT["zh"]["language_message"])
+    except Exception:
+        return "zh"
+
+
 def tr(lang, key):
     return TEXT.get(lang, TEXT["zh"]).get(key, TEXT["zh"].get(key, key))
 
@@ -90,7 +110,7 @@ def safe_text(value):
     if value is None:
         return u""
     try:
-        return unicode(value)  # noqa: F821  # IronPython
+        return unicode(value)  # noqa: F821
     except NameError:
         return str(value)
     except Exception:
@@ -114,11 +134,10 @@ def get_placed_view_ids():
     sheets = FilteredElementCollector(doc).OfClass(ViewSheet).ToElements()
     for sheet in sheets:
         try:
-            view_ids = sheet.GetAllPlacedViews()
-            for view_id in view_ids:
+            for view_id in sheet.GetAllPlacedViews():
                 placed_ids.add(element_id_value(view_id))
         except Exception:
-            continue
+            pass
     return placed_ids
 
 
@@ -132,28 +151,14 @@ def is_reportable_view(view):
         return False
     if isinstance(view, ViewSheet):
         return False
-
-    view_type = safe_text(view.ViewType)
-    allowed = [
-        "FloorPlan",
-        "CeilingPlan",
-        "Section",
-        "Elevation",
-        "ThreeD",
-        "DraftingView",
-        "Legend",
-        "AreaPlan",
-        "EngineeringPlan",
-    ]
-    return view_type in allowed
+    return safe_text(view.ViewType) in ALLOWED_VIEW_TYPES
 
 
 def collect_preview_rows():
     placed_ids = get_placed_view_ids()
-    views = FilteredElementCollector(doc).OfClass(View).ToElements()
     reportable_count = 0
     unplaced = []
-
+    views = FilteredElementCollector(doc).OfClass(View).ToElements()
     for view in views:
         if not is_reportable_view(view):
             continue
@@ -163,54 +168,60 @@ def collect_preview_rows():
         if view_id in placed_ids:
             continue
 
-        unplaced.append({
-            "dry_run": "true",
-            "element_id": view_id,
-            "category": "View",
-            "view_name": safe_text(view.Name),
-            "view_type": safe_text(view.ViewType),
-            "status": "PossiblyUnplaced",
-        })
-
+        unplaced.append(
+            {
+                "dry_run": "true",
+                "element_id": view_id,
+                "category": "View",
+                "view_name": safe_text(view.Name),
+                "view_type": safe_text(view.ViewType),
+                "status": "PossiblyUnplaced",
+            }
+        )
     return reportable_count, unplaced
 
 
-def write_markdown(path, lang, reportable_count, unplaced):
+def build_report_lines(lang, reportable_count, unplaced):
+    theme_id = get_theme_id()
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    summary_lines = [
+        tr(lang, "document").format(safe_text(doc.Title)),
+        tr(lang, "exported_at").format(timestamp),
+        tr(lang, "reportable_total").format(reportable_count),
+        tr(lang, "unplaced_total").format(len(unplaced)),
+    ]
+    next_step_lines = [
+        tr(lang, "next_step_1"),
+        tr(lang, "next_step_2"),
+        tr(lang, "next_step_3"),
+    ]
+
     lines = []
-    lines.append(tr(lang, "title"))
+    lines.append(build_intro_block(theme_id, tr(lang, "report_title"), tr(lang, "read_only_note")))
     lines.append(u"")
-    lines.append(tr(lang, "read_only"))
+    lines.append(build_status_block(theme_id, tr(lang, "summary_heading"), summary_lines))
     lines.append(u"")
-    lines.append(tr(lang, "summary"))
-    lines.append(u"")
-    lines.append(tr(lang, "document").format(safe_text(doc.Title)))
-    lines.append(tr(lang, "exported_at").format(timestamp))
-    lines.append(tr(lang, "reportable_total").format(reportable_count))
-    lines.append(tr(lang, "unplaced_total").format(len(unplaced)))
-    lines.append(u"")
-    lines.append(tr(lang, "details"))
+    lines.append(u"## {0}".format(tr(lang, "detail_heading")))
     lines.append(u"")
 
     if not unplaced:
-        lines.append(tr(lang, "none"))
+        lines.append(u"- {0}".format(tr(lang, "none")))
     else:
         for row in unplaced:
             lines.append(
-                u"- `{0}` {1} | {2}".format(
+                u"- ElementId `{0}` | {1} | {2}".format(
                     row["element_id"],
-                    row["view_type"],
-                    row["view_name"],
+                    row["view_type"] or tr(lang, "none"),
+                    row["view_name"] or tr(lang, "none"),
                 )
             )
 
     lines.append(u"")
-    lines.append(tr(lang, "next_steps"))
-    lines.append(u"")
-    lines.append(tr(lang, "step_1"))
-    lines.append(tr(lang, "step_2"))
-    lines.append(tr(lang, "step_3"))
+    lines.append(build_status_block(theme_id, tr(lang, "next_steps_heading"), next_step_lines))
+    return lines
 
+
+def write_markdown(path, lines):
     with codecs.open(path, "w", "utf-8-sig") as stream:
         stream.write(u"\n".join(lines))
 
@@ -239,8 +250,7 @@ def write_csv(path, rows):
 
 
 def main():
-    lang = get_or_choose_language(forms)
-
+    lang = choose_language()
     if doc is None:
         forms.alert(tr(lang, "no_doc"), title=tr(lang, "alert_title"))
         return
@@ -251,13 +261,12 @@ def main():
     csv_path = os.path.join(export_dir, "unplaced_views_{0}.csv".format(timestamp))
 
     reportable_count, unplaced = collect_preview_rows()
-    write_markdown(report_path, lang, reportable_count, unplaced)
+    write_markdown(report_path, build_report_lines(lang, reportable_count, unplaced))
     write_csv(csv_path, unplaced)
 
-    output.print_md(tr(lang, "title"))
+    output.print_md(tr(lang, "output_title"))
     output.print_md(u"")
     output.print_md(tr(lang, "output_done"))
-    output.print_md(u"")
     output.print_md(tr(lang, "output_unplaced").format(len(unplaced)))
     output.print_md(tr(lang, "output_report").format(report_path))
     output.print_md(tr(lang, "output_csv").format(csv_path))

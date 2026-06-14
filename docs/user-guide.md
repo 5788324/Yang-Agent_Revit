@@ -1,447 +1,194 @@
 # 用户使用指南
 
-本文档面向不熟悉 AI 和编程的 Revit 使用者。
+这份文档面向当前个人使用场景。
 
-## 1. 当前能做什么
+如果你只关心“现在能点什么、会不会改模型、先怎么测”，看这份就够了。
 
-当前版本提供两个功能区：
+## 1. 这套工具现在是做什么的
 
-- `系统设置`
-- `导出报告`
+当前 `YangAgent` 主要做三件事：
 
-系统设置：
+1. 导出模型信息
+2. 生成检查报告
+3. 先预览，再谨慎执行低风险修改
 
-- `系统设置`：统一设置语言、简称、头像路径、Light/Dark Theme、AI 工作习惯、公司标准文件、视图命名规则，并查看版权声明和更新链接。
+当前不是：
 
-导出报告：
+- 全自动 AI 改模系统
+- 企业平台
+- 正式生产环境批量修改工具
 
-- `导出路径`：设置报告输出目录，避免报告堆积。
-- `导出模型快照`：导出模型快照，给 AI 分析。
-- `模型健康报告`：生成模型健康检查报告。
-- `回归测试清单`：生成标准工具测试清单，方便记录每次测试结果。
-- `AI分析提示词`：生成安全 AI 分析提示词和最近报告清单。
-- `预览缺失标记`：预览缺少标记的门窗，不修改模型。
-- `预览缺失房间编号`：预览缺少编号的房间，不修改模型。
-- `预览重复房间编号`：预览重复编号的房间，不修改模型。
-- `预览未上图视图`：预览可能未放置到图纸的视图，不修改模型。
-- `预览视图命名`：预览视图命名规则问题，不修改模型。
-- `应用门窗标记`：读取 dry-run CSV，在二次确认后写入门窗标记。
-- `应用房间编号`：读取 dry-run CSV，在二次确认后写入缺失房间编号。
+## 2. 当前工具入口
 
-除 `应用门窗标记`、`应用房间编号` 外，其它报告和预览工具都不会修改模型。
+Revit 里当前主要看：
 
-工具箱支持两种语言：
+- `YangAgent -> System Settings`
+- `YangAgent -> Reports`
 
-- 中文
-- English
+## 3. System Settings 能做什么
 
-你可以通过 `系统设置` 设置默认语言。
+`System Settings` 当前负责：
 
-## 2. 安装 pyRevit 工具栏
+- 语言设置：中文 / English
+- 主题预设选择
+- 用户昵称和头像路径
+- AI 工作偏好
+- 公司标准文档路径
+- 视图命名规则
+- 报告导出路径相关设置入口
 
-前提：
+当前主题预设：
 
-- 已安装 Revit。
-- 已安装 pyRevit。如果 Revit 中没有 pyRevit 选项卡，本项目按钮也不会显示。
-- 本仓库已克隆到本机。
+- `YangAgent Core`
+- `Toolbox Warm`
+- `Dark Pro`
 
-### 2.1 检查 pyRevit 是否安装
+## 4. Reports 里有哪些按钮
 
-打开 Revit 后，先看功能区是否有 `pyRevit` 选项卡。
+当前主线按钮包括：
 
-如果没有，先安装 pyRevit：
+- `Project Info Report`
+- `Report Export Path`
+- `Export Model Snapshot`
+- `Model Health Report`
+- `Export Regression Checklist`
+- `Export AI Review Prompt`
+- `Preview Missing Marks`
+- `Preview Missing Room Numbers`
+- `Preview Duplicate Room Numbers`
+- `Preview Unplaced Views`
+- `Preview View Naming Rules`
+- `Apply Missing Door Window Marks`
+- `Apply Missing Room Numbers`
 
-```text
-https://github.com/pyrevitlabs/pyRevit/releases
-```
+## 5. 哪些按钮不会改模型
 
-安装完成后重启 Revit，确认能看到 `pyRevit` 选项卡，再继续安装本项目工具栏。
+这些按钮默认只读：
 
-### 2.2 安装 YangAgent 工具栏
+- `Project Info Report`
+- `Report Export Path`
+- `Export Model Snapshot`
+- `Model Health Report`
+- `Export Regression Checklist`
+- `Export AI Review Prompt`
+- 所有 `Preview ...` 按钮
 
-在 PowerShell 中进入仓库目录：
+只读工具会：
 
-```powershell
-cd "D:\codex\Yang Agent_Revit"
-.\scripts\install-pyrevit-extension.ps1
-```
+- 读取模型信息
+- 导出 Markdown / CSV / JSON
 
-然后重启 Revit，或在 pyRevit 中 reload。
+只读工具不会：
 
-成功后会看到：
+- 修改模型参数
+- 删除元素
+- 创建元素
 
-```text
-YangAgent -> 系统设置
-YangAgent -> 导出报告
-```
+## 6. 哪些按钮会改模型
 
-如果看不到：
+当前只有这两个按钮属于 apply：
 
-1. 确认 Revit 里已经能看到 `pyRevit` 选项卡。
-2. 确认脚本没有提示安装失败。
-3. 在 pyRevit 里执行 reload。
-4. 重启 Revit。
+- `Apply Missing Door Window Marks`
+- `Apply Missing Room Numbers`
 
-如果按钮都是灰色，并提示 `availability` 或“可用性命令载入失败”，请先关闭 Revit，清理 pyRevit 旧缓存，再重新打开 Revit。
-
-## 3. 设置语言
-
-点击：
-
-```text
-YangAgent -> 系统设置
-```
-
-选择 `中文` 或 `English`。设置会保存到本机，后续按钮自动使用该语言。
-
-## 4. 设置用户、主题和导出路径
-
-用户和主题设置：
+它们都应该按这个顺序使用：
 
 ```text
-YangAgent -> 系统设置
+先运行对应 Preview -> 检查 CSV -> 再运行 Apply -> 再测 Undo
 ```
 
-可设置：
+## 7. 第一次使用建议顺序
 
-- 简称。
-- 头像图片路径。
-- Light Theme
-- Dark Theme
-- 常用 Revit 版本。
-- 默认工作流。
-- AI 分析重点。
-- 安全偏好。
-- 公司标准 Markdown 文件。
-- 视图命名规则前缀。
-- 临时视图关键词。
+第一次不要直接点 apply。
 
-视图命名规则使用英文逗号分隔多个前缀，例如：
+推荐顺序：
+
+1. 打开测试模型
+2. 打开 `System Settings`
+3. 确认语言和导出目录
+4. 运行 `Project Info Report`
+5. 运行 `Export Model Snapshot`
+6. 运行 `Model Health Report`
+7. 运行各个 `Preview ...` 按钮
+8. 只有在 preview 结果合理后，再测试 apply
+
+## 8. 推荐测试模型
+
+不要直接拿正式项目试。
+
+当前推荐测试模型：
 
 ```text
-FP-, PL-, A-
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\Revit 测试模型\Snowdon Towers Sample Architectural_sandbox.rvt
 ```
 
-保存后重新运行 `导出报告 -> 预览视图命名` 即可使用新规则。
+## 9. 报告保存到哪里
 
-AI 工作习惯只保存在本机：
+当前报告目录建议设到：
 
 ```text
-%APPDATA%\YangAgent_Revit\settings.json
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\Revit 测试模型\报告
 ```
 
-后续运行 `导出报告 -> AI分析提示词` 时，会自动把这些偏好写入提示词，帮助 AI 更贴合你的工作方式。
-
-公司标准文件也是本机 Markdown 文件。你可以在 `系统设置` 中选择已有文件，或点击 `Create` 创建模板。后续运行 `AI分析提示词` 时，会把公司标准内容一并写入提示词。
-
-导出路径：
+你也可以通过：
 
 ```text
-YangAgent -> 导出报告 -> 导出路径
+YangAgent -> Reports -> Report Export Path
 ```
 
-用于选择报告输出目录，方便自己管理报告文件。
+来改导出位置。
 
-## 5. 使用 Export Model Snapshot
+## 10. Apply 工具怎么安全使用
 
-适合场景：
+### 10.1 门窗标记
 
-- 想让 AI 理解当前模型。
-- 想导出房间、门窗、视图、图纸数据。
-- 想先做数据分析，不改模型。
-
-操作：
-
-1. 打开 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> 导出模型快照`。
-3. 等待导出完成。
-4. 到你设置的导出目录查看结果。
-
-输出文件：
-
-- `model_snapshot_*.json`
-- `rooms_*.csv`
-- `doors_windows_*.csv`
-- `sheets_views_*.csv`
-
-## 6. 使用 Model Health Report
-
-适合场景：
-
-- 检查房间编号缺失。
-- 检查房间名称缺失。
-- 检查重复房间编号。
-- 检查门窗标记缺失。
-- 检查可能未上图的视图。
-
-操作：
-
-1. 打开 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> 模型健康报告`。
-3. 到你设置的导出目录查看报告。
-
-输出文件：
-
-- `model_health_report_*.md`
-
-## 7. 使用 Preview Missing Marks
-
-适合场景：
-
-- 检查哪些门窗缺少 `Mark/标记`。
-- 生成 dry-run 预览清单。
-- 给后续修复工具准备数据。
-
-操作：
-
-1. 打开 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> 预览缺失标记`。
-3. 到你设置的导出目录查看报告。
-
-输出文件：
-
-- `missing_door_window_marks_*.md`
-- `missing_door_window_marks_*.csv`
-
-注意：此工具只预览，不会写入标记。
-
-## 8. 使用 Export Regression Checklist
-
-适合场景：
-
-- 新功能上线前做统一测试。
-- 给同事记录每个按钮的 Pass / Fail。
-- 固定测试模型的验收流程。
-
-操作：
-
-1. 打开测试 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> 回归测试清单`。
-3. 到你设置的导出目录查看清单。
-4. 按清单逐项运行工具，并记录结果。
-
-输出文件：
-
-- `yangagent_regression_checklist_*.md`
-
-注意：此工具只生成测试清单，不会修改模型。
-
-## 9. 使用 Export AI Review Prompt
-
-适合场景：
-
-- 已经导出模型健康报告、模型快照或 dry-run CSV。
-- 想把报告交给 Codex、Claude Code 或 Antigravity 分析。
-- 想避免 AI 直接生成危险的模型修改脚本。
-
-操作：
-
-1. 打开 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> AI分析提示词`。
-3. 到你设置的导出目录查看提示词文件。
-4. 把提示词和需要分析的报告内容一起发给 AI。
-
-输出文件：
-
-- `yangagent_ai_review_prompt_*.md`
-
-注意：此工具只生成提示词，不会修改模型。
-它会自动带上 `系统设置` 中保存的 Revit 版本、工作流、分析重点和安全偏好。
-如果设置了公司标准文件，也会自动带上公司标准内容。
-
-## 10. 使用 Preview Missing Room Numbers
-
-适合场景：
-
-- 检查哪些房间缺少编号。
-- 生成 dry-run 预览清单。
-- 给后续房间编号修复工具准备数据。
-
-操作：
-
-1. 打开 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> 预览缺失房间编号`。
-3. 到你设置的导出目录查看报告。
-
-输出文件：
-
-- `missing_room_numbers_*.md`
-- `missing_room_numbers_*.csv`
-
-注意：此工具只预览，不会写入房间编号。
-
-## 11. 使用 Preview Duplicate Room Numbers
-
-适合场景：
-
-- 检查哪些房间编号重复。
-- 生成 dry-run 预览清单。
-- 给后续房间编号规则整理做准备。
-
-操作：
-
-1. 打开 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> 预览重复房间编号`。
-3. 到你设置的导出目录查看报告。
-
-输出文件：
-
-- `duplicate_room_numbers_*.md`
-- `duplicate_room_numbers_*.csv`
-
-注意：此工具只预览，不会修改房间编号。
-`duplicate_room_numbers_*.csv` 只是重复编号检查结果，不能用于 `应用房间编号`。
-
-## 10. 使用 Preview Unplaced Views
-
-适合场景：
-
-- 检查哪些视图可能没有放到图纸。
-- 筛查临时视图、工作视图、分析视图。
-- 为后续视图整理规则做准备。
-
-操作：
-
-1. 打开 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> 预览未上图视图`。
-3. 到你设置的导出目录查看报告。
-
-输出文件：
-
-- `unplaced_views_*.md`
-- `unplaced_views_*.csv`
-
-注意：此工具只预览，不会修改视图或图纸。
-
-## 11. 使用 Preview View Naming Rules
-
-适合场景：
-
-- 检查视图名称是否包含临时、测试、temp、test 等关键词。
-- 检查常见视图类型是否缺少推荐前缀。
-- 为公司视图命名规则整理做准备。
-
-操作：
-
-1. 打开 Revit 模型。
-2. 点击 `YangAgent -> 导出报告 -> 预览视图命名`。
-3. 到你设置的导出目录查看报告。
-
-输出文件：
-
-- `view_naming_rules_*.md`
-- `view_naming_rules_*.csv`
-
-注意：此工具只预览，不会修改视图名称。
-
-## 14. 使用 Apply Missing Door Window Marks
-
-此工具会修改模型。只建议在测试模型或已备份模型中使用。
-
-使用前必须先运行：
+先运行：
 
 ```text
-YangAgent -> 导出报告 -> 预览缺失标记
+Preview Missing Marks
 ```
 
-然后人工检查输出的：
+检查生成的 `missing_door_window_marks_*.csv` 后，再运行：
 
 ```text
-missing_door_window_marks_*.csv
+Apply Missing Door Window Marks
 ```
 
-确认无误后再运行：
+### 10.2 房间编号
+
+先运行：
 
 ```text
-YangAgent -> 导出报告 -> 应用门窗标记
+Preview Missing Room Numbers
 ```
 
-安全机制：
-
-- 只能选择 CSV 文件。
-- 只读取 dry-run 行。
-- 只处理 `Door` 和 `Window`。
-- 只写入当前 Mark 仍为空的元素。
-- 执行前会显示影响数量并要求二次确认。
-- 所有修改放在一个 Revit Transaction 中，可通过 Revit 撤销。
-
-输出文件：
-
-- `apply_door_window_marks_*.md`
-- `apply_door_window_marks_*.csv`
-
-## 15. 使用 Apply Missing Room Numbers
-
-此工具会修改模型。只建议在测试模型或已备份模型中使用。
-
-使用前必须先运行：
+检查生成的 `missing_room_numbers_*.csv` 后，再运行：
 
 ```text
-YangAgent -> 导出报告 -> 预览缺失房间编号
+Apply Missing Room Numbers
 ```
 
-然后人工检查输出的：
+不要把别的 CSV 误拿去 apply。
 
-```text
-missing_room_numbers_*.csv
-```
+## 11. 出问题先看什么
 
-确认无误后再运行：
+如果按钮灰掉、点了报错、没出文件，先看：
 
-```text
-YangAgent -> 导出报告 -> 应用房间编号
-```
+- `docs/troubleshooting.md`
+- `docs/error-codes.md`
+- `docs/sandbox-pyrevit-mvp-checklist.md`
 
-安全机制：
+## 12. 当前最重要的安全提醒
 
-- 只能选择 CSV 文件。
-- 只读取 dry-run 行。
-- 只处理 `Room`。
-- 只写入当前编号仍为空的房间。
-- 执行前会显示影响数量并要求二次确认。
-- 所有修改放在一个 Revit Transaction 中，可通过 Revit 撤销。
+- 只在 sandbox / test 模型里试
+- 先 preview，后 apply
+- apply 后立刻测一次 Undo
+- 没看懂结果时先别继续
 
-输出文件：
+## 13. 相关文档
 
-- `apply_room_numbers_*.md`
-- `apply_room_numbers_*.csv`
-
-注意：此工具只能选择 `missing_room_numbers_*.csv`。不要选择 `duplicate_room_numbers_*.csv`，重复编号需要人工确认规则后再处理。
-
-## 16. 如何把结果交给 AI
-
-你可以把导出的 `.md`、`.json`、`.csv` 文件发给 Codex、Claude Code 或 Antigravity，然后这样问：
-
-```text
-请分析这份 Revit 模型健康报告，按严重程度列出问题，并建议下一步 pyRevit 修复方案。
-```
-
-如果要生成修复脚本，建议这样问：
-
-```text
-请先生成 dry-run 脚本，只预览会修改哪些元素，不要直接修改模型。
-```
-
-## 17. 版权和更新
-
-点击：
-
-```text
-YangAgent -> 系统设置
-```
-
-可查看：
-
-- 版权声明：由 Yang 开发，工具为 Codex。
-- 插件更新链接。
-
-## 18. 安全提醒
-
-当前报告和预览工具不会修改模型。
-
-后续如果出现修复工具，请记住：
-
-- 先在测试模型运行。
-- 先 dry-run。
-- 确认影响元素数量。
-- 再执行真正修改。
+- `README.md`
+- `docs/safety-rules.md`
+- `docs/sandbox-pyrevit-mvp-checklist.md`
+- `docs/sandbox-pyrevit-mvp-runbook.md`
+- `docs/troubleshooting.md`

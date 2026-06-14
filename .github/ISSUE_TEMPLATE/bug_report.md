@@ -1,29 +1,39 @@
-name: Bug Report (Revit / pyRevit 工具缺陷)
-about: 报告在 Revit 环境中使用本工具时遇到的 Bug
-title: '[BUG] '
+---
+name: Bug Report
+about: 报告 YangAgent 在离线检查、pyRevit 或 sandbox Revit 测试中的缺陷
+title: "[BUG] "
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
-**描述 Bug (Describe the bug)**
-清晰简洁地描述该 Bug 是什么。
+## 问题描述
 
-**复现步骤 (To Reproduce)**
-如何重现此问题：
-1. 运行环境: Revit [e.g. 2027], pyRevit [e.g. 4.8.14]
-2. 打开工具栏菜单 '...'
-3. 点击 '....'
-4. 发生报错或现象 '....'
+清楚描述问题是什么。
 
-**预期行为 (Expected behavior)**
-清晰简洁地描述你期望发生的事情。
+## 复现步骤
 
-**错误截图 / 日志 (Screenshots / Logs)**
-如果有报错弹窗，或者 pyRevit 输出窗口有红色的报错代码 (Traceback)，请截图或将代码粘贴在这里。
+1. 使用环境：
+   - Revit：
+   - pyRevit：
+   - 仓库路径：
+2. 打开的模型：
+3. 点击的按钮或运行的命令：
+4. 实际发生了什么：
 
-**测试模型 (Test Model)**
-是在中心模型还是个人测试模型 (`*_test.rvt`) 中复现的？如果可能，请说明相关的图元类别（如门窗、房间等）。
+## 预期结果
 
-**补充上下文 (Additional context)**
-在这里添加有关该问题的任何其他上下文。
+你原本期望发生什么。
+
+## 原始错误
+
+请尽量贴原始报错，而不是只写“打不开”。
+
+## 输出证据
+
+- 是否生成文件：
+- 输出目录：
+- 如果是 apply，是否测了 Undo：
+
+## 补充信息
+
+还有哪些上下文有助于定位问题。

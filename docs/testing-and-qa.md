@@ -1,82 +1,166 @@
-# 测试与质量保证规范 (Testing & QA)
+# 测试与质量保证
 
-在执行任何可能修改模型的 Agent 自动化任务前，必须遵循本测试规范。
+这份文档定义当前主线的验证口径。
 
-## 1. 测试环境要求
+当前原则很简单：
 
-* **隔离环境**：必须在名为 `*_test.rvt` 或 `*_sandbox.rvt` 的测试模型上进行开发和测试。
-* **脱机操作**：测试模型应当是从正式服务器/BIM 360 下载到本地的离线（分离）文件，禁止直接在共享云模型上进行代码调试。
+- 先过离线检查
+- 再在 sandbox 模型里 live 验证
+- 第一个 blocker 优先
+- 不在一个回合里同时追很多问题
 
-## 2. 工具发布标准 (Definition of Done)
+## 1. 测试环境
 
-所有 pyRevit 脚本或 C# 插件在合入主分支并向团队发布前，必须满足以下条件：
+只用测试模型：
 
-1. **多语言支持**：界面提示和导出文件必须同时支持中文和英文切换。
-2. **Dry-Run 机制**：任何涉及修改的功能，必须存在对应的“预览 (Preview)”模式。
-3. **Transaction 约束**：所有改动被包裹在 `revit.Transaction` 中，名称要易于用户在“撤销(Undo)”历史中识别，如 `[Agent] 批量修改门标记`。
-4. **日志记录**：失败或异常情况必须记录在日志文件中，而不是直接导致 Revit 崩溃。
-5. **用户二次确认**：批量修改前弹出汇总数量，如“即将修改 15 樘门，是否继续？”。
+- `*_sandbox.rvt`
+- `*_test.rvt`
+- 本地可丢弃副本
 
-## 3. 回归测试流程
+不要用：
 
-当新增工具或进行版本升级时，按以下流程进行回归测试：
+- 正式项目模型
+- 中心模型
+- 云上正式模型
 
-1. 打开标准测试模型 (如 `samples/test_model.rvt`)。
-2. 运行 `导出报告 -> 回归测试清单`，生成 `yangagent_regression_checklist_*.md`。
-3. 按清单运行所有现有的只读工具，比对输出的 JSON/CSV 是否存在格式突变。
-4. 运行现有的 Dry-Run 工具，确认识别出的待处理 Element 数量无误。
-5. 对于修改类工具，必须先运行 dry-run，人工检查 CSV，再执行 Apply。
-6. Apply 后必须确认可以通过 Revit 撤销。
-7. 填写测试清单结果；不要提交 `.rvt` 模型到 Git。
+## 2. 当前 Definition of Done
 
-## 4. 不依赖 Revit 的静态检查
+一个功能要算基本可交付，至少满足：
 
-在没有打开 Revit 的情况下，可以先运行只读检查：
+1. 仓库离线检查通过
+2. 按钮能在 Revit 里被正常加载
+3. 输出文件或 UI 结果符合预期
+4. 错误信息可读
+5. 如果改模型，则满足：
+   `preview -> confirmation -> apply -> log -> Undo note`
+
+## 3. 当前离线检查
+
+从仓库根目录运行：
 
 ```powershell
-cd "D:\codex\Yang Agent_Revit"
+python tools\check_pyrevit_extension.py
+python tools\run_sandbox_preflight.py --write-report
 python tools\static_checks.py --write-report
 ```
 
-该脚本只扫描仓库文件，不运行 Revit，不运行安装脚本，不修改模型。
+当前期望：
 
-当前检查范围：
+- `check_pyrevit_extension.py`：`0 errors`
+- sandbox preflight：全部 `PASS`
+- static checks：`0 errors`
 
-- pyRevit 按钮目录是否缺少 `bundle.yaml`、`script.py`、`README.md` 或 `icon.png`。
-- 文档里的 PowerShell 命令是否可能不可复制。
-- 文档是否把 Revit 2011-2027 写成已支持。
-
-Hermes/DeepSeek 可以运行这个脚本并整理报告，但不能据此直接修改核心代码。
-
-## 5. Apply CSV 离线校验
-
-在 Revit 里运行 apply 之前，可以先用只读脚本检查 dry-run CSV：
+必要时补跑：
 
 ```powershell
-cd "D:\codex\Yang Agent_Revit"
-python tools\validate_apply_csv.py --kind room --csv path\to\missing_room_numbers_YYYYMMDD_HHMMSS.csv
-python tools\validate_apply_csv.py --kind mark --csv path\to\missing_door_window_marks_YYYYMMDD_HHMMSS.csv
+python tools\check_offline_python_syntax.py
 ```
 
-该脚本不打开 Revit，不修改模型，只检查：
+## 4. live Revit 验证
 
-- 文件名是否匹配对应 apply 工具。
-- CSV 必要字段是否存在。
-- `dry_run` 是否为 `true`。
-- `element_id` 是否可解析。
-- `category` 是否匹配。
-- `suggested_*` 是否为空。
-- 是否有重复 `element_id`。
+只要行为依赖以下任一项，就必须 live 测：
 
-有 `ERROR` 时不要在 Revit 中执行 apply。先重新生成 dry-run CSV 或让 Codex 检查原因。
+- pyRevit 按钮注册
+- Revit UI
+- Revit 模型内容
+- Transaction
+- Undo
+- pyRevit 缓存
 
-当前仓库内有最小样例：
+## 5. 建议 live 验证顺序
 
-```powershell
-python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_valid.csv
-python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_valid.csv
-python tools\validate_apply_csv.py --kind room --csv tests\fixtures\missing_room_numbers_duplicate.csv
-python tools\validate_apply_csv.py --kind mark --csv tests\fixtures\missing_door_window_marks_duplicate.csv
+按这个顺序最省时间：
+
+1. `System Settings`
+2. `Project Info Report`
+3. `Export Model Snapshot`
+4. `Model Health Report`
+5. `Export Regression Checklist`
+6. `Export AI Review Prompt`
+7. 各 preview 按钮
+8. 各 apply 按钮
+9. 每个 apply 后立即测一次 Undo
+
+详细执行用：
+
+- `docs/sandbox-pyrevit-mvp-runbook.md`
+- `docs/sandbox-pyrevit-mvp-checklist.md`
+- `docs/sandbox-pyrevit-mvp-feedback-template.md`
+
+## 6. apply 工具验证要求
+
+对每个 apply 工具，至少验证：
+
+- 只能读取对应 preview CSV
+- 文件名校验有效
+- 字段校验有效
+- 重复 `element_id` 能拦截
+- 用户确认有效
+- 结果日志生成
+- Undo 至少测一次
+
+## 7. 回归测试
+
+需要固定验证一组当前主线按钮，不要求一次性扩太多新场景。
+
+当前最重要的是：
+
+- 基础报告按钮不坏
+- preview 链路不坏
+- apply 安全壳不坏
+- 中英切换不坏
+- 导出路径和共享主题不破
+
+## 8. 失败时怎么处理
+
+只抓第一个 blocker。
+
+记录：
+
+- 按钮名
+- Runbook 步骤号
+- 精确报错
+- 是否生成输出文件
+- Revit 版本
+- 模型名
+- 是否已 reload / restart / clear cache
+
+不要在同一轮失败里混进很多二级问题。
+
+## 9. 外部 AI 的测试口径
+
+Hermes / DeepSeek 可以：
+
+- 跑离线检查
+- 整理测试清单
+- 写 review
+
+但它们不能把“离线通过”写成“live 可用”。
+
+如果没有 Revit live 证据，只能写：
+
+- offline checked
+- live not verified
+
+## 10. 当前重点模型
+
+当前更有内容的 sandbox 模型：
+
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\Revit 测试模型\Snowdon Towers Sample Architectural_sandbox.rvt
 ```
 
-前两个应通过；后两个应因为重复 `element_id` 返回 `YA-APPLY-*-CSV-007`。
+当前报告目录：
+
+```text
+G:\Codex\YangAgent Revit\YangAgent Revit\Gemini 资料\Revit 测试模型\报告
+```
+
+## 11. 相关文档
+
+- `docs/safety-rules.md`
+- `docs/developer-guide.md`
+- `docs/error-codes.md`
+- `docs/sandbox-pyrevit-mvp-runbook.md`
+- `docs/sandbox-pyrevit-mvp-checklist.md`
+- `docs/sandbox-pyrevit-mvp-feedback-template.md`

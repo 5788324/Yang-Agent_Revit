@@ -15,6 +15,8 @@ Codex owns:
 - current priorities;
 - task packs for other agents;
 - safety rules;
+- theme engine and design system;
+- external toolbox rewrite boundaries;
 - final review;
 - key implementation when a blocker is risky or unclear;
 - Git commit and release decisions.
@@ -54,6 +56,8 @@ They must follow:
 
 If they deliver work without a task sheet and delivery report, Codex treats it as unreviewable.
 
+They must also leave an operation log for every task so Codex can audit what was actually done instead of only reading the final summary.
+
 ## User
 
 The user provides:
@@ -80,6 +84,13 @@ When the user works without Git or Codex, the agent may deliver a zip, folder, s
 Use `docs/incoming/` for external deliveries and `docs/reviews/` for Codex review records.
 
 Use `docs/agent-review-checklist.md` before accepting any external work.
+
+Use the current day worklog and the daily ops routine to keep handoff context live:
+
+- `docs/worklogs/worklog-YYYY-MM-DD.md`
+- `docs/next-steps.md`
+- `docs/new-chat-startup-YYYY-MM-DD.md`
+- `docs/framework/daily-ops-routine.md`
 
 ## Live Revit Rule
 
